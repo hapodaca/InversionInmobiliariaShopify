@@ -1,0 +1,465 @@
+<div class="ps-page ps-page--blog" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="ps-page__header">
+        <div class="container">
+            <h1 class="ps-page__heading">{{ blog.title | escape }}</h1>
+            {% render 'breadcrumb' %}
+        </div>
+    </div>
+    <div class="ps-page__content">
+        <div class="container">
+            {%- if section.settings.feature_post1 != blank and section.settings.feature_post2 != blank and section.settings.feature_post3 != blank and section.settings.feature_post4 != blank and section.settings.feature_post5 != blank -%}
+                <div class="ps-blog--feature-posts">
+
+                    {% if section.settings.feature_post1 != blank %}
+                        <div class="ps-blog__left">
+                            <div class="ps-post ps-post--grid large">
+                                {%- if section.settings.feature_post1.image != blank and section.settings.show_image -%}
+                                    <div class="ps-post__thumbnail">
+                                        <div class="ps-post__image">
+                                            <img src="{{ section.settings.feature_post1.image | image_url: width: '685x446' }}" alt="{{ section.settings.feature_post1.title | escape }}" width="685" height="446" loading="lazy"/>
+                                        </div>
+                                        <a class="ps-post__overlay" aria-lable="blog article" href="{{ section.settings.feature_post1.url }}" title="{{ section.settings.feature_post1.title | escape }}"></a>
+                                    </div>
+                                {%- endif -%}
+                                
+                                <div class="ps-post__content">
+                                    <div class="ps-post__meta">
+                                        {%- if show_date -%}
+                                            <span class="ps-post__created-at">{{ section.settings.feature_post1.published_at | time_tag: format: 'date' }}</span>
+                                        {%- endif -%}
+                                    </div>
+                                    <h4 class="ps-post__title"><a href="{{ section.settings.feature_post1.url }}">{{ section.settings.feature_post1.title | escape }}</a></h4>
+                                    <div class="ps-post__desc">
+                                        <p>
+                                            {%- if section.settings.feature_post1.excerpt.size > 0 -%}
+                                                {{ section.settings.feature_post1.excerpt | strip_html | truncatewords: 70 }}
+                                            {%- else -%}
+                                                {{ section.settings.feature_post1.content | strip_html | truncatewords: 70 }}
+                                            {%- endif -%}
+                                        </p>
+                                    </div>
+                                    <div class="ps-post__bottom">
+                                        {%- if section.settings.show_author -%}
+                                            <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ section.settings.feature_post1.author }}</span></span>
+                                        {%- endif -%}
+                    
+                                        {%- if section.settings.show_comments -%}
+                                            <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: section.settings.feature_post1.comments_count }}</span>
+                                        {%-  endif -%}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endif -%}
+
+                    <div class="ps-blog__right">
+                        {% if section.settings.feature_post2 != blank %}
+                            {%- render 'article-only-text',
+                                article: section.settings.feature_post2,
+                                show_image: section.settings.show_image,
+                                show_date: section.settings.show_date,
+                                show_author: section.settings.show_author,
+                                show_comments: section.settings.show_comments
+                            -%}
+                        {%- endif -%}
+
+                        {% if section.settings.feature_post3 != blank %}
+                            {%- render 'article-only-text',
+                                article: section.settings.feature_post3,
+                                show_image: section.settings.show_image,
+                                show_date: section.settings.show_date,
+                                show_author: section.settings.show_author,
+                                show_comments: section.settings.show_comments
+                            -%}
+                        {%- endif -%}
+
+                        {% if section.settings.feature_post4 != blank %}
+                            {%- render 'article-only-text',
+                                article: section.settings.feature_post4,
+                                show_image: section.settings.show_image,
+                                show_date: section.settings.show_date,
+                                show_author: section.settings.show_author,
+                                show_comments: section.settings.show_comments
+                            -%}
+                        {%- endif -%}
+
+                        {% if section.settings.feature_post5 != blank %}
+                            {%- render 'article-only-text',
+                                article: section.settings.feature_post5,
+                                show_image: section.settings.show_image,
+                                show_date: section.settings.show_date,
+                                show_author: section.settings.show_author,
+                                show_comments: section.settings.show_comments
+                            -%}
+                        {%- endif -%}
+                    </div>
+                </div>
+            {%- endif -%}
+            {%- paginate blog.articles by section.settings.posts_per_page -%}
+            <div class="ps-blog ps-blog--list">
+                <div class="ps-blog__content">
+                    <div class="ps-layout--with-sidebar">
+                        <div class="ps-layout__left">
+                            <div class="ps-blog__items">
+
+                                {%- if section.settings.layout == 'grid' -%}
+                                    <div class="row">
+                                {%- endif -%}
+                                
+                                {%- for article in blog.articles -%}
+                                    {%- render 'article-card',
+                                        layout: section.settings.layout,
+                                        article: article,
+                                        show_image: section.settings.show_image,
+                                        show_date: section.settings.show_date,
+                                        show_author: section.settings.show_author,
+                                        show_comments: section.settings.show_comments
+                                    -%}
+                                {%- endfor -%}
+
+                                {%- if section.settings.layout == 'grid' -%}
+                                    </div>
+                                {%- endif -%}
+
+                            </div>
+                            {%- if paginate.pages > 1 -%}
+                                {% render 'pagination', paginate: paginate %}
+                            {%- endif -%}
+                        </div>
+
+                        {%- if section.blocks.size > 0 -%}
+                            {%- render 'blog-sidebar', blocks: section.blocks -%}
+                        {%- endif -%}
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            {%- endpaginate -%}
+        </div>
+    </div>
+</div>
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": "{{ shop.url }}/blogs/{{ blog.handle }}#blog",
+  "url": "{{ shop.url }}/blogs/{{ blog.handle }}",
+  "name": "{{ blog.title | escape }} - {{ shop.name | escape }}",
+  "headline": "{{ blog.title | escape }}",
+  "description": "{{ blog.metafields.custom.description | default: blog.title | escape }}",
+  "inLanguage": "es",
+  "publisher": {
+    "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% if settings.organization_logo != blank %}{{ settings.organization_logo | image_url: width: 500 }}{% else %}{{ settings.logo | image_url: width: 500 }}{% endif %}"
+    },
+    "sameAs": [
+      "{{ settings.social_linkedin_link | escape }}",
+      "{{ settings.social_instagram_link | escape }}",
+      "{{ settings.social_facebook_link | escape }}",
+      "{{ settings.social_twitter_link | escape }}",
+      "{{ settings.social_tiktok_link | escape }}",
+      "{{ settings.social_youtube_link | escape }}"
+    ]
+  },
+  "blogPost": [
+    {% for article in blog.articles limit: 5 %}
+    {
+      "@type": "BlogPosting",
+      "headline": "{{ article.title | escape }}",
+      "url": "{{ article.url | prepend: shop.url }}",
+      "datePublished": "{{ article.published_at | date: '%Y-%m-%d' }}",
+      "dateModified": "{{ article.updated_at | date: '%Y-%m-%d' }}",
+      "description": "{{ article.excerpt_or_content | strip_html | truncate: 160 | escape }}",
+      {% if article.image %}
+      "image": "{{ article.image | image_url: width: 800 }}",
+      {% endif %}
+      "author": {
+        "@type": "Person",
+        "name": "{{ article.author | escape }}"
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+
+{% schema %}
+{
+    "name": "t:sections.main-blog.name",
+    "tag": "section",
+    "settings": [
+        {
+        "type": "header",
+        "content": "t:sections.main-blog.settings.content.general"
+        },
+        {
+        "type": "radio",
+        "id": "layout",
+        "options": [
+            {
+            "value": "grid",
+            "label": "Grid"
+            },
+            {
+            "value": "list",
+            "label": "List"
+            }
+        ],
+        "default": "list",
+        "label": "Posts layout"
+        },
+        {
+            "type": "range",
+            "id": "posts_per_page",
+            "label": "Posts limit",
+            "min": 3,
+            "max": 20,
+            "step": 1,
+            "default": 5
+        },
+        {
+            "type": "header",
+            "content": "t:sections.main-blog.settings.feature.name"
+        },
+        {
+        "type": "article",
+        "id": "feature_post1",
+        "label": "t:sections.main-blog.settings.feature.post1"
+        },
+        {
+        "type": "article",
+        "id": "feature_post2",
+        "label": "t:sections.main-blog.settings.feature.post2"
+        },
+        {
+        "type": "article",
+        "id": "feature_post3",
+        "label": "t:sections.main-blog.settings.feature.post3"
+        },
+        {
+        "type": "article",
+        "id": "feature_post4",
+        "label": "t:sections.main-blog.settings.feature.post4"
+        },
+        {
+        "type": "article",
+        "id": "feature_post5",
+        "label": "t:sections.main-blog.settings.feature.post5"
+        },
+        {
+            "type": "header",
+            "content": "t:sections.main-blog.settings.content.blog_post_card"
+        },
+        {
+        "type": "checkbox",
+        "id": "show_image",
+        "default": true,
+        "label": "Show featured image"
+        },
+        {
+        "type": "checkbox",
+        "id": "show_date",
+        "default": true,
+        "label": "Show date"
+        },
+        {
+        "type": "checkbox",
+        "id": "show_author",
+        "default": true,
+        "label": "Show author"
+        },
+        {
+        "type": "checkbox",
+        "id": "show_comments",
+        "default": true,
+        "label": "Show comments"
+        },
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+        
+    ],
+    "blocks": [
+        {
+            "type": "social",
+            "name": "Widget Social",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "social",
+                    "label": "Show social links",
+                    "default": true
+                },
+                {
+                    "type": "text",
+                    "id": "sidebar_social_title",
+                    "label": "Follow Us",
+                    "default": "Síguenos"
+                }
+            ]
+        },
+        {
+            "type": "products",
+            "name": "Widget Products",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "sidebar_collection_title",
+                    "label": "Products featured Title",
+                    "default": "Featured Products"
+                },
+                {
+                    "type": "collection",
+                    "id": "sidebar_collection",
+                    "label": "Products featured collection"
+                },
+                {
+                    "type": "range",
+                    "id": "sidebar_products_limit",
+                    "min": 1,
+                    "max": 8,
+                    "step": 1,
+                    "unit": "prd",
+                    "label": "Products featured Limit",
+                    "default": 4
+                }
+            ]
+        },
+        {
+            "type": "tags",
+            "name": "Widget Tags",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "tags",
+                    "label": "Show tags",
+                    "default": true
+                }
+            ]
+        },
+        {
+            "type": "newsletter",
+            "name": "Widget newsletter",
+            "limit": 1,
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "newsletter_yes",
+                    "label": "t:settings_schema.sections.footer.settings.newsletter_enable.label",
+                    "default": true
+                },
+                {
+                  "type": "text",
+                  "id": "newsletter_heading",
+                  "default": "Newsletter",
+                  "label": "t:settings_schema.sections.footer.settings.newsletter_heading.label"
+                },
+                {
+                  "type": "inline_richtext",
+                  "id": "newsletter_subtext",
+                  "default": "Subscribe our newsletter to be the first to hear about exclusive deals",
+                  "label": "t:settings_schema.sections.footer.settings.newsletter_subtext.label"
+                },
+                {
+                  "type": "text",
+                  "id": "newsletter_input",
+                  "default": "Your email",
+                  "label": "t:settings_schema.sections.footer.settings.newsletter_input.label"
+                },
+                {
+                  "type": "text",
+                  "id": "newsletter_button",
+                  "default": "Subscribe",
+                  "label": "t:settings_schema.sections.footer.settings.newsletter_button.label"
+                }
+            ]
+        },
+        {
+          "type": "featured_posts",
+          "name": "Featured posts",
+          "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Featured Posts"
+                },
+                {
+                    "type": "article",
+                    "id": "article_1",
+                    "label": "Post"
+                },
+                {
+                    "type": "article",
+                    "id": "article_2",
+                    "label": "Post"
+                },
+                {
+                    "type": "article",
+                    "id": "article_3",
+                    "label": "Post"
+                },
+                {
+                    "type": "article",
+                    "id": "article_4",
+                    "label": "Post"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

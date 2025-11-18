@@ -1,0 +1,221 @@
+{%- comment -%}
+  Galería principal + thumbnails sincronizados (OwlCarousel)
+  - Arriba: 1 imagen por slide, sin flechas ni autoplay
+  - Abajo: carrusel con flechas + autoplay que controla la imagen de arriba
+{%- endcomment -%}
+
+{%- assign imgs = product.images -%}
+{%- if imgs.size > 0 -%}
+<div class="ps-project__gallery" id="inv-gallery">
+
+  <!-- GALERÍA PRINCIPAL (sin flechas, sin autoplay) -->
+  <div id="gallery-main" class="owl-carousel owl-theme inv-main">
+    {%- for image in imgs -%}
+      <div class="g-item">
+        {{ image
+          | image_url: width: 1600
+          | image_tag: alt: product.title, loading: 'lazy' }}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <!-- THUMBNAILS (con flechas + autoplay) -->
+  <div id="gallery-thumbs" class="owl-carousel owl-theme inv-thumbs">
+    {%- for image in imgs -%}
+      <div class="t-item" data-index="{{ forloop.index0 }}">
+        {{ image
+          | image_url: width: 360
+          | image_tag: alt: product.title, loading: 'lazy' }}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  /* ====== Galería principal ====== */
+  #gallery-main .g-item img{
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  /* No mostrar flechas en el slider principal */
+  #gallery-main .owl-nav{ display: none !important; }
+
+  /* ====== Thumbnails (carrusel inferior) ====== */
+  #gallery-thumbs{
+    position: relative;
+    margin-top: 14px;
+
+    /* Variables para ajustar rápido */
+    --nav-color: #002b5b;   /* color del círculo */
+    --nav-size: 36px;       /* diámetro del círculo */
+    --icon-size: 16px;      /* tamaño del chevrón */
+    --offset: -12px;        /* cuánto “sale” hacia fuera del carrusel */
+  }
+
+  /* Alto de cada thumb */
+  #gallery-thumbs .t-item{
+    height: 120px;
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #gallery-thumbs .t-item img{
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Activo con borde del color de marca */
+  #gallery-thumbs .t-item.is-active{
+    outline: 2px solid #002b5b;
+    outline-offset: 2px;
+  }
+
+  /* Asegura que Owl muestre la navegación en thumbs */
+  #gallery-thumbs .owl-nav{ display: block !important; }
+  #gallery-thumbs .owl-dots{ display: none !important; }
+
+  /* ====== Flechas circulares ====== */
+  #gallery-thumbs .owl-nav button{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+
+    width: var(--nav-size);
+    height: var(--nav-size);
+    background: var(--nav-color);
+    color: #fff;
+    border: 0;
+    border-radius: 9999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,.18);
+    transition: transform .15s ease, filter .15s ease;
+  }
+  #gallery-thumbs .owl-nav button.owl-prev{ left: var(--offset); }
+  #gallery-thumbs .owl-nav button.owl-next{ right: var(--offset); }
+
+  /* Oculta spans/iconos del tema para usar nuestros símbolos */
+  #gallery-thumbs .owl-nav button span{ display: none; }
+
+  /* Chevrons centrados y del tamaño definido */
+  #gallery-thumbs .owl-nav button::before{
+    content: '›';
+    font-size: var(--icon-size);
+    line-height: 1;
+    font-weight: 700;
+  }
+  #gallery-thumbs .owl-nav button.owl-prev::before{ content: '‹'; }
+
+  /* Feedback al interactuar */
+  #gallery-thumbs .owl-nav button:hover{
+    filter: brightness(1.06);
+    transform: translateY(-50%) scale(1.04);
+  }
+  #gallery-thumbs .owl-nav button:active{
+    transform: translateY(-50%) scale(0.98);
+  }
+
+  /* ====== Responsive ====== */
+  @media (max-width: 768px){
+    #gallery-thumbs{ --nav-size: 32px; --icon-size: 14px; --offset: -10px; }
+    #gallery-thumbs .t-item{ height: 95px; }
+  }
+
+  /* Evita desalineaciones raras de tipografías/line-heights heredados */
+  #gallery-thumbs, #gallery-thumbs *{ line-height: normal; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    var $ = window.jQuery;
+    if(!$) return;
+
+    var $main   = $('#gallery-main');
+    var $thumbs = $('#gallery-thumbs');
+    if(!$main.length || !$thumbs.length) return;
+
+    // Init principal (1 ítem, sin nav, sin dots, sin autoplay)
+    $main.owlCarousel({
+      items: 1,
+      loop: true,
+      nav: false,
+      dots: false,
+      autoplay: false,
+      smartSpeed: 600,
+      mouseDrag: true,
+      touchDrag: true
+    });
+
+    // Init thumbs (con flechas + autoplay)
+    $thumbs.owlCarousel({
+      items: 3,                 // siempre 3 miniaturas visibles
+      margin: 16,
+      stagePadding: 24,         // recorte lateral (ajústalo a gusto)
+      loop: true,
+      nav: true,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 4000,
+      autoplayHoverPause: true,
+      smartSpeed: 600,
+      responsive: {
+        0:    { items: 2, stagePadding: 12 },  // en móviles: 2 + recorte
+        640:  { items: 3, stagePadding: 16 },
+        1024: { items: 3, stagePadding: 24 }
+      }
+    });
+
+    // Helpers de índice relativo (por los clones de Owl)
+    function relIndex(e){
+      var api = e.relatedTarget;
+      return api.relative(api.current());
+    }
+    function setActive(i){
+      $thumbs.find('.t-item').removeClass('is-active');
+      $thumbs.find('.owl-item').eq(i).find('.t-item').addClass('is-active');
+    }
+    function goMain(i){
+      $main.trigger('to.owl.carousel', [i, 400, true]);
+      setActive(i);
+    }
+
+    // Click en thumbnail -> mueve principal
+    $thumbs.on('click', '.owl-item', function(){
+      var i = $(this).index();
+      goMain(i);
+    });
+
+    // Autoplay/cambio de thumbs -> mueve principal
+    $thumbs.on('changed.owl.carousel', function(e){
+      goMain(relIndex(e));
+    });
+
+    // Cambio manual del principal (drag) -> sigue thumbs
+    $main.on('changed.owl.carousel', function(e){
+      var i = relIndex(e);
+      $thumbs.trigger('to.owl.carousel', [i, 400, true]);
+      setActive(i);
+    });
+
+    // Marca el primero como activo
+    setActive(0);
+
+    // --- asegurar que el autoplay siga activo siempre ---
+    $thumbs.trigger('play.owl.autoplay', [4000]);
+    $thumbs.on('click', '.owl-prev, .owl-next', function () {
+      $thumbs.trigger('stop.owl.autoplay');
+      $thumbs.trigger('play.owl.autoplay', [4000]);
+    });
+    $thumbs.on('translated.owl.carousel', function () {
+      $thumbs.trigger('play.owl.autoplay', [4000]);
+    });
+  });
+</script>
+{%- endif -%}

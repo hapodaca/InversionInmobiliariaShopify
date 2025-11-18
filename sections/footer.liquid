@@ -1,0 +1,268 @@
+<main class="ps-main">
+{%- if settings.footer_bg != blank -%}
+        <footer class="ps-footer ps-footer--default bg--cover" data-background="{{ settings.footer_bg | image_url }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    {%- else -%}
+        <footer class="ps-footer ps-footer--default bg--cover" data-background="{{ 'footer-bg.jpg' | asset_url }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    {%- endif -%}
+        <div class="container">
+            <div class="ps-footer__top">
+                <div class="ps-footer__widgets">
+                    <div class="ps-footer__column">
+                        <div class="ps-widget ps-widget--footer ps-widget-footer-contact">
+                            <div class="ps-widget__content">
+
+                                {%- if settings.address != blank -%}
+                                    <p>{{ settings.address }}</p>
+                                {%- endif -%}
+
+                                {%- if settings.phone != blank -%}
+                                    <p>{{ settings.phone }}</p>
+                                {%- endif -%}
+
+                                {%- if settings.email != blank -%}
+                                    <p><a href="mailto:{{ settings.email }}">{{ settings.email }}</a></p>
+                                {%- endif -%}
+
+                                <div class="ps-social-links light">
+                                    {%- render 'social-links' -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {%- if settings.footer_menu_1.links != blank -%}
+                        <div class="ps-footer__column">
+                            <div class="ps-widget ps-widget--footer">
+                                <div class="ps-widget__content">
+                                    <ul class="ps-widget__links">
+                                        {%- for link in settings.footer_menu_1.links -%}
+                                            <li>
+                                                <a
+                                                    id="FooterMenu-{{ link.handle }}"
+                                                    href="{{ link.url }}">
+                                                    {{- link.title | escape -}}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endif -%}
+
+                    {%- if settings.footer_menu_2.links != blank -%}
+                        <div class="ps-footer__column">
+                            <div class="ps-widget ps-widget--footer">
+                                <div class="ps-widget__content">
+                                    <ul class="ps-widget__links">
+                                        {%- for link in settings.footer_menu_2.links -%}
+                                            <li>
+                                                <a
+                                                    id="FooterMenu-{{ link.handle }}"
+                                                    href="{{ link.url }}">
+                                                    {{- link.title | escape -}}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endif -%}
+
+                </div>
+
+                {%- if settings.newsletter_yes -%}
+                    <div class="ps-footer__subscribe">
+                        <div class="ps-widget ps-widget--footer ps-widget--footer-subscribe">
+                            <div class="ps-widget__content">
+                                {%- form 'customer', class: 'ps-form--widget-subscribe', name: 'newsletter' -%}
+                                    <div class="ps-form__top">
+                                        <p>{{ settings.newsletter_heading }}</p>
+                                    </div>
+                                    <div class="ps-form__content">
+                                        <div class="ps-form__icon"><i class="icon-envelope"></i></div>
+                                        <input 
+                                            class="form-control" 
+                                            type="email" 
+                                            name="contact[email]" 
+                                            value="{% if customer %}{{ customer.email }}{% endif %}"
+                                            aria-required="true"
+                                            autocorrect="off"
+                                            autocapitalize="off"
+                                            autocomplete="email"
+                                            placeholder="{{ 'newsletter.placeholder' | t }}" required />
+                                        <button type="submit" aria-label="commit" name="commit"><i class="icon-arrow-right"></i></button>
+                                    </div>
+                                    <div class="ps-form__bottom">
+                                        <p>{{ settings.newsletter_policy }}</p>
+                                    </div>
+                                {%- endform -%}
+                            </div>
+                        </div>
+                    </div>
+                {%- endif -%}
+            </div>
+            <div class="ps-footer__bottom">
+                <div class="ps-footer__copyright">
+                    {%- if settings.copyright_text != blank -%}
+                        {{ settings.copyright_text }}
+                    {%- else -%}
+                        <p>&copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: '/' }}. {{ powered_by_link }}</p>
+                    {%- endif -%}
+                    <div class="footer-language__currency"> 
+                    {%- if settings.enable_language or settings.enable_currency -%}
+                    <div class="desktop-localization-wrapper hidden-mb">
+                        {%- if localization.available_languages.size > 1 and settings.enable_language -%}
+                        <noscript class="small-hide medium-hide">
+                            {%- form 'localization', id: 'HeaderLanguageMobileFormNoScript', class: 'localization-form' -%}
+                            <div class="localization-form__select">
+                                <h2 class="visually-hidden" id="HeaderLanguageMobileLabelNoScript">
+                                {{ 'localization.language_label' | t }}
+                                </h2>
+                                <select
+                                class="localization-selector link"
+                                name="locale_code"
+                                aria-labelledby="HeaderLanguageMobileLabelNoScript"
+                                >
+                                {%- for language in localization.available_languages -%}
+                                    <option
+                                    value="{{ language.iso_code }}"
+                                    lang="{{ language.iso_code }}"
+                                    {%- if language.iso_code == localization.language.iso_code %}
+                                        selected
+                                    {% endif %}
+                                    >
+                                    {{ language.endonym_name | capitalize }}
+                                    </option>
+                                {%- endfor -%}
+                                </select>
+                                {% render 'icon-caret' %}
+                            </div>
+                            <button class="button button--tertiary">{{ 'localization.update_language' | t }}</button>
+                            {%- endform -%}
+                        </noscript>
+
+                        <localization-form class="small-hide medium-hide no-js-hidden">
+                            {%- form 'localization', id: 'HeaderLanguageForm', class: 'localization-form' -%}
+                            <div>
+                                <h2 class="visually-hidden" id="HeaderLanguageLabel">{{ 'localization.language_label' | t }}</h2>
+                                {%- render 'language-localization', localPosition: 'HeaderLanguage' -%}
+                            </div>
+                            {%- endform -%}
+                        </localization-form>
+                        {%- endif -%}
+
+                        {%- if localization.available_countries.size > 1 and settings.enable_currency -%}
+                        <noscript class="small-hide medium-hide">
+                            {%- form 'localization', id: 'HeaderCountryMobileFormNoScript', class: 'localization-form' -%}
+                            <div class="localization-form__select">
+                                <h2 class="visually-hidden" id="HeaderCountryMobileLabelNoScript">
+                                {{ 'localization.country_label' | t }}
+                                </h2>
+                                <select
+                                class="localization-selector link"
+                                name="country_code"
+                                aria-labelledby="HeaderCountryMobileLabelNoScript"
+                                >
+                                {%- for country in localization.available_countries -%}
+                                    <option
+                                    value="{{ country.iso_code }}"
+                                    {%- if country.iso_code == localization.country.iso_code %}
+                                        selected
+                                    {% endif %}
+                                    >
+                                    {{ country.name }} ({{ country.currency.iso_code }}
+                                    {{ country.currency.symbol }})
+                                    </option>
+                                {%- endfor -%}
+                                </select>
+                                {% render 'icon-caret' %}
+                            </div>
+                            <button class="button button--tertiary">{{ 'localization.update_country' | t }}</button>
+                            {%- endform -%}
+                        </noscript>
+
+                        <localization-form class="small-hide medium-hide no-js-hidden">
+                            {%- form 'localization', id: 'HeaderCountryForm', class: 'localization-form' -%}
+                            <div>
+                                <h2 class="visually-hidden" id="HeaderCountryLabel">{{ 'localization.country_label' | t }}</h2>
+                                {%- render 'country-localization', localPosition: 'HeaderCountry' -%}
+                            </div>
+                            {%- endform -%}
+                        </localization-form>
+                        {% endif %}
+                    </div>
+                    {%- endif -%}
+                </div>
+                </div>
+                
+            </div>
+        </div>
+    </footer>
+</main>
+
+<div class="ps-site-overlay"></div>
+
+{%- if settings.scroll_top_enable -%}
+    <div id="back2top"><i class="lnil lnil-arrow-up"></i></div>
+{%- endif -%}
+
+<div class="modal-wrap modal-quickview" style="display: none;" id="quickView">
+    <div data-load="loading"></div>
+</div>
+
+<loading-bar data-time="1500ms"></loading-bar>
+
+{% schema %}
+{
+    "name": "Footer",
+    "tag": "section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+    ]
+}
+{% endschema %}

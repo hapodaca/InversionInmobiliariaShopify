@@ -1,0 +1,2950 @@
+{% render 'air-aggregate-rating' %}
+{% comment %}theme-check-disable TemplateLength, NestedSnippet, UnusedAssign{% endcomment %}
+
+{%- liquid
+  assign hide_variants = false
+  assign media_count = product.media.size
+-%}
+
+{%- comment -%} ===== Helper: leer ficha inmobiliaria (project.ficha) con fallbacks suaves ===== {%- endcomment -%}
+{%- assign fx = product.metafields.project.ficha.value 
+  | default: product.metafields.custom.ficha_inmobiliaria.value -%}
+{%- assign product_form_id = 'product-form-' | append: section.id -%}
+{%- assign _direccion_val   = fx.direccion               | default: product.metafields.project.direccion    | default: product.metafields.custom.address -%}
+{%- assign _municipio_val   = fx.municipio               | default: product.metafields.project.municipio    | default: product.metafields.custom.municipio -%}
+{%- assign _departamento_val   = fx.departamento         | default: product.metafields.project.departamento | default: product.metafields.custom.departamento -%}
+{%- capture _direccion_completa -%}
+  {%- if _direccion_val != blank -%}
+    {{ _direccion_val }}
+  {%- endif -%}
+  {%- if _municipio_val != blank -%}
+    {%- if _direccion_val != blank -%}, {% endif -%}
+    {{ _municipio_val }}
+  {%- endif -%}
+  {%- if _departamento_val != blank -%}
+    {%- if _direccion_val != blank or _municipio_val != blank -%}, {% endif -%}
+    {{ _departamento_val }}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign direccion_completa = _direccion_completa | strip -%}
+
+{%- assign _year_built_val  = fx.year_built              | default: product.metafields.project.year_built -%}
+{%- assign _id_proyecto_val = fx.id_proyecto             | default: product.metafields.project.id_proyecto -%}
+{%- assign _estrato_val     = fx.estrato                 | default: product.metafields.project.estrato -%}
+{%- assign _inmobiliaria_val     = fx.inmobiliaria       | default: product.metafields.project.inmobiliaria -%}
+{%- assign _f_ini_proy_val  = fx.fecha_inicio_proyecto   | default: product.metafields.project.fecha_inicio_proyecto -%}
+{%- assign _f_pe_val        = fx.fecha_punto_equilibrio  | default: product.metafields.project.fecha_punto_equilibrio -%}
+{%- assign _f_ini_obra_val  = fx.fecha_inicio_obra       | default: product.metafields.project.fecha_inicio_obra -%}
+{%- assign _f_entrega_val   = fx.fecha_entrega_estimada  | default: product.metafields.project.fecha_entrega_estimada -%}
+{%- assign _gimnasio = fx.gimnasio.value | default: fx.gimnasio | default: product.metafields.campos_inmobiliaria.gimnasio | default: blank -%}
+{%- assign _cuarto_util = fx.cuarto_util.value | default: fx.cuarto_util | default: product.metafields.campos_inmobiliaria.cuarto_util | default: blank -%}
+{%- assign _parqueaderos = fx.parqueaderos | default: product.metafields.campos_inmobiliaria.parqueaderos -%}
+{%- assign _cocina = fx.cocina_comun.value | default: fx.cocina_comun | default: fx.cocina.value | default: fx.cocina | default: blank -%}
+{%- assign _piscina = fx.piscina.value | default: fx.piscina | default: product.metafields.campos_inmobiliaria.piscina | default: blank -%}
+{%- assign _habitaciones = fx.habitaciones | default: product.metafields.campos_inmobiliaria.habitaciones -%}
+{%- assign _banos = fx.banos | default: product.metafields.campos_inmobiliaria.banos -%}
+{%- assign _area_total = fx.area_total | default: product.metafields.campos_inmobiliaria.area_total -%}
+{%- assign _precio_cesion_val = fx.precio_cesion | default: product.metafields.project.precio_cesion -%}
+{%- assign _fin_true = false -%}
+{%- if fx and fx.financiacion_disponible -%}
+  {%- assign _fin_true = true -%}
+{%- else -%}
+  {%- assign _fin_val = product.metafields.project.financiacion_disponible.value | default: product.metafields.project.financiacion_disponible | default: false -%}
+  {%- if _fin_val == true or _fin_val == 'true' or _fin_val == 1 or _fin_val == '1' -%}{%- assign _fin_true = true -%}{%- endif -%}
+{%- endif -%}
+{%- assign _escritura_en_val = fx.escritura_en | default: product.metafields.project.escritura_en -%}
+{%- assign _short_desc_val   = fx.short_description | default: product.metafields.custom.short_description -%}
+{%- comment -%} Para snippets de bloques {%- endcomment -%}
+{%- liquid
+  assign _amenities_raw = nil
+  if fx and fx.amenidades != blank
+    assign _amenities_raw = fx.amenidades
+  elsif fx and fx.amenities != blank
+    assign _amenities_raw = fx.amenities
+  elsif product.metafields.project.amenities != blank
+    assign _amenities_raw = product.metafields.project.amenities
+  elsif product.metafields.campos_inmobiliaria.amenidades != blank
+    assign _amenities_raw = product.metafields.campos_inmobiliaria.amenidades
+  elsif product.metafields.custom.amenidades != blank
+    assign _amenities_raw = product.metafields.custom.amenidades
+  endif
+
+  assign _amenities_source = _amenities_raw
+  if _amenities_source and _amenities_source.value
+    assign _amenities_source = _amenities_source.value
+  endif
+
+  assign _amenities_csv = _amenities_source | append: '' | strip
+  assign _amenities_csv = _amenities_csv | newline_to_br | replace: '<br />', ',' | replace: ';', ','
+  assign _amenities_list = _amenities_csv | split: ','
+-%}
+
+{%- assign _floor_plan_img = fx.imagen_planos | default: fx.floor_plan | default: product.metafields.project.floor_plan | default: product.metafields.campos_inmobiliaria.imagen_planos -%}
+{%- assign _floor_plan_desc = fx.descripcion_plano | default: fx.floor_plan_description | default: product.metafields.project.floor_plan_description | default: product.metafields.campos_inmobiliaria.descripcion_plano -%}
+{%- assign _map_embed_html = fx.map_embed  | default: product.metafields.project.map_embed -%}
+
+<div class="ps-page--single-property" data-section-render style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="ps-page__header">
+    <div class="container">
+      {% render 'breadcrumb' %}
+    </div>
+  </div>
+  <div class="ps-page__content">
+    <div class="container">
+      <div class="ps-section--single-project">
+        <div class="ps-section__left">
+          <div class="ps-project ps-project--detail">
+            <div class="ps-project__top">
+              <header class="inv-project-header">
+                <h1 class="ps-project__name">{{ product.title | escape }}</h1>
+                {%- liquid
+                  assign _dir = product.metafields.custom.address
+                  if _dir == blank
+                    assign _dir = product.metafields.project.direccion
+                  endif
+                  if _dir == blank and product.metafields.project.ficha and product.metafields.project.ficha.value
+                    assign _dir = product.metafields.project.ficha.value.direccion
+                  endif
+                  if _dir == blank
+                    assign _dir = product.metafields.project.direction | default: product.metafields.custom.direction
+                  endif
+                  if _dir != blank
+                    assign _dir = _dir | strip
+                  endif
+                -%}
+                {%- if direccion_completa != blank -%}
+                  <p class="ps-project__address">{{ direccion_completa }}</p>
+                {%- endif -%}
+              </header>
+              {%- if product.media.size > 0 -%}
+                <div class="ps-project__gallery" id="inv-gallery">
+                  {% render 'product-media-main', product: product, product_form_id: product_form_id, media_count: product.media.size %}
+                </div>
+              {%- endif -%}
+              <div class="inv-separator-space"></div>
+              <hr class="inv-separator">
+            </div>
+            <div class="ps-project__header">
+              {%- assign current_variant = product.selected_or_first_available_variant -%}
+              <div class="ps-project__header-left">
+                <div class="ps-project__rating">
+                  <div class="AirReviews-Widget AirReviews-Widget--Stars"></div>
+                </div>
+                <h1 class="ps-project__name">{{ product.title | escape }}</h1>
+                {%- liquid
+                  assign _dir = product.metafields.custom.address
+                  if _dir == blank
+                    assign _dir = product.metafields.project.direccion
+                  endif
+                  if _dir == blank and product.metafields.project.ficha and product.metafields.project.ficha.value
+                    assign _dir = product.metafields.project.ficha.value.direccion
+                  endif
+                  if _dir == blank and fx and fx.direccion
+                    assign _dir = fx.direccion
+                  endif
+                -%}
+                {%- if direccion_completa != blank -%}
+                  <p class="ps-project__address">{{ direccion_completa }}</p>
+                {%- endif -%}
+                {%- liquid
+                assign v = product.selected_or_first_available_variant
+                -%}
+                <div class="inv-price-section">
+                  <div class="inv-price-main">
+                    <div class="inv-price-item">
+                      <span class="inv-price-label">PRECIO:</span>
+                      <span class="inv-price-current">
+                        {{ v.price | money_with_currency | strip_html }}
+                      </span>
+                    </div>
+
+                    {%- if v.compare_at_price and v.compare_at_price > v.price -%}
+                      <div class="inv-price-item">
+                        <span class="inv-price-label">PRECIO ACTUAL:</span>
+                        <span class="inv-price-compare">
+                          {{ v.compare_at_price | money_with_currency | strip_html }}
+                        </span>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+
+                {%- assign price_proj = fx.precio_actual | default: product.metafields.project.precio_actual | default: fx.precio_cesion | default: product.metafields.project.precio_cesion -%}
+                {%- if price_proj and price_proj != blank -%}
+                  {%- assign price_proj_cents = price_proj -%}
+                  {%- if price_proj_cents < 10000 -%}
+                    {%- assign price_proj_cents = price_proj | times: 100 -%}
+                  {%- endif -%}
+                  <div class="inv-price-project">
+                    <small>Precio del proyecto:</small>
+                    <strong>{{ price_proj_cents | money_without_trailing_zeros }}</strong>
+                  </div>
+                {%- endif -%}
+                <!-- Botón solo para móviles -->
+                <div class="inv-mobile-cta-wrapper">
+                  <button type="button" class="inv-btn-main-cta" id="popup-trigger-btn-mobile">
+                    QUIERO MÁS INFORMACIÓN
+                  </button>
+                </div>
+                {%- if product.description != blank -%}
+                  <div class="ps-project__desc-moved">
+                    {{ product.description }}
+                  </div>
+                {%- endif -%}
+                {%- if fx and fx.descripcion_corta and fx.descripcion_corta != blank -%}
+                  <div class="ps-project__short-desc">
+                    <p>{{ fx.descripcion_corta }}</p>
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="ps-project__header-right">
+                <div class="inv-info-button-section">
+                  <button type="button" class="inv-btn-contactame-fixed" id="popup-trigger-btn"
+                    onmouseover="this.style.filter='brightness(1.05)'"
+                    onmouseout="this.style.filter='brightness(1)'" style="filter: brightness(1);">
+                    QUIERO MÁS INFORMACIÓN
+                  </button>
+                </div>
+              </div>
+              <div id="infoPopup" class="inv-popup-overlay" onclick="closeInfoPopup()">
+                <div class="inv-popup-content" onclick="event.stopPropagation()">
+                  <div class="inv-popup-header">
+                    <h3>Solicitar Información</h3>
+                    <button type="button" class="inv-popup-close" onclick="closeInfoPopup()">&times;</button>
+                  </div>
+                  {%- assign prop_id_print = fx.id_proyecto 
+                        | default: product.metafields.project.id_proyecto 
+                        | default: product.metafields.custom.property_id 
+                        | default: product.selected_or_first_available_variant.sku 
+                        | default: product.id -%}
+                  <div class="inv-popup-body">
+                    {% form 'contact', class: 'inv-popup-form' %}
+                      <div class="inv-form-group">
+                        <label for="PopupName">Nombre *</label>
+                        <input id="PopupName" type="text" name="contact[name]" required>
+                      </div>
+                      <div class="inv-form-group">
+                        <label for="PopupEmail">Tu correo electrónico *</label>
+                        <input id="PopupEmail" type="email" name="contact[email]" required>
+                      </div>
+                      <div class="inv-form-group">
+                        <label for="PopupPhone">WhatsApp</label>
+                        <input id="PopupPhone" type="tel" name="contact[phone]">
+                      </div>
+                      <div class="inv-form-group">
+                        <label for="PopupMessage">Mensaje</label>
+                        <textarea id="PopupMessage" name="contact[body]" rows="4">Envíame más información sobre el proyecto {{ product.title | escape }}</textarea>
+                      </div>
+
+                      <!-- Hidden fields (Popup) -->
+                      <input type="hidden" name="contact[subject]" value="Solicitud de información - {{ product.title | escape }}">
+                      <input type="hidden" name="contact[property]" value="{{ prop_id_print }}">
+                      <input type="hidden" name="property_id" value="{{ prop_id_print }}">
+                      <input type="hidden" name="contact[url]" value="{{ shop.url }}{{ product.url }}">
+                      <input type="hidden" name="contact[whatsapp_link]" id="whatsapp_link">
+                      <input type="hidden" name="contact[phone_full]" id="hiddenPhonePopup">
+                      <input type="hidden" name="contact[phone_country_code]" id="phoneCountryCode">
+                      <input type="hidden" name="contact[phone_country_name]" id="phoneCountryName">
+                      <input type="hidden" name="contact[phone_national]" id="phoneNational">
+                                            <input type="hidden" name="contact[recurso]" value="Popup Proyecto">
+                      <input type="hidden" name="return_path" value="{{ product.url }}">
+                      <div class="inv-form-actions">
+                        <button type="submit" class="inv-btn-submit">Enviar solicitud</button>
+                      </div>
+                    {% endform %}
+                  </div>
+                </div>
+              </div>  
+                {%- if settings.product_show_add_cart -%}
+                  <div class="ps-project__cart">
+                    {%- liquid
+                      assign swatches_width = product.metafields.custom.swatches_width
+                      if swatches_width == blank
+                        assign swatches_width = block.settings.swatches_width
+                      endif
+                    -%}
+                    {%- render 'variant_picker', product: product, picker_type: block.settings.picker_type, shopify_attributes: block.shopify_attributes, section: section, section_id: section_id, layout: layout, product_form_id: product_form_id, use_pics: block.settings.use_pics, use_variants_media: block.settings.use_variants_media, color_options_name: settings.product_card_color_options_name, swatches_width: swatches_width -%}
+                    {%- liquid assign buy_buttons_block_size = section.blocks | where: 'type', 'buy_buttons' | size -%}
+                    {%- if buy_buttons_block_size == 0 -%}
+                    {%- form 'product', product, id: product_form_id, class: 'form js-product-form', novalidate: 'novalidate' -%}
+                      <input type="hidden" name="id" value="{{ current_variant.id }}">
+                      <button type="submit" class="ps-btn inv-btn-main">Añadir al carrito</button>
+                    {%- endform -%}
+                    {%- endif -%}
+                    {% render 'product-buy-buttons' block: block, product: product, product_form_id: product_form_id, section_id: section_id, layout: layout, show_dynamic_checkout: false, checkout_agreement: false, show_cart_note: false, hide_quantity: true, hide_add_to_cart: false %}
+                  </div>
+                {%- endif -%}
+              </div>
+            <div class="ps-project__information">
+              <div class="ps-project__meta no-margin-bottom">
+                {%- if product.type != blank -%}<figure><figcaption>{{ 'products.product.type' | t }}</figcaption><p>{{ product.type }}</p></figure>{%- endif -%}
+                {%- comment -%}{%- if product.vendor != blank -%}<figure><figcaption>{{ 'products.product.vendor' | t }}</figcaption><p>{{ product.vendor }}</p></figure>{%- endif -%}{%- endcomment -%}
+                {%- if section.settings.show_inmobiliaria and _inmobiliaria_val and _inmobiliaria_val != blank -%}<figure class="inv-inmobiliaria-centered"><figcaption>Comercializa</figcaption><p>{{ _inmobiliaria_val }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_estrato and _estrato_val and _estrato_val != blank -%}<figure class="inv-estrato-centered"><figcaption>Estrato</figcaption><p>{{ _estrato_val }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_year_built and _year_built_val and _year_built_val != blank -%}<figure><figcaption>{{ 'products.product.year_built' | t }}</figcaption><p>{{ _year_built_val }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_direccion and _direccion_completa != blank -%}<figure><figcaption>{{ 'products.product.direction' | t }}</figcaption><p>{{ _direccion_completa }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_id_proyecto and _id_proyecto_val and _id_proyecto_val != blank -%}<figure><figcaption>{{ 'products.product.property_id' | t }}</figcaption><p>{{ _id_proyecto_val }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_precio_cesion and _precio_cesion_val and _precio_cesion_val != blank -%}{%- assign _precio_cesion_cents = _precio_cesion_val | times: 100 -%}<figure><figcaption>Precio cesión</figcaption><p>{{ _precio_cesion_cents | money }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_financiacion and _fin_true -%}<figure><figcaption>Financiación</figcaption><p>Disponible</p></figure>{%- endif -%}
+                {%- if section.settings.show_escritura_en and _escritura_en_val and _escritura_en_val != blank -%}<figure><figcaption>Se escritura en</figcaption><p>{{ _escritura_en_val }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_fecha_inicio_proyecto and _f_ini_proy_val and _f_ini_proy_val != blank -%}<figure><figcaption>Inicio proyecto</figcaption><p>{{ _f_ini_proy_val | date: "%d-%m-%Y" }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_fecha_punto_equilibrio and _f_pe_val and _f_pe_val != blank -%}<figure><figcaption>Punto de equilibrio</figcaption><p>{{ _f_pe_val | date: "%d-%m-%Y" }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_fecha_inicio_obra and _f_ini_obra_val and _f_ini_obra_val != blank -%}<figure><figcaption>Inicio obra</figcaption><p>{{ _f_ini_obra_val | date: "%d-%m-%Y" }}</p></figure>{%- endif -%}
+                {%- if section.settings.show_fecha_entrega_estimada and _f_entrega_val and _f_entrega_val != blank -%}<figure><figcaption>Entrega estimada</figcaption><p>{{ _f_entrega_val | date: "%d-%m-%Y" }}</p></figure>{%- endif -%}
+              </div>
+              <div class="ps-project__services">
+                {%- if _area_total and _area_total != blank -%}
+                  <p><span><i class="lnil lnil-size"></i>{{ _area_total }} m²</span></p>
+                {%- endif -%}
+
+                {%- if _habitaciones and _habitaciones != blank -%}
+                  {%- assign habs = _habitaciones | plus: 0 -%}
+                  <p><span>
+                    <i class="lnil lnil-hospital-bed"></i>
+                    {{ habs }} {% if habs == 1 %}habitación{% else %}habitaciones{% endif %}
+                  </span></p>
+                {%- endif -%}
+
+                {%- if _banos and _banos != blank -%}
+                  {%- assign banos_n = _banos | plus: 0 -%}
+                  <p><span>
+                    <i class="icon icon-bathtub"></i>
+                    {{ banos_n }} {% if banos_n == 1 %}baño{% else %}baños{% endif %}
+                  </span></p>
+                {%- endif -%}
+
+                {%- if section.settings.show_parqueaderos and _parqueaderos and _parqueaderos != blank -%}
+                  {%- assign parks = _parqueaderos | plus: 0 -%}
+                  <p><span>
+                    <i class="lnil lnil-car"></i>
+                    {{ parks }} {% if parks == 1 %}parqueadero{% else %}parqueaderos{% endif %}
+                  </span></p>
+                {%- endif -%}
+
+                {%- if section.settings.show_gimnasio -%}
+                  {%- assign g = _gimnasio | append: '' | downcase -%}
+                  {%- if g == 'true' or g == '1' -%}
+                    <p><span><i class="lnil lnil-dumbbell"></i>Gimnasio</span></p>
+                  {%- endif -%}
+                {%- endif -%}
+
+                {%- if section.settings.show_cuarto_util -%}
+                  {%- assign cu = _cuarto_util | append: '' | downcase -%}
+                  {%- if cu == 'true' or cu == '1' -%}
+                    <p><span><i class="lnil lnil-home"></i>Cuarto útil</span></p>
+                  {%- endif -%}
+                {%- endif -%}
+
+                {%- assign ps = _piscina | append: '' | downcase -%}
+                {%- if ps == 'true' or ps == '1' -%}
+                  <p><span><i class="icon icon-swim"></i>Piscina</span></p>
+                {%- endif -%}
+
+                {%- if section.settings.show_cocina -%}
+                  {%- assign c = _cocina | append: '' | downcase -%}
+                  {%- if c == 'true' or c == '1' -%}
+                    <p><span><i class="icon icon-chef"></i>Cocina</span></p>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+
+            </div>
+            <div class="inv-main-cta-wrapper">
+              <button type="button" class="inv-btn-main-cta">
+                QUIERO MÁS INFORMACIÓN
+              </button>
+            </div>
+            <div class="ps-project__content">
+              {%- if section.blocks.size > 0 -%}
+                {%- for block in section.blocks -%}
+                  {%- case block.type -%}
+                    {%- when '@app' -%}
+                      {%- liquid render block -%}
+                    {%- when 'amenities' -%}
+                      {%- if section.settings.show_amenities -%}
+                        {% comment %}
+                            AMENIDADES DEBUG:
+                            source={{ _amenities_source | json }}
+                            csv={{ _amenities_csv | json }}
+                            size={{ _amenities_list.size }}
+                            {% endcomment %}
+                        {% render 'product-amenities', product: product, section: block, amenities_list: _amenities_list %}
+                      {%- endif -%}
+                    {%- when 'product-review' -%}
+                      {% render 'product-review', product: product, section: block %}
+                    {%- when 'floor-plan' -%}
+                      {%- if section.settings.show_floor_plans -%}
+                        {% render 'floor-plan', product: product, section: block, floor_plan_img: _floor_plan_img, floor_plan_desc: _floor_plan_desc %}
+                      {%- endif -%}
+                      <div class="inv-main-cta-wrapper">
+                        <button type="button" class="inv-btn-main-cta">
+                          QUIERO MÁS INFORMACIÓN
+                        </button>
+                      </div>
+                    {%- when 'google_map' -%}
+                      {%- if section.settings.show_map -%}
+                        {% render 'google_map', product: product, section: block, map_html: _map_embed_html %}
+                      {%- endif -%}
+                  {%- endcase -%}
+                {%- endfor -%}
+              {%- endif -%}
+              </div>
+            </div>
+          </div>
+        <div class="ps-section__right">
+          <aside class="ps-widget ps-widget--project">
+            <h4 class="ps-widget__heading">Contactar al Agente</h4>
+            <div class="ps-widget__content">
+              {% form 'contact', class: 'ps-form--agent-contact' %}
+                <div class="ps-form__group">
+                  <label for="ContactFormName">Nombre *</label>
+                  <input id="ContactFormName" type="text" name="contact[name]" required>
+                </div>
+                <div class="ps-form__group">
+                  <label for="ContactFormLast">Apellido *</label>
+                  <input id="ContactFormLast" type="text" name="contact[last_name]" required>
+                </div>
+                <div class="ps-form__group">
+                  <label for="ContactFormPhone">WhatsApp *</label>
+                  <input id="ContactFormPhone" type="tel" name="contact[phone]" required>
+                </div>
+                <div class="ps-form__group">
+                  <label for="ContactFormEmail">Correo Electrónico *</label>
+                  <input id="ContactFormEmail" type="email" name="contact[email]" required>
+                </div>
+                <div class="ps-form__group">
+                  <label for="ContactFormBody">Mensaje</label>
+                  <textarea id="ContactFormBody" name="contact[body]" rows="4"> </textarea>
+                </div>
+
+                <!-- Hidden fields Agente - SideBar-->
+                <input type="hidden" name="contact[subject]" value="Solicitud de información - {{ product.title | escape }}">
+                <input type="hidden" name="contact[property]" value="{{ prop_id_print }}">
+                <input type="hidden" name="property_id" value="{{ prop_id_print }}">
+                <input type="hidden" name="contact[url]" value="{{ shop.url }}{{ product.url }}">
+                <input type="hidden" name="contact[whatsapp_link]" id="whatsapp_link_agent">
+                <input type="hidden" name="contact[phone_full]" id="hiddenPhoneAgent">
+                <input type="hidden" name="contact[phone_country_code]" id="phoneCountryCodeAgent">
+                <input type="hidden" name="contact[phone_country_name]" id="phoneCountryNameAgent">
+                <input type="hidden" name="contact[phone_national]" id="phoneNationalAgent">
+                <input type="hidden" name="contact[recurso]" value="Sidebar Agente">
+                <div class="ps-form__actions">
+                  <button type="submit" class="ps-btn inv-btn-main">Contáctame</button>
+                </div>
+              {% endform %}
+            </div>
+          </aside>
+        </div><!-- /.ps-section__right -->
+      </div><!-- /.ps-section--single-project -->
+    </div><!-- /.container -->
+  </div><!-- /.ps-page__content -->
+</div><!-- /.ps-page--single-property -->
+
+
+<!-- SCRIPT 1: WhatsApp -->
+<script>
+/* Construye el WhatsApp Link hacia el número que escribe el cliente */
+(function () {
+  var form = document.querySelector('.ps-form--agent-contact');
+  if (!form) return;
+  function onlyDigits(s){ return (s||'').replace(/\D+/g,''); }
+  function normalizedPhone(raw){
+    var d = onlyDigits(raw);
+    if (d.startsWith('57') && d.length === 12) return d;
+    if (d.startsWith('1')  && d.length === 11) return d;
+    if (d.length === 10) return '57' + d;
+    return d;
+  }
+  function buildWA(){
+    var name  = form.querySelector('[name="contact[name]"]').value.trim();
+    var last  = form.querySelector('[name="contact[last_name]"]').value.trim();
+    var mail  = form.querySelector('[name="contact[email]"]').value.trim();
+    var body  = form.querySelector('[name="contact[body]"]').value.trim();
+    var phone = normalizedPhone(form.querySelector('[name="contact[phone]"]').value);
+    var prop  = '{{ _prop_id_print }}';
+    var url   = '{{ shop.url }}{{ product.url }}';
+    var text =
+    `Hola, soy ${name}${last ? ' ' + last : ''}.
+    Te escribo acerca de la propiedad *{{ product.title | escape }}* (ID: ${prop}).
+    ¿Podrías compartirme la información del proyecto?
+    ¿Prefieres que te contacte por teléfono o por este medio para agendar una reunión?
+    Link del inmueble: ${url}
+${phone ? 'Mi WhatsApp: +' + phone + '\n' : ''}${mail ? 'Mi correo: ' + mail + '\n' : ''}${body ? '\nMensaje: ' + body : ''}`;
+    var waUrl = 'https://api.whatsapp.com/send?phone=' + phone + '&text=' + encodeURIComponent(text);
+    var hidden = document.getElementById('waLinkHidden');
+    if (hidden) hidden.value = waUrl;
+  }
+  form.addEventListener('input', buildWA);
+  buildWA();
+})();
+</script>
+
+
+{%- comment -%}
+<!-- SCRIPT 2: Schema.org (JSON-LD) -->
+{%- liquid
+  if product.selected_or_first_available_variant.featured_media
+    assign seo_media = product.selected_or_first_available_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif -%}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "url": {{ request.origin | append: product.url | json }},
+  {% if seo_media -%}
+  "image": [
+    {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
+  ],
+  {%- endif %}
+  "description": {{ product.description | strip_html | json }},
+  {% if product.selected_or_first_available_variant.sku != blank -%}
+  "sku": {{ product.selected_or_first_available_variant.sku | json }},
+  {%- endif %}
+  "brand": {
+    "@type": "Brand",
+    "name": {{ product.vendor | json }}
+  },
+  "offers": [
+    {%- for variant in product.variants -%}
+    {
+      "@type" : "Offer",
+      {%- if variant.sku != blank -%}
+      "sku": {{ variant.sku | json }},
+      {%- endif -%}
+      {%- if variant.barcode.size == 12 -%}
+      "gtin12": {{ variant.barcode | json }},
+      {%- endif -%}
+      {%- if variant.barcode.size == 13 -%}
+      "gtin13": {{ variant.barcode | json }},
+      {%- endif -%}
+      {%- if variant.barcode.size == 14 -%}
+      "gtin14": {{ variant.barcode | json }},
+      {%- endif -%}
+      "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+      "price" : {{ variant.price | divided_by: 100.00 | json }},
+      "priceCurrency" : {{ cart.currency.iso_code | json }},
+      "url" : {{ request.origin | append: variant.url | json }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+}
+</script>
+{%- endcomment -%}
+
+<!-- SCRIPT 3: Popup & Toast (ÚNICO) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const popup = document.getElementById('infoPopup');
+  if (!popup) return;
+
+  // Evita stacking contexts (sticky/transform padres)
+  if (popup.parentNode !== document.body) document.body.appendChild(popup);
+
+  const triggers = document.querySelectorAll('#popup-trigger-btn, .inv-btn-main-cta');
+  const closeBtn = popup.querySelector('.inv-popup-close');
+  const form = popup.querySelector('form');
+
+  function openInfoPopup() {
+    popup.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeInfoPopup() {
+    popup.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  // Disponible para onclick inline si lo usas
+  window.openInfoPopup = openInfoPopup;
+  window.closeInfoPopup = closeInfoPopup;
+
+  // Abrir
+  triggers.forEach(btn => btn.addEventListener('click', e => {
+    e.preventDefault();
+    openInfoPopup();
+  }));
+
+  // Cerrar
+  if (closeBtn) closeBtn.addEventListener('click', closeInfoPopup);
+  popup.addEventListener('click', e => { if (e.target === popup) closeInfoPopup(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfoPopup(); });
+
+  // Toast util
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'inv-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 50);
+    setTimeout(() => {
+      toast.classList.add('hide');
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  // Cerrar tras enviar (feedback + cierre suave)
+  if (form) {
+    form.addEventListener('submit', () => {
+      showToast('¡Solicitud enviada correctamente! Te contactaremos pronto.');
+      setTimeout(closeInfoPopup, 800);
+    });
+  }
+});
+</script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Popup form
+  const popupForm = document.querySelector('.inv-popup-form');
+  if (popupForm) {
+    const popupTextarea = popupForm.querySelector('#PopupMessage');
+    const baseMessage = "";
+
+
+
+  // Sidebar agent form
+  const agentForm = document.querySelector('.ps-form--agent-contact');
+  if (agentForm) {
+    const agentTextarea = agentForm.querySelector('#ContactFormBody');
+    const baseMessage = "";
+
+    agentForm.addEventListener('submit', function(e) {
+      const userMessage = (agentTextarea.value || "").trim();
+
+      if (userMessage && userMessage !== baseMessage) {
+        agentTextarea.value = baseMessage + "\n\n" + userMessage;
+      } else if (!userMessage) {
+        agentTextarea.value = baseMessage;
+      }
+    });
+  }
+});
+</script>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.innerWidth < 992) {
+      var headerRight = document.querySelector(".ps-project__header-right");
+      if (headerRight) {
+        headerRight.remove();
+      }
+
+      var headerLeft = document.querySelector(".ps-project__header-left");
+      if (headerLeft) {
+        headerLeft.style.width = "100%";
+      }
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var mobileBtn = document.getElementById("popup-trigger-btn-mobile");
+    var popupBtn = document.getElementById("popup-trigger-btn");
+
+    if (mobileBtn && popupBtn) {
+      mobileBtn.addEventListener("click", function () {
+        popupBtn.click(); // dispara el popup original
+      });
+    }
+  });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const forms = document.querySelectorAll('.inv-popup-form, .ps-form--agent-contact');
+
+  forms.forEach(form => {
+    const textarea = form.querySelector('textarea[name="contact[body]"]');
+    if (!textarea) return;
+
+    const baseMessage = textarea.value.trim();
+
+    form.addEventListener('submit', function () {
+      const userMessage = textarea.value.trim();
+
+      if (userMessage && !userMessage.startsWith(baseMessage)) {
+        textarea.value = baseMessage + "\n\n" + userMessage;
+      } else if (!userMessage) {
+        textarea.value = baseMessage;
+      }
+    });
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const forms = document.querySelectorAll('.inv-popup-form, .ps-form--agent-contact');
+
+  forms.forEach(form => {
+    const textarea = form.querySelector('textarea[name="contact[body]"]');
+    if (!textarea) return;
+
+    const baseMessage = textarea.value.trim();
+
+    form.addEventListener('submit', function () {
+      const userMessage = textarea.value.trim();
+
+      if (userMessage && !userMessage.startsWith(baseMessage)) {
+        textarea.value = baseMessage + "\n\n" + userMessage;
+      } else if (!userMessage) {
+        textarea.value = baseMessage;
+      }
+    });
+  });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const phoneInputs = document.querySelectorAll('input[type="tel"]');
+  
+  phoneInputs.forEach(input => {
+    const iti = window.intlTelInput(input, {
+      initialCountry: "co",
+      preferredCountries: ["co", "us", "es", "mx"],
+      separateDialCode: false,
+      autoPlaceholder: "off",
+      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.2.19/build/js/utils.js"
+    });
+
+    const form = input.closest("form");
+    if (!form) return;
+
+    // Función para llenar los campos
+    function fillPhoneFields() {
+      const countryData = iti.getSelectedCountryData();
+      const fullNumber = iti.getNumber();
+      const national = input.value.replace(/\D/g, "");
+      let phoneForWA = fullNumber.replace(/\+/g, '');
+
+      if (phoneForWA.length === 10) {
+        phoneForWA = '57' + phoneForWA;
+      }
+
+      const projectName = '{{ product.title | escape }}';
+      const text = 'Envíame más información sobre el proyecto ' + projectName;
+      const waUrl = 'https://api.whatsapp.com/send?phone=' + phoneForWA + '&text=' + encodeURIComponent(text);
+
+      // POPUP
+      if (form.classList.contains("inv-popup-form")) {
+        document.getElementById("hiddenPhonePopup").value = fullNumber;
+        document.getElementById("phoneCountryCode").value = "+" + countryData.dialCode;
+        document.getElementById("phoneCountryName").value = countryData.name;
+        document.getElementById("phoneNational").value = national;
+        document.getElementById("whatsapp_link").value = waUrl;
+      }
+
+      // SIDEBAR AGENTE
+      if (form.classList.contains("ps-form--agent-contact")) {
+        document.getElementById("hiddenPhoneAgent").value = fullNumber;
+        document.getElementById("phoneCountryCodeAgent").value = "+" + countryData.dialCode;
+        document.getElementById("phoneCountryNameAgent").value = countryData.name;
+        document.getElementById("phoneNationalAgent").value = national;
+        document.getElementById("whatsapp_link_agent").value = waUrl;
+      }
+    }
+
+    // Llenar cuando el usuario termine de escribir
+    input.addEventListener('blur', fillPhoneFields);
+    input.addEventListener('change', fillPhoneFields);
+    
+    // También en el click del botón submit
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.addEventListener('click', fillPhoneFields);
+    }
+    
+    // Y en el submit por si acaso
+    form.addEventListener("submit", fillPhoneFields);
+
+    input.addEventListener("open:countrydropdown", () => {
+      const width = input.offsetWidth + "px";
+      document.documentElement.style.setProperty("--iti-dropdown-width", width);
+    });
+  });
+});
+</script>
+
+
+{%- comment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SingleFamilyResidence",
+  "name": {{ product.title | json }},
+  "url": {{ request.origin | append: product.url | json }},
+  "description": {{ product.description | strip_html | truncate: 300 | json }},
+  {% if seo_media %}
+  "image": [{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}],
+  {% endif %}
+
+  "identifier": {{ product.metafields.campos_inmobiliaria.id_proyecto | json }},
+  "projectName": {{ product.metafields.campos_inmobiliaria.proyecto | json }},
+  "descriptionShort": {{ product.metafields.campos_inmobiliaria.descripcion_corta | json }},
+
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": {{ product.metafields.campos_inmobiliaria.direccion | json }},
+    "addressLocality": {{ product.metafields.campos_inmobiliaria.municipio | json }},
+    "addressRegion": {{ product.metafields.campos_inmobiliaria.departamento | json }},
+    "addressCountry": "CO"
+  },
+  "numberOfRooms": {{ product.metafields.campos_inmobiliaria.habitaciones | json }},
+  "numberOfBathroomsTotal": {{ product.metafields.campos_inmobiliaria.banos | json }},
+  "floorSize": {
+    "@type": "QuantitativeValue",
+    "value": {{ product.metafields.campos_inmobiliaria.area_total | json }},
+    "unitCode": "MTK"
+  },
+  "yearBuilt": {{ product.metafields.campos_inmobiliaria.ano_construido | json }},
+
+  "amenityFeature": [
+    { "@type": "LocationFeatureSpecification", "name": "Gimnasio", "value": {{ product.metafields.campos_inmobiliaria.gimnasio | default: false }} },
+    { "@type": "LocationFeatureSpecification", "name": "Cocina común", "value": {{ product.metafields.campos_inmobiliaria.cocina_comun | default: false }} },
+    { "@type": "LocationFeatureSpecification", "name": "Piscina", "value": {{ product.metafields.campos_inmobiliaria.piscina | default: false }} },
+    { "@type": "LocationFeatureSpecification", "name": "Cuarto útil", "value": {{ product.metafields.campos_inmobiliaria.cuarto_util | default: false }} },
+    { "@type": "LocationFeatureSpecification", "name": "Parqueaderos", "value": {{ product.metafields.campos_inmobiliaria.parqueaderos | json }} }
+  ],
+
+  "hasPart": {
+    "@type": "FloorPlan",
+    "description": {{ product.metafields.campos_inmobiliaria.descripcion_plano | json }},
+    "image": {{ product.metafields.campos_inmobiliaria.imagen_planos | json }}
+  },
+
+  "additionalProperty": [
+    { "name": "Estrato", "value": {{ product.metafields.campos_inmobiliaria.estrato | json }} },
+    { "name": "Fecha inicio proyecto", "value": {{ product.metafields.campos_inmobiliaria.fecha_inicio_proyecto | date: "%Y-%m-%d" | json }} },
+    { "name": "Fecha inicio obra", "value": {{ product.metafields.campos_inmobiliaria.fecha_inicio_obra | date: "%Y-%m-%d" | json }} },
+    { "name": "Entrega estimada", "value": {{ product.metafields.campos_inmobiliaria.fecha_entrega_estimada | date: "%Y-%m-%d" | json }} }
+  ],
+
+  "seller": {
+    "@type": "RealEstateAgent",
+    "name": {{ product.metafields.campos_inmobiliaria.comercializa | default: 'Inversión Inmobiliaria' | json }},
+    "telephone": {{ settings.phone | json }},
+    "email": {{ settings.email | json }}
+  },
+
+  "offers": {
+    "@type": "Offer",
+    "price": {{ product.price | divided_by: 100.0 | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+{%- endcomment -%}
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+{%- comment -%} JSON-LD: usa SOLO variables ya resueltas arriba {%- endcomment -%}
+{% assign img_planos = product.metafields.campos_inmobiliaria.imagen_planos %}
+{% assign desc_plano = product.metafields.campos_inmobiliaria.descripcion_plano %}
+
+{% liquid
+  if product.selected_or_first_available_variant.featured_media
+    assign seo_media = product.selected_or_first_available_variant.featured_media
+  else
+    assign seo_media = product.featured_media
+  endif
+%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SingleFamilyResidence",
+  "name": {{ product.title | json }},
+  "url": {{ request.origin | append: product.url | json }},
+  
+  {%- if seo_media -%}
+  "image": [{{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}],
+  {%- endif -%}
+  {% assign desc_final = _short_desc_val | default: product.description %}
+
+  {%- if _id_proyecto_val -%}
+  "identifier": {{ _id_proyecto_val | json }},
+  {%- endif -%}
+
+  {%- comment -%} =====================
+  BLOQUE: METADATOS EXTRAS
+  ===================== {%- endcomment -%}
+  "additionalProperty": [
+  {%- assign props = '' -%}
+  {%- assign sep = '' -%}
+
+  {% assign proyecto_val = fx.proyecto | default: product.metafields.campos_inmobiliaria.proyecto %}
+  {%- if proyecto_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Proyecto","value":{{ proyecto_val | json }}}{%- endcapture -%}
+    {%- assign sep = ',' -%}
+  {%- endif -%}
+
+  {%- if _estrato_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Estrato","value":{{ _estrato_val | json }}}{%- endcapture -%}
+    {%- assign sep = ',' -%}
+  {%- endif -%}
+
+  {%- if _short_desc_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Descripción corta","value":{{ _short_desc_val | json }}}{%- endcapture -%}
+    {%- assign sep = ',' -%}
+  {%- endif -%}
+
+  {% assign parqueaderos = product.metafields.campos_inmobiliaria.parqueaderos %}
+  {% if parqueaderos != blank %}
+    {% assign parq_num = parqueaderos | plus: 0 %}
+    {% capture props %}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Parqueaderos","value":{{ parq_num }}}{% endcapture %}
+    {% assign sep = ',' %}
+  {% endif %}
+
+
+  {%- if _f_ini_proy_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Inicio proyecto","value":{{ _f_ini_proy_val | date: "%Y-%m-%d" | json }}}{%- endcapture -%}
+    {%- assign sep = ',' -%}
+  {%- endif -%}
+
+  {%- if _f_ini_obra_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Inicio obra","value":{{ _f_ini_obra_val | date: "%Y-%m-%d" | json }}}{%- endcapture -%}
+    {%- assign sep = ',' -%}
+  {%- endif -%}
+
+  {%- if _f_entrega_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Entrega estimada","value":{{ _f_entrega_val | date: "%Y-%m-%d" | json }}}{%- endcapture -%}
+    {%- assign sep = ',' -%}
+  {%- endif -%}
+
+  {%- if _year_built_val != blank -%}
+    {%- capture props -%}{{ props }}{{ sep }}{"@type":"PropertyValue","name":"Año construido","value":{{ _year_built_val | json }}}{%- endcapture -%}
+  {%- endif -%}
+
+  {{- props -}}
+  ],
+
+  "address": {
+    "@type": "PostalAddress"
+    {%- if _direccion_val %},"streetAddress": {{ _direccion_val | json }}{%- endif -%}
+    {%- if _municipio_val %},"addressLocality": {{ _municipio_val | json }}{%- endif -%}
+    {%- if _departamento_val %},"addressRegion": {{ _departamento_val | json }}{%- endif -%}
+    ,"addressCountry": "CO"
+  }
+
+  {%- if _habitaciones -%},
+  "numberOfRooms": {{ _habitaciones | plus: 0 }}
+  {%- endif -%}
+  {%- if _banos -%},
+  "numberOfBathroomsTotal": {{ _banos | plus: 0 }}
+  {%- endif -%}
+  {%- if _area_total -%},
+  "floorSize": {
+    "@type": "QuantitativeValue",
+    "value": {{ _area_total | replace: ',', '.' | plus: 0 }},
+    "unitCode": "MTK"
+  }
+  {%- endif -%}
+
+  {%- if _year_built_val -%},
+  "yearBuilt": {{ _year_built_val | plus: 0 }}
+  {%- endif -%}
+
+  {%- comment -%} =====================
+  BLOQUE: GEO DINÁMICO
+  ===================== {%- endcomment -%}
+  {% assign geo_string = product.metafields.campos_inmobiliaria.geo | default: "3.542996048807009, -73.05514500917336" %}
+  {% assign geo_parts = geo_string | split: ',' %}
+  {% assign lat = geo_parts[0] | strip %}
+  {% assign lon = geo_parts[1] | strip %}
+  , "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": {{ lat | json }},
+    "longitude": {{ lon | json }}
+  }
+
+  {%- comment -%} =====================
+  BLOQUE: AMENIDADES
+  ===================== {%- endcomment -%}
+  , "amenityFeature": [
+    {%- assign first = true -%}
+    {%- for a in _amenities_list -%}
+      {%- assign label = a | strip -%}
+      {%- if label != '' -%}
+        {%- unless first %},{%- endunless -%}
+        { "@type":"LocationFeatureSpecification","name": {{ label | json }},"value": true }
+        {%- assign first = false -%}
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+
+  {%- if desc_plano or img_planos -%},
+  "hasPart": {
+    "@type": "FloorPlan"
+    {%- if desc_plano %},"description": {{ desc_plano | strip | json }}{%- endif -%}
+    {%- if img_planos %},"image": {{ img_planos | json }}{%- endif -%}
+  }
+  {%- endif -%}
+
+  , "seller": {
+    "@type": "RealEstateAgent",
+    {% assign seller_name = _inmobiliaria_val | default: 'Inversión Inmobiliaria' %}
+    "name": {{ seller_name | json }},
+    "telephone": {{ settings.phone | json }},
+    "email": {{ settings.email | json }}
+  }
+
+  {%- comment -%} =====================
+  BLOQUE: OFFERS con priceValidUntil dinámico
+  ===================== {%- endcomment -%}
+  {% if product.metafields.campos_inmobiliaria.preciovalidohasta != blank %}
+  {% assign fecha_validez = product.metafields.campos_inmobiliaria.preciovalidohasta | date: "%Y-%m-%d" %}
+    {% else %}
+      {% assign base_date = product.updated_at | default: product.published_at %}
+      {% assign fecha_validez = base_date | date: "%s" | plus: 7776000 | date: "%Y-%m-%d" %}
+    {% endif %}
+
+  , "offers": {
+    "@type": "Offer",
+    "price": {{ product.price | divided_by: 100.0 | json }},
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "availability": "https://schema.org/InStock",
+    "priceValidUntil": {{ fecha_validez | json }}
+  },
+
+  {%- comment -%} =====================
+  EXTRA: Agregar también al additionalProperty
+  ===================== {%- endcomment -%}
+  {% capture props_extra %}
+  {"@type":"PropertyValue","name":"Precio válido hasta","value":{{ fecha_validez | json }}}
+  {% endcapture %}
+  {%- if props != blank -%}
+    {%- assign props = props | append: "," | append: props_extra -%}
+  {%- else -%}
+    {%- assign props = props_extra -%}
+  {%- endif -%}
+}
+</script>
+
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+
+<style>
+/* ===== RESET Y LAYOUT BASE ===== */
+#MainContent, 
+.ps-page__content, 
+.container
+
+/* ===== LAYOUT PRINCIPAL (CRITICAL) ===== */
+.ps-section--single-project {
+    
+    gap: 30px !important;
+    align-items: flex-start !important;
+}
+
+.ps-section__left {
+    flex: 4 !important;
+    min-width: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.ps-section__right {
+    flex: 1 !important;
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 96px !important;
+    align-self: flex-start !important;
+    height: fit-content !important;
+    max-height: calc(100vh - 116px) !important;
+    overflow-y: auto !important;
+}
+
+/* ===== HEADER Y TÍTULO ===== */
+.ps-page__header {
+    padding: 0 !important;
+    margin-bottom: 15px !important;
+    min-height: auto !important;
+}
+
+/* ===== HEADER INTERNO ===== */
+.ps-project__header {
+    display: flex !important;
+    gap: 30px !important;
+    align-items: flex-start !important;
+    margin-bottom: 30px !important;
+}
+
+.ps-project__header-left {
+    flex: 2 !important;
+    min-width: 0 !important;
+}
+
+.ps-project__header-right {
+    flex: 1 !important;
+    position: relative !important;
+}
+
+.ps-project__name {
+    margin: 0 0 8px 0 !important;
+    padding-top: 0 !important;
+}
+
+.ps-project__address {
+    margin: 0 !important;
+}
+
+/* ===== WIDGET DE CONTACTO ===== */
+.ps-section__right .ps-widget--project,
+.ps-section__right .ps-widget__content,
+.ps-section__right .ps-form--agent-contact {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+}
+
+
+
+/* ===== BOTONES ===== */
+.inv-info-button-section {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+
+
+/* ===== FORMULARIOS ===== */
+.ps-form--agent-contact input:not([type="hidden"]):not([type="tel"]), 
+.ps-form--agent-contact textarea {
+    width: 100% !important;
+    border: 0 !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    padding: 10px 2px !important;
+    background: transparent !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+/* ===== ELEMENTOS VISUALES ===== */
+.ps-project__gallery {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ===== GALLERY THUMBNAILS REDUCIDOS ===== */
+.ps-project__gallery .product-media__item:not(:first-child),
+.ps-project__gallery .swiper-slide:not(:first-child) {
+    max-height: 150px !important;
+    overflow: hidden !important;
+}
+
+.ps-project__gallery .product-media__thumbs,
+.ps-project__gallery [class*="thumb"],
+.ps-project__gallery .gallery-thumbnails {
+    max-height: 80px !important;
+    height: 80px !important;
+}
+
+/* Forzar gallery con z-index bajo */
+.ps-project__gallery,
+.ps-project__gallery *,
+[class*="swiper"],
+[class*="gallery"] {
+    z-index: 1 !important;
+    position: relative !important;
+}
+
+/* ===== TÍTULOS DE ABAJO (30% MÁS GRANDES) ===== */
+.ps-project__header .ps-project__header-left .ps-project__name {
+    font-size: 2.6rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    color: #1a1a1a !important;
+    margin-top: -10px !important;
+}
+
+.ps-project__header .ps-project__header-left .ps-project__address {
+    font-size: 1.3rem !important;
+    color: #666 !important;
+    font-weight: 400 !important;
+    margin-top: 2px !important;
+}
+
+/* ===== SECCIÓN DE PRECIOS ===== */
+.inv-price-section {
+    background: white !important;
+    padding: 20px 0 !important;
+    margin: 15px 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+
+
+/* ===== DESCRIPCIÓN (30% MÁS GRANDE) ===== */
+.ps-project__desc-moved,
+.ps-project__desc-moved p,
+.ps-project__short-desc,
+.ps-project__short-desc p {
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+}
+
+/* ===== POPUP FIX -  ===== */
+/* Popup base */
+#infoPopup{
+  position: fixed !important;
+  inset: 0 !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0,0,0,.8) !important;
+  z-index: 2147483647 !important; /* arriba de todo */
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity .2s ease !important;
+}
+
+/* Estado abierto */
+#infoPopup.show{
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Contenido del popup */
+#infoPopup .inv-popup-content{
+  background: #fff !important;
+  border-radius: 12px !important;
+  width: 90% !important;
+  max-width: 500px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  box-shadow: 0 25px 50px rgba(0,0,0,.5) !important;
+}
+
+/* Botón cerrar */
+#infoPopup .inv-popup-close{
+  position: absolute !important;
+  top: 10px !important; right: 10px !important;
+  background: none !important; border: 0 !important;
+  font-size: 28px !important; cursor: pointer !important;
+}
+
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.inv-toast {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    background: linear-gradient(135deg, #4CAF50, #45a049) !important;
+    color: white !important;
+    padding: 16px 24px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.3) !important;
+    z-index: 10000000000 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    transform: translateX(400px) !important;
+    transition: transform 0.3s ease, opacity 0.3s ease !important;
+    opacity: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    max-width: 350px !important;
+    border-left: 4px solid #2E7D32 !important;
+}
+
+.inv-toast.show {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+}
+
+.inv-toast.hide {
+    transform: translateX(400px) !important;
+    opacity: 0 !important;
+}
+
+.inv-toast::before {
+    content: "✓" !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+}
+
+/* ===== EFECTOS VISUALES ===== */
+.ps-section__right {
+    transition: box-shadow 0.3s ease !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent !important;
+}
+
+.ps-section__right:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.ps-section__right::-webkit-scrollbar {
+    width: 6px !important;
+}
+
+.ps-section__right::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+.ps-section__right::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 3px !important;
+}
+
+.ps-section__right::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ===== RESPONSIVE - MÓVIL ===== */
+@media (max-width: 991px) {
+    .ps-section--single-project {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    
+    .ps-section__right { 
+        position: static !important;
+        max-height: none !important;
+        overflow-y: visible !important;
+    }
+    
+    
+    .ps-project__header-right {
+        position: static !important;
+    }
+    
+    .inv-btn-contactame-fixed {
+        width: 100% !important;
+    }
+    
+    .inv-toast {
+        top: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        max-width: none !important;
+        transform: translateY(-100px) !important;
+    }
+    
+    .inv-toast.show {
+        transform: translateY(0) !important;
+    }
+    
+    .inv-toast.hide {
+        transform: translateY(-100px) !important;
+    }
+}
+
+/* ===== RESPONSIVE - TABLET ===== */
+@media (max-width: 1200px) and (min-width: 992px) {
+    .ps-section--single-project {
+        gap: 20px !important;
+    }
+    
+    .ps-section__right {
+        flex: 25% !important;
+    }
+    
+    .ps-section__left {
+        flex: 75% !important;
+    }
+}
+/* ===== Sección de Precios ===== */
+.inv-price-section {
+    margin: 20px 0 24px;
+}
+.inv-price-main {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.inv-price-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+.inv-price-label {
+    font-size: 18px !important;
+    font-weight: 600;
+    margin-right: 10px !important;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 120px;
+}
+.inv-price-current {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2e7d32;
+}
+.inv-price-compare {
+    font-size: 20px;
+    font-weight: 500;
+    color: #999;
+    text-decoration: line-through;
+    opacity: 0.8;
+}
+.ps-project__short-desc {
+    margin: 16px 0;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #2e7d32;
+}
+
+.ps-project__short-desc p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #444;
+    font-weight: 500;
+}
+
+/* ===== FLECHAS OWL CAROUSEL - AJUSTE FINO VERTICAL ===== */
+.owl-stage-outer {
+    position: relative !important;
+}
+
+#gallery-thumbs .owl-nav {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+}
+
+#gallery-thumbs .owl-prev,
+#gallery-thumbs .owl-next {
+    position: absolute !important;
+    top: 60% !important; /* Cambio de 50% a 60% para bajar un poco */
+    transform: translateY(-50%) !important;
+    z-index: 100 !important;
+    width: 44px !important;
+    height: 44px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #002b5b !important;
+    border-radius: 50% !important;
+    color: white !important;
+    border: none !important;
+    pointer-events: auto !important;
+}
+
+/* Flecha izquierda */
+#gallery-thumbs .owl-prev {
+    left: -22px !important;
+    right: auto !important;
+}
+
+/* Flecha derecha */
+#gallery-thumbs .owl-next {
+    right: -22px !important;
+    left: auto !important;
+}
+
+/* Hover effect */
+#gallery-thumbs .owl-prev:hover,
+#gallery-thumbs .owl-next:hover {
+    background: #1a4480 !important;
+}
+
+/* ===== FICHA DE INFORMACIÓN Y SERVICIOS ===== */
+
+/* 1. Elimina el fondo "crema" del contenedor principal */
+.ps-section__left, .ps-project__gallery {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* 2. Estilos para la tabla de datos superior (Tipo, Estrato, etc.) */
+
+.no-margin-bottom {
+    margin-bottom: 0 !important;
+}
+
+/* ===== ARREGLAR ZONA CREMA Y VERDE EN SERVICES ===== */
+.ps-project__services {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+    justify-content: center !important;
+    margin: 20px 0 !important; /* Reducir margen */
+    padding: 0 !important; /* Quitar padding que causa la zona verde */
+    background: transparent !important; /* Quitar cualquier fondo */
+    border: none !important; /* Quitar bordes */
+}
+
+.ps-project__services p {
+    flex: 0 1 120px !important;
+    min-height: 120px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 15px 10px !important; /* Mantener solo padding interno */
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    text-align: center !important;
+    font-size: 13px !important;
+    color: #555 !important;
+    background: white !important; /* Fondo blanco limpio */
+    margin: 0 !important; /* Sin márgenes externos */
+}
+
+.ps-project__services i {
+    font-size: 28px !important;
+    color: #002b5b !important;
+    height: 30px !important;
+    margin: 0 !important;
+}
+
+/* Quitar cualquier fondo del contenedor padre */
+/* ===== Amenities full-width y 3 columnas SOLO MÓVIL ===== */
+/* ===== MOBILE ONLY: services 3-up, full width, no overlaps ===== */
+@media (max-width: 768px){
+  .ps-project__services,
+  .ps-project__services.grid{                 /* por si el tema añade .grid */
+    /* que el bloque ocupe el ancho completo del contenedor/padre */
+    width: 100% !important;
+    max-width: none !important;
+    grid-column: 1 / -1 !important;
+
+    /* rejilla de 3 columnas */
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+
+    /* que cada celda se pueda “llenar” */
+    justify-items: stretch !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+  }
+
+  /* cada item (p u otro) llena su celda y centra su contenido */
+  .ps-project__services > *,
+  .ps-project__services.grid > *{
+    margin: 0 !important;
+    width: 100% !important;          /* quita anchos fijos del tema */
+    max-width: none !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Muy chico: 2 por fila */
+@media (max-width: 380px){
+  .ps-project__services { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+
+/* FIN SERVICIOS MOVIL */
+
+
+/* === META (REEMPLAZO COMPLETO) =========================================== */
+/* ====== META (compacto y consistente) ====== */
+
+/* Grid compacto: 6 columnas desktop */
+.ps-project__meta{
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(140px, 1fr)) !important;
+  gap: 8px !important;
+  margin: 0 0 10px !important;
+}
+
+/* Tarjeta */
+.ps-project__meta > figure{
+  margin: 0 !important;
+  padding: 10px 12px !important;
+  border: 1px solid #e2e8f3 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04) !important;
+  height: auto !important;
+  min-height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+/* Tipografía */
+.ps-project__meta figcaption{
+  margin: 0 0 2px !important;
+  font-size: 11px !important;
+  color: #6b7a90 !important;
+  letter-spacing: .25px !important;
+  text-transform: uppercase !important;
+}
+.ps-project__meta p{
+  margin: 0 !important;
+  font-weight: 700 !important;
+  color: #1f2d3d !important;
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+
+  /* sin truncados del tema */
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+  hyphens: auto !important;
+}
+
+/* Dirección: sin “span 2”, ancho normal */
+.ps-project__meta > figure:nth-child(3){
+  grid-column: auto !important;
+  min-width: 0 !important;
+}
+
+/* ID: una sola línea con elipsis si se excede */
+.ps-project__meta > figure:nth-child(4) p{
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Breakpoints */
+@media (max-width: 1200px){
+  .ps-project__meta{ grid-template-columns: repeat(4, minmax(140px,1fr)) !important; }
+}
+@media (max-width: 900px){
+  .ps-project__meta{ grid-template-columns: repeat(3, minmax(130px,1fr)) !important; }
+}
+@media (max-width: 600px){
+  .ps-project__meta{ grid-template-columns: repeat(2, minmax(120px,1fr)) !important; }
+}
+@media (max-width: 360px){
+  .ps-project__meta{ grid-template-columns: 1fr !important; }
+}
+
+/* === FIN META ============================================================ */
+
+
+/* Responsive para mantener el diseño limpio */
+@media (max-width: 768px) {
+    .ps-project__services {
+        gap: 10px !important;
+        margin: 15px 0 !important;
+    }
+    
+    .ps-project__services p {
+        flex: 0 1 calc(50% - 5px) !important;
+        min-height: 100px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .ps-project__services p {
+        flex: 0 1 calc(100% - 5px) !important;
+        min-height: 80px !important;
+    }
+}
+
+/* Centrado SOLO para la card Estrato */
+.ps-project__meta .inv-estrato-centered{
+  align-items: center !important;   /* la figure por defecto estaba en flex-start */
+  text-align: center !important;
+}
+.ps-project__meta .inv-estrato-centered p,
+.ps-project__meta .inv-estrato-centered figcaption{
+  text-align: center !important;
+  width: 100% !important;
+}
+
+/* ===== INI - Estilo para el Botones CTA  ===== */
+
+/* 🎯 Restaurar el fondo gris del wrapper */
+.inv-main-cta-wrapper{
+  margin:0 !important;
+  padding:40px 20px !important;
+  text-align:center !important;
+  background-color:#f9f9f9 !important;
+  border-top:1px solid #eee !important;
+  border-bottom:1px solid #eee !important;
+
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+}
+
+/* ✅ NO matar el gradiente del botón: sin el selector *  */
+.inv-main-cta-wrapper{ background-image:none !important; }
+
+/* Si usas el CTA superior también, centrado igual */
+.inv-info-button-section{
+  text-align:center !important;
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+}
+
+/* ❌ Quita esto (rompe el gradiente y es innecesario)
+.ps-project__content,
+.ps-project__content > div,
+[class*="section"]:has(.inv-main-cta-wrapper){
+  background:transparent !important;
+  background-image:none !important;
+}
+*/
+
+/* ✨ Estilo WOW SOLO para los CTAs que nosotros controlamos */
+.inv-main-cta-wrapper .inv-btn-main-cta,
+.inv-info-button-section .inv-btn-contactame-fixed{
+  text-transform:uppercase !important;
+  letter-spacing:.5px !important;
+  display:block !important;
+  position:relative !important;
+  z-index:10 !important;
+
+  width:100% !important;
+  max-width:450px !important;
+  margin:0 auto !important;
+  padding:18px 25px !important;
+
+  font-size:16px !important;
+  font-weight:700 !important;
+  color:#fff !important;
+  text-align:center !important;
+
+  background:linear-gradient(135deg,#002b5b,#1e4d8a,#3a6fb5) !important;
+  background-size:200% 200% !important;
+  border:none !important;
+  border-radius:12px !important;
+  cursor:pointer !important;
+  overflow:hidden !important;
+
+  transition:all .3s cubic-bezier(.4,0,.2,1) !important;
+  box-shadow:0 8px 25px rgba(0,43,91,.3), 0 4px 12px rgba(0,0,0,.1) !important;
+}
+
+/* Hover de esos dos CTAs únicamente */
+.inv-main-cta-wrapper .inv-btn-main-cta:hover,
+.inv-info-button-section .inv-btn-contactame-fixed:hover{
+  transform:translateY(-3px) scale(1.02) !important;
+  animation:gradientShift 2s ease infinite !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.2),
+    0 15px 35px rgba(0,43,91,.4),
+    0 8px 20px rgba(0,0,0,.15) !important;
+}
+
+/* Animación del gradiente */
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+/* === POPUP: botón Enviar solicitud === */
+#infoPopup .inv-popup-form button[type="submit"],
+#infoPopup .inv-popup-body button[type="submit"],
+#infoPopup form button[type="submit"],
+#infoPopup button[type="submit"]{
+  display:block !important;
+  width:100% !important;
+  padding:16px 22px !important;
+  border:0 !important; border-radius:12px !important;
+
+  text-transform:uppercase !important;
+  letter-spacing:.5px !important;
+  font-weight:800 !important; font-size:14px !important;
+  color:#fff !important; text-align:center !important;
+
+  /* override a cualquier inline del snippet */
+  background:linear-gradient(135deg,#002b5b,#1e4d8a,#3a6fb5) !important;
+  background-size:200% 200% !important;
+
+  box-shadow:0 8px 22px rgba(0,43,91,.28), 0 3px 10px rgba(0,0,0,.08) !important;
+  cursor:pointer !important;
+  transition:transform .25s ease, box-shadow .25s ease !important;
+}
+#infoPopup .inv-popup-form button[type="submit"]:hover,
+#infoPopup .inv-popup-body button[type="submit"]:hover,
+#infoPopup form button[type="submit"]:hover,
+#infoPopup button[type="submit"]:hover{
+  transform:translateY(-2px) scale(1.01) !important;
+  animation:gradientShift 2s ease infinite !important;
+  box-shadow:0 14px 32px rgba(0,43,91,.35), 0 8px 18px rgba(0,0,0,.12) !important;
+}
+
+/* === RIGHT SIDEBAR: botón Contáctame === */
+.ps-widget--project .ps-form--agent-contact .ps-btn,
+.ps-widget--project .ps-btn.inv-btn-main{
+  display:block !important;
+  width:100% !important;
+  padding:14px 18px !important;
+  border:0 !important; border-radius:12px !important;
+
+  text-transform:uppercase !important;
+  letter-spacing:.5px !important;
+  font-weight:800 !important; font-size:14px !important;
+  color:#fff !important; text-align:center !important;
+
+  background:linear-gradient(135deg,#002b5b,#1e4d8a,#3a6fb5) !important;
+  background-size:200% 200% !important;
+
+  box-shadow:0 8px 22px rgba(0,43,91,.28), 0 3px 10px rgba(0,0,0,.08) !important;
+  transition:transform .25s ease, box-shadow .25s ease !important;
+}
+.ps-widget--project .ps-form--agent-contact .ps-btn:hover,
+.ps-widget--project .ps-btn.inv-btn-main:hover{
+  transform:translateY(-2px) scale(1.01) !important;
+  animation:gradientShift 2s ease infinite !important;
+  box-shadow:0 14px 32px rgba(0,43,91,.35), 0 8px 18px rgba(0,0,0,.12) !important;
+}
+
+/* Responsive fino */
+@media (max-width:768px){
+  #infoPopup .inv-popup-form button[type="submit"],
+  #infoPopup .inv-popup-body button[type="submit"],
+  .ps-widget--project .ps-form--agent-contact .ps-btn{
+    font-size:13px !important; padding:12px 16px !important;
+  }
+}
+
+/* Reutiliza tu animación existente */
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+
+/* ===== Plano arquitectónico (nuevo) ===== */
+.fp-section{margin:24px 0}
+.fp-card{
+  border:1px solid #e6ebf2; border-radius:16px; background:linear-gradient(#fff,#fafbff);
+  box-shadow:0 6px 24px rgba(0,0,0,.06); padding:18px;
+}
+
+/* Header */
+.fp-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px}
+.fp-title{display:flex; align-items:center; gap:10px}
+.fp-title i{font-size:22px; color:#002b5b}
+.fp-title h3{margin:0; font-size:18px; font-weight:800; color:#1f2d3d; letter-spacing:.2px}
+.fp-action{
+  font-weight:600; font-size:13px; color:#002b5b; text-decoration:none;
+  padding:8px 12px; border:1px solid #d8e1f0; border-radius:10px;
+}
+.fp-action:hover{background:#f3f6fb}
+
+/* Grid 2 columnas */
+.fp-grid{display:grid; grid-template-columns:2fr 1fr; gap:16px}
+@media (max-width: 992px){ .fp-grid{grid-template-columns:1fr} }
+
+/* Imagen + zoom */
+.fp-viewport{
+  border:1px solid #e6ebf2; border-radius:12px; background:#fff; overflow:hidden; position:relative;
+  max-height:62vh;
+}
+.fp-img{display:block; width:100%; height:auto; transition:transform .25s ease; cursor:zoom-in}
+.fp-zoomable.is-zoomed{overflow:auto; cursor:zoom-out}
+.fp-zoomable.is-zoomed .fp-img{transform:scale(1.7); transform-origin:center}
+
+/* Leyenda */
+.fp-caption{margin:8px 2px 0; font-size:12px; color:#6b7a90}
+
+/* Panel derecho */
+.fp-aside{display:flex}
+.fp-highlights{
+  width:100%; padding:12px; border:1px solid #e6ebf2; border-radius:12px; background:#fff;
+}
+.fp-highlights h3, .fp-highlights h4{margin:.25rem 0 .4rem; color:#002b5b}
+.fp-highlights p, .fp-highlights li{font-size:14px; line-height:1.55; color:#1f2d3d}
+.fp-highlights ul{margin:.25rem 0 .25rem 1rem}
+
+
+/*AMENIDADES*/
+/* Wrapper + separadores */
+.ProductAmenities{padding:20px 0}
+.ProductAmenities.is-divided{border-top:1px solid #eee;border-bottom:1px solid #eee;background:#fafbfc}
+
+/* Título */
+.amenities-header{display:flex;align-items:center;justify-content:flex-start;margin:0 0 14px}
+.amenities-title{
+  font-size:18px;font-weight:700;color:#002b5b;letter-spacing:.3px;margin:0
+}
+
+/* Grid responsivo */
+.amenities-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media(max-width:1200px){.amenities-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:991px){.amenities-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){.amenities-grid{grid-template-columns:1fr}}
+
+/* Card con icono (look IMAGEN 2) */
+.amenity-card{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;
+  background:#fff;border:1px solid #dfe6ef;box-shadow:0 1px 2px rgba(0,0,0,.04);
+  font:600 13px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial;
+  color:#1f2d3d
+}
+.amenity-card--icon i{font-size:18px;color:#002b5b;opacity:.9}
+.amenity-card:hover{border-color:#cfd8e6;transform:translateY(-1px);transition:all .15s ease}
+/* GENERAL*/
+
+/* === Headings de sección (uniforme) === */
+.ps-project__heading,
+.floor-plan-header h3,
+.ProductAmenities .amenities-title {
+  font: 700 18px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, Arial !important;
+  color: #0b2e5b !important;
+  text-transform: uppercase !important;
+  letter-spacing: .4px !important;
+  margin: 0 0 10px !important;
+}
+.ps-project__heading + * { margin-top: 8px !important; }
+
+/* === Meta cards: compacidad y alineación del valor === */
+.ps-project__meta > figure {
+  padding: 10px 12px !important;
+}
+.ps-project__meta figcaption { margin-bottom: 4px !important; }
+.ps-project__meta p { align-self: flex-start !important; }
+.ps-project__meta > figure:nth-child(4) p { /* ID una línea */
+  white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;
+}
+
+/* === Amenidades: cuadrícula estable === */
+.ProductAmenities .amenities-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(180px,1fr)) !important;
+  gap: 10px !important;
+}
+.amenity-card {
+  display: flex !important; align-items: center !important; gap: 8px !important;
+  padding: 10px 12px !important; border:1px solid #e8eef7 !important; border-radius:10px !important;
+  background:#fff !important; box-shadow: 0 1px 2px rgba(0,0,0,.04) !important;
+}
+.amenity-label { font-weight:600 !important; color:#1f2d3d !important; font-size:14px !important; }
+@media (max-width: 992px){ .ProductAmenities .amenities-grid{ grid-template-columns: repeat(3,1fr)!important; } }
+@media (max-width: 640px){ .ProductAmenities .amenities-grid{ grid-template-columns: repeat(2,1fr)!important; } }
+
+/* === Plano arquitectónico: estilo consistente === */
+/* === Plano arquitectónico: estilo consistente === */
+.floor-plan-section{
+  margin: 28px 0 !important;
+  padding: 20px !important;
+  border: 1px solid #e8eef7 !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04) !important;
+}
+
+/* Imagen */
+.floor-plan-image a{
+  border-radius: 8px !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,.08) !important;
+  display: inline-block !important;
+  overflow: hidden !important;
+}
+
+/* Descripción */
+.floor-plan-description{
+  background: #fff !important;
+  border-left: 4px solid #002b5b !important;
+  border-radius: 8px !important;
+  padding: 16px 18px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,.05) !important;
+  color: #333 !important;
+  line-height: 1.6 !important;
+}
+
+/* Títulos dentro de la descripción */
+.floor-plan-description h3,
+.floor-plan-description h4{
+  margin: 0 0 8px !important;
+  color: #002b5b !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+}
+
+/* Texto/listas dentro de la descripción (metafield_tag) */
+.floor-plan-description p,
+.floor-plan-description li{
+  margin: 0 0 8px !important;
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.floor-plan-description ul{
+  padding-left: 1.1rem !important;
+  list-style: disc !important;
+}
+
+/* Seguridad para que no rompa layout si entra contenido raro */
+.floor-plan-description *{
+  max-width: 100% !important;
+  word-wrap: break-word !important;
+}
+
+/* FIN GENERAL*/
+/* MAP */
+.ProjectMap{margin:28px 0;padding:20px;border:1px solid #e8eef7;border-radius:12px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.pm-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.pm-title-wrap{display:flex;flex-direction:column;gap:6px}
+.pm-title{margin:0;font-size:22px;font-weight:800;color:#0b2e5b;letter-spacing:.2px;text-transform:uppercase}
+.pm-title-bar{width:60px;height:3px;background:#002b5b;border-radius:2px;display:inline-block}
+.pm-map{position:relative;overflow:hidden;border-radius:10px;box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.ProjectMap iframe,
+.ProjectMap .map,
+.ProjectMap #map,
+.ProjectMap .inv-map{width:100%;height:420px;display:block;border:0}
+@media (max-width:768px){
+  .ProjectMap{margin:24px 0;padding:16px;border-radius:10px}
+  .pm-title{font-size:20px}
+  .ProjectMap iframe,
+  .ProjectMap .map,
+  .ProjectMap #map,
+  .ProjectMap .inv-map{height:320px}
+}
+
+/* MAP */
+
+/*UNIFICA TITULOS*/
+/* — Barrita del título: más delgada y sutil — */
+:root{
+  --inv-title-bar-w: 48px;        /* ancho */
+  --inv-title-bar-h: 2px;         /* grosor (usa 1px si la quieres súper fina) */
+  --inv-title-bar-color: rgba(11,46,91,.85); /* azul con ligera transparencia */
+}
+
+/* Aplica a Amenidades, Plano y Mapa sin tocar el HTML */
+.inv-title-bar,
+.ProjectMap .pm-title::after,
+.fp-header .fp-title h3::after,
+.floor-plan-section .floor-plan-header h3::after,
+.ProductAmenities .amenities-title::after,
+.ProductAmenities .ps-project__heading::after{
+  content:"";
+  width: var(--inv-title-bar-w) !important;
+  height: var(--inv-title-bar-h) !important;
+  background: var(--inv-title-bar-color) !important;
+  border-radius: 999px !important;     /* extremos redondeados */
+  display: inline-block !important;
+  margin-left: 10px !important;        /* espacio después del texto */
+  transform: translateY(1px);          /* alineación óptica con el baseline */
+}
+
+/* El mapa traía su propia barrita: la ocultamos para evitar duplicado */
+.ProjectMap .pm-title-bar{ display:none !important; }
+
+/* Un poco más corta en móvil */
+@media (max-width:768px){
+  :root{ --inv-title-bar-w: 40px; }
+}
+/* === PLANOS: tarjeta, header, grilla, imagen y panel derecho === */
+
+/* Wrapper de la sección (soporta .floor-plan-section y .fp-card) */
+.floor-plan-section,
+.fp-card{
+  margin: 28px 0 !important;
+  padding: 18px !important;
+  border: 1px solid #e6ebf2 !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,.06) !important;
+}
+
+/* Header: título + botón descargar */
+.floor-plan-section .fp-header,
+.fp-card .fp-header,
+.floor-plan-section .fp-title{              /* por si el tema no trae .fp-header */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin: 0 0 14px !important;
+}
+
+.floor-plan-section .fp-title,
+.fp-card .fp-title{
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.floor-plan-section .fp-title h3,
+.fp-card .fp-title h3,
+.floor-plan-header h3{
+  margin: 0 !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #0b2e5b !important;
+  text-transform: uppercase !important;
+  letter-spacing: .2px !important;
+}
+
+/* Botón Descargar */
+.floor-plan-section .fp-action,
+.fp-card .fp-action{
+  display: inline-block !important;
+  padding: 8px 12px !important;
+  border: 1px solid #d8e1f0 !important;
+  border-radius: 10px !important;
+  font: 600 13px/1 system-ui, -apple-system, "Segoe UI", Roboto, Arial !important;
+  color: #002b5b !important;
+  text-decoration: none !important;
+  background: #fff !important;
+}
+.floor-plan-section .fp-action:hover,
+.fp-card .fp-action:hover{ background:#f3f6fb !important; }
+
+/* Grilla 2 columnas (imagen + descripción) */
+.floor-plan-section .fp-grid,
+.fp-card .fp-grid,
+.floor-plan-section .row{                   /* fallback si el tema usa .row */
+  display: grid !important;
+  grid-template-columns: 2fr 1fr !important;
+  gap: 16px !important;
+}
+@media (max-width: 992px){
+  .floor-plan-section .fp-grid,
+  .fp-card .fp-grid,
+  .floor-plan-section .row{
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Imagen del plano */
+.floor-plan-section .floor-plan-image a,
+.fp-viewport{
+  display: block !important;
+  overflow: hidden !important;
+  border: 1px solid #e6ebf2 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+}
+.floor-plan-section .floor-plan-image img,
+.fp-img{
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  transition: transform .25s ease !important;
+}
+
+/* Pie de foto */
+.fp-caption{
+  margin: 8px 2px 0 !important;
+  font-size: 12px !important;
+  color: #6b7a90 !important;
+}
+
+/* Panel derecho (descripción) */
+.floor-plan-section .fp-highlights,
+.fp-highlights{
+  width: 100% !important;
+  padding: 12px !important;
+  border: 1px solid #e6ebf2 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+.floor-plan-section .fp-highlights h3,
+.floor-plan-section .fp-highlights h4,
+.fp-highlights h3, .fp-highlights h4{
+  margin: .25rem 0 .4rem !important;
+  color: #002b5b !important;
+}
+.floor-plan-section .fp-highlights p,
+.floor-plan-section .fp-highlights li,
+.fp-highlights p, .fp-highlights li{
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #1f2d3d !important;
+}
+
+/* — Barrita del título más delgada (compartida con Amenidades/Mapa) — */
+:root{
+  --inv-title-bar-w: 48px;
+  --inv-title-bar-h: 2px;
+  --inv-title-bar-color: rgba(11,46,91,.85);
+}
+.inv-title-bar,
+.ProjectMap .pm-title::after,
+.fp-header .fp-title h3::after,
+.floor-plan-section .fp-title h3::after,
+.floor-plan-section .floor-plan-header h3::after,
+.ProductAmenities .amenities-title::after,
+.ProductAmenities .ps-project__heading::after{
+  content:"";
+  width: var(--inv-title-bar-w) !important;
+  height: var(--inv-title-bar-h) !important;
+  background: var(--inv-title-bar-color) !important;
+  border-radius: 999px !important;
+  display: inline-block !important;
+  margin-left: 10px !important;
+  transform: translateY(1px);
+}
+/* Oculta la barrita vieja del mapa para evitar duplicados */
+.ProjectMap .pm-title-bar{ display:none !important; }
+@media (max-width:768px){ :root{ --inv-title-bar-w: 40px; } }
+
+/*UNIFICA TITULOS*/
+
+/* Quitar fondo crema del wrapper del plano */
+.fp-section,
+.fp-section::before,
+.fp-section::after,
+.fp-section > .section__bg,
+.fp-section .ps-section__bg {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Opcional: compactar el espacio si quieres */
+.fp-section{
+  padding: 0 !important;
+  margin: 0 !important;       /* o deja margin: 16px 0 si quieres un poco de aire */
+  border: 0 !important;
+}
+
+/* ===== Mobile: header a borde completo antes y durante sticky ===== */
+@media (max-width: 768px){
+  /* Forzar la sección del header a ser full-bleed */
+  .shopify-section.section-header,
+  [id^="shopify-section-"][id$="__header"]{
+    width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+  }
+
+  /* El header móvil ocupa todo, sin esquinas recortadas */
+  .header--mobile{
+    width: 100% !important;
+    border-radius: 0 !important;
+  }
+
+  /* Respiración interna del contenido del header móvil */
+  .header--mobile .header__left,
+  .header--mobile .header__right{
+    padding: 0 16px !important;
+  }
+}
+
+@media (min-width: 992px){
+  .ps-section--single-project{
+    display: grid !important;
+    grid-template-columns: minmax(0,1fr) 320px !important;
+    gap: 30px !important;
+    align-items: start !important;
+    overflow: visible !important; /* necesario para sticky */
+  }
+  .ps-section__left{ min-width: 0 !important; }
+  .ps-section__right{
+    grid-column: 2 !important;
+    position: sticky !important;
+    top: 96px !important;
+    align-self: start !important;
+    max-height: calc(100vh - 116px) !important;
+    overflow-y: auto !important;
+    float: none !important;
+    clear: none !important;
+  }
+}
+/* CTA sticky (botón QUIERO MÁS INFORMACIÓN) */
+@media (min-width: 992px){
+  .ps-project__header-right{
+    align-self: start !important;
+    overflow: visible !important;
+  }
+  .ps-project__header-right .inv-info-button-section{
+    position: sticky !important;
+    top: 96px !important;   /* ajusta si tu header ocupa más/menos */
+    z-index: 5 !important;
+  }
+  /* asegurar que ningún padre corte el sticky */
+  .ps-project__header,
+  .ps-project,
+  .ps-section__left{
+    overflow: visible !important;
+  }
+}
+/* 1) Quita el relative viejo */
+.ps-project__header-right{
+  position: initial !important; /* o unset */
+}
+
+/* 2) Haz sticky la columna derecha del header */
+@media (min-width: 992px){
+  .ps-project__header{ 
+    overflow: visible !important;        /* por si el tema pone hidden */
+    align-items: flex-start !important;
+  }
+  .ps-project__header-right{
+    position: sticky !important;
+    top: 96px !important;                 /* ajusta según tu header */
+    align-self: flex-start !important;
+    z-index: 5 !important;
+  }
+}
+
+@media (min-width: 992px){
+  .ps-project__meta > figure{ 
+    min-width: 0 !important;            /* clave para que no se desborde en grid */
+  }
+  /* Que Dirección (4º chip) ocupe 2 columnas */
+  .ps-project__meta > figure:nth-child(4){
+    grid-column: span 2 !important;
+  }
+}
+/* Que los chips puedan encoger sin romper la fila */
+.ps-project__meta > figure{
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Dirección ocupa 2 col en desktop ancho */
+@media (min-width: 1200px){
+  .ps-project__meta > figure:nth-child(4){
+    grid-column: span 2 !important;
+  }
+}
+
+/* Entre 992 y 1199px: que Dirección tome la fila completa */
+@media (min-width: 992px) and (max-width: 1199px){
+  .ps-project__meta > figure:nth-child(4){
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* 768–991px: también fila completa (por si reduces más la ventana en desktop) */
+@media (min-width: 768px) and (max-width: 991px){
+  .ps-project__meta > figure:nth-child(4){
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* <=767px: ya es móvil, mantenla a lo ancho de la rejilla */
+@media (max-width: 767px){
+  .ps-project__meta > figure:nth-child(4){
+    grid-column: 1 / -1 !important;
+  }
+}
+
+/* Evita desbordes del texto dentro de TODOS los valores */
+.ps-project__meta > figure p{
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;      /* 2 líneas con “…” */
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  hyphens: auto !important;
+}
+
+/* (Opcional) el ID a 1 línea con elipsis */
+@media (min-width: 992px){
+  .ps-project__meta > figure:nth-child(5) p{
+    -webkit-line-clamp: 1 !important;
+    white-space: nowrap !important;
+  }
+}
+/* ============ DESKTOP ONLY (>=992px) ============ */
+@media (min-width: 992px){
+  /* Layout principal: grid 2 columnas */
+  .ps-section--single-project{
+    display: grid !important;
+    grid-template-columns: minmax(0,1fr) 320px !important;
+    gap: 30px !important;
+    align-items: start !important;
+    overflow: visible !important;
+  }
+  .ps-section__left{ min-width: 0 !important; overflow: visible !important; }
+  .ps-section__right{
+    grid-column: 2 !important;
+    position: sticky !important;
+    top: 96px !important;
+    align-self: start !important;
+    max-height: calc(100vh - 116px) !important;
+    overflow-y: auto !important;
+    float: none !important;
+    clear: none !important;
+  }
+
+  /* Header interno (dos columnas) */
+  .ps-project__header{
+    display: flex !important;
+    gap: 30px !important;
+    align-items: flex-start !important;
+    overflow: visible !important; /* no corte hijos sticky */
+  }
+  .ps-project__header-left{ flex: 2 !important; min-width: 0 !important; }
+  .ps-project__header-right{
+    flex: 1 !important;
+    position: sticky !important;   /* <— el CTA se queda pegado */
+    top: 96px !important;
+    align-self: flex-start !important;
+    z-index: 5 !important;
+    overflow: visible !important;
+  }
+  /* El wrapper del botón NO necesita sticky, solo ocupa el ancho */
+  .ps-project__header-right .inv-info-button-section{
+    position: static !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+
+  /* === META: desktop, sin desbordes === */
+/* ==== META DESKTOP (>=992px) ====================================== */
+@media (min-width: 992px){
+  /* 6 columnas donde la 4ª (Dirección) se ajusta al contenido,
+     pero con un tope para que NO invada la sidebar */
+  .ps-project__meta{
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr fit-content(540px) 1fr 1fr !important;
+    gap: 12px !important;
+    align-items: stretch !important;   /* alturas iguales por fila */
+  }
+
+  /* saneo general */
+  .ps-project__meta > figure{
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    height: 100% !important;
+  }
+
+  /* Dirección: nada de spans ni widths fijos */
+  .ps-project__meta > figure:nth-child(4){
+    width: auto !important;
+    max-width: 100% !important;      /* por si el padre trae límites raros */
+  }
+
+  /* Texto dentro de Dirección: que envuelva y no desborde */
+  .ps-project__meta > figure:nth-child(4) p{
+    white-space: normal !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;           /* 2 líneas máx., ajusta si quieres */
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* ID: 1 sola línea con elipsis (como tenías) */
+  .ps-project__meta > figure:nth-child(5) p{
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
+  }
+}
+
+/* ==== ancho “medio” (992–1199px): 4 columnas y Dirección con tope menor */
+@media (min-width: 992px) and (max-width: 1199px){
+  .ps-project__meta{
+    grid-template-columns: 1fr 1fr fit-content(420px) 1fr !important;
+  }
+}
+
+/* Icono arriba, texto abajo */
+.ps-project__services p > .inv-svc{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Tamaño y alineación del icono */
+.ps-project__services i{
+  font-size: 28px !important;
+  line-height: 1 !important;
+}
+
+/* Texto debajo centrado */
+.ps-project__services .inv-svc-text{
+  display: block !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+
+/* Desktop: quitar la franja crema del bloque que sigue a la ficha */
+@media (min-width: 992px){
+  .ps-section--single-project + * {
+    background: transparent !important;
+  }
+  .ps-section--single-project + *::before,
+  .ps-section--single-project + *::after {
+    content: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* por si esa sección usa un contenedor interno para la franja */
+  .ps-section--single-project + * .ps-section__bg,
+  .ps-section--single-project + * .ps-section__bg::before,
+  .ps-section--single-project + * .ps-section__bg::after{
+    content: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+}
+@media (min-width: 992px){
+  .ps-section--single-project{ margin-bottom: 24px !important; }
+  .ps-section--single-project + *{ margin-top: 0 !important; }
+}
+
+
+}
+
+/* CTA móvil entre precio y descripción */
+.inv-mobile-cta-wrapper {
+  display: none; /* por defecto oculto */
+  margin: 16px 0;
+  text-align: center;
+}
+
+.inv-mobile-cta-wrapper .inv-btn-main-cta {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #002b5b, #1e4d8a, #3a6fb5);
+  background-size: 200% 200%;
+  transition: all .3s ease;
+  box-shadow: 0 6px 18px rgba(0, 43, 91, .3);
+}
+
+.inv-mobile-cta-wrapper .inv-btn-main-cta:hover {
+  transform: translateY(-2px);
+  animation: gradientShift 2s ease infinite;
+  box-shadow: 0 12px 24px rgba(0, 43, 91, .4);
+}
+
+/* Mostrar solo en móviles */
+@media (max-width: 991px) {
+  .inv-mobile-cta-wrapper {
+    display: block;
+  }
+}
+
+.ps-form--agent-contact .inv-form-success {
+    display: block !important;
+    background: #e8f7ee !important;
+    color: #245e36 !important;
+    border: 1px solid #b9e2c7 !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    margin: 0 0 16px 0 !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Overlay oscuro */
+.inv-popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.inv-popup-overlay.show {
+  display: flex;
+}
+
+/* Caja blanca centrada */
+.inv-popup-content {
+  background: #fff;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: popupFadeIn .3s ease;
+}
+
+@keyframes popupFadeIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Header */
+.inv-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.inv-popup-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Botón cerrar */
+.inv-popup-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  width: 30px; height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cuerpo */
+.inv-popup-body {
+  padding: 20px;
+}
+
+/* Labels + inputs */
+.inv-form-group {
+  margin-bottom: 16px;
+}
+
+.inv-form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+}
+
+.inv-form-group input,
+.inv-form-group textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.inv-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Botón submit */
+.inv-form-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.inv-btn-submit {
+  width: 100%;
+  background: linear-gradient(90deg, #003a80, #002b5b);
+  border: none;
+  color: #fff;
+  padding: 14px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.inv-btn-submit:hover {
+  background: linear-gradient(90deg, #004c9c, #003a80);
+}
+
+/* Mensajes de éxito / error */
+.inv-form-success {
+  background: #e8f7ee;
+  color: #245e36;
+  border: 1px solid #b9e2c7;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.inv-form-errors {
+  color: #b00020;
+  margin-bottom: 12px;
+}
+
+
+
+
+/* Estilos para todos los inputs de teléfono */
+
+/* Asegurar ancho consistente */
+#infoPopup .inv-form-group input,
+#infoPopup .inv-form-group .iti,
+.ps-form--agent-contact .ps-form__group input,
+.ps-form--agent-contact .ps-form__group .iti {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+
+/* ==== FORMULARIO DEL AGENTE: Input de teléfono ==== */
+.ps-form--agent-contact input:not([type="hidden"]), 
+.ps-form--agent-contact textarea {
+    width: 100% !important;
+    border: 0 !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    padding: 10px 2px !important;
+    background: transparent !important;
+    outline: none !important;
+    box-sizing: border-box !important;
+}
+
+
+/* Agente: input con espacio para bandera */
+.ps-form--agent-contact input[type="tel"] {
+  padding-left: 52px !important;
+}
+
+#infoPopup{
+  z-index: 9999 !important;
+}
+
+  body > .iti__country-list .iti__country {
+    padding: 12px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* === PHONE INPUT PRODUCT === */
+#ContactFormPhone,
+#ContactFormPhone.iti__tel-input {
+  width: 100% !important;
+  border: 1px solid #ddd !important;
+  border-radius: 6px !important;
+  padding: 10px 12px 10px 52px !important; /* espacio bandera */
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+}
+
+/* Contenedor de bandera */
+#ContactFormPhone ~ .iti__flag-container {
+  position: absolute !important;
+  top: 0; bottom: 0; left: 0;
+  z-index: 2;
+  display: flex !important;
+  align-items: center !important;
+  padding-left: 8px;
+}
+
+  body > .iti--container .iti__country-list .iti__country {
+    padding: 12px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* Overlay del popup debe estar SIEMPRE debajo del contenido del popup
+   pero arriba del resto de la página */
+#infoPopup.inv-popup-overlay {
+  z-index: 2147483646 !important; /* justo debajo del dropdown */
+}
+
+/* Caja blanca del popup (contenido real) va arriba del overlay */
+#infoPopup .inv-popup-content {
+  position: relative !important;
+  z-index: 2147483647 !important;
+}
+
+/* Dropdown móvil del phone input */
+@media (max-width: 767px) {
+  body > .iti--container,
+  body > .iti--container .iti__country-list {
+    position: fixed !important;
+    z-index: 2147483648 !important; /* +1 respecto al popup content */
+  }
+}
+
+/*   */
+
+/* ===== FIX: Dropdown de países (intl-tel-input) ===== */
+
+/* Desktop: limitar ancho del dropdown */
+@media (min-width: 768px) {
+  .iti__country-list {
+    max-width: 320px !important;
+    width: auto !important;
+  }
+}
+
+/* Móvil: centrar y hacer full-width */
+@media (max-width: 767px) {
+  /* El contenedor del dropdown */
+  body > .iti--container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
+    background: rgba(0, 0, 0, 0.5) !important; /* overlay oscuro */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* La lista de países */
+  .iti__country-list {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    max-height: 70vh !important;
+    margin: 0 auto !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+
+@media (min-width: 768px) {
+  /* Desktop: dropdown posicionado relativo al sidebar */
+  .ps-section__right .iti {
+    position: relative !important;
+  }
+  
+  .ps-section__right .iti__country-list {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 280px !important;  /* Ancho fijo adecuado */
+    min-width: 240px !important;
+    max-width: none !important;
+    z-index: 10 !important;
+    margin-top: 4px !important;
+  }
+  
+  /* Asegurar que el sidebar sticky permita overflow visible */
+  .ps-section__right {
+    overflow: visible !important;
+  }
+  
+  .ps-widget--project,
+  .ps-widget__content,
+  .ps-form--agent-contact {
+    overflow: visible !important;
+  }
+  
+  /* Items del dropdown */
+  .ps-section__right .iti__country-list .iti__country {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+  }
+}
+</style>
+
+
+{% schema %}
+{
+  "name": "t:sections.main-product.name",
+  "tag": "section",
+  "class": "product-section",
+  "settings": [
+    { "type": "header", "content": "Spacing Options" },
+    { "type": "range", "id": "margin_top", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Margin Top", "default": 0 },
+    { "type": "range", "id": "margin_bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Margin Bottom", "default": 0 },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Padding Top", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Padding Bottom", "default": 0 },
+    { "type": "header", "content": "Configuración del tema" },
+    { "type": "checkbox", "id": "show_amenities", "label": "Mostrar bloque Amenidades (project/amenities)", "default": false },
+    { "type": "checkbox", "id": "show_floor_plans", "label": "Mostrar bloque Planos (project/floor_plan)", "default": false },
+    { "type": "checkbox", "id": "show_map", "label": "Mostrar bloque Mapa (project/map_embed)", "default": false },
+    { "type": "checkbox", "id": "show_direccion", "label": "Mostrar Dirección (project/direccion)", "default": false },
+    { "type": "checkbox", "id": "show_year_built", "label": "Mostrar Año construido (project/year_built)", "default": false },
+    { "type": "checkbox", "id": "show_id_proyecto", "label": "Mostrar ID Proyecto (project/id_proyecto o SKU)", "default": false },
+    { "type": "checkbox", "id": "show_estrato", "label": "Mostrar Estrato (project/estrato)", "default": false },
+    { "type": "checkbox", "id": "show_inmobiliaria", "label": "Mostrar Inmobiliaria (project/inmobiliaria)", "default": false },
+    { "type": "checkbox", "id": "show_precio_cesion", "label": "Mostrar Precio cesión (project/precio_cesion)", "default": false },
+    { "type": "checkbox", "id": "show_financiacion", "label": "Mostrar Financiación disponible (project/financiacion_disponible)", "default": false },
+    { "type": "checkbox", "id": "show_escritura_en", "label": "Mostrar \"Se escritura en\" (project/escritura_en)", "default": false },
+    { "type": "checkbox", "id": "show_fecha_inicio_proyecto", "label": "Mostrar Inicio proyecto", "default": false },
+    { "type": "checkbox", "id": "show_fecha_punto_equilibrio", "label": "Mostrar Punto de equilibrio", "default": false },
+    { "type": "checkbox", "id": "show_fecha_inicio_obra", "label": "Mostrar Inicio obra", "default": false },
+    { "type": "checkbox", "id": "show_fecha_entrega_estimada", "label": "Mostrar Entrega estimada", "default": false },
+    { "type": "checkbox", "id": "show_gimnasio", "label": "Mostrar Gimnasio (project/gimnasio)", "default": false },
+    { "type": "checkbox", "id": "show_cuarto_util", "label": "Mostrar Cuarto útil (project/cuarto_util)", "default": false },
+    { "type": "checkbox", "id": "show_parqueaderos", "label": "Mostrar Parqueaderos (project/parqueaderos)", "default": false },
+    { "type": "checkbox", "id": "show_cocina", "label": "Mostrar Cocina (project/cocina)", "default": false },
+    { "type": "header", "content": "Contacto" },
+    { "type": "text", "id": "agent_name", "label": "Nombre del asesor para el mensaje", "default": "Asesor Inmobiliario" },
+    { "type": "text", "id": "agent_phone", "label": "WhatsApp del asesor (E164: ej. 573332843565)", "default": "573332843565" }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "content",
+      "name": "t:sections.main-product.blocks.content.name",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "amenities",
+      "name": "t:sections.main-product.blocks.amenities.name",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Título", "default": "Amenidades" },
+        { "type": "checkbox", "id": "show_divider", "label": "Mostrar separador arriba/abajo", "default": true }
+      ]
+    },
+    {
+      "type": "floor-plan",
+      "name": "t:sections.main-product.blocks.floor-plan.name",
+      "limit": 1,
+      "settings": []
+    },
+    {
+      "type": "google_map",
+      "name": "Google map",
+      "settings": []
+    },
+    {
+      "type": "product-review",
+      "name": "t:sections.main-product.blocks.product-review.name",
+      "limit": 1,
+      "settings": []
+    }
+  ]
+}
+{% endschema %}

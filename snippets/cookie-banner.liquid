@@ -1,0 +1,114 @@
+{%- if settings.cookies_banner_show -%}
+    <style>
+        #cookies-banner {
+            display: none;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 1em;
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #dcdcdc;
+            z-index: 99999;
+            box-shadow: 0 -1px 10px 0 #acabab4d;
+        }
+        #cookies-banner.active{display: flex;}
+        #cookies-banner p{padding-right: 20px;color: #000000;}
+        #cookies-banner p a{color: var(--color-1st);text-decoration: underline;}
+        @media screen and (max-width: 767px){
+            #cookies-banner.active{display: grid;}
+            #cookies-banner.active .ps-btn--gray{margin-bottom: 10px;}
+        }
+    </style>
+    <div id="cookies-banner">
+        {{ settings.cookies_banner_desc }}
+        <button class="ps-btn text-capitalize ps-btn--gray" style="margin-left: 1em;" onclick="handleDecline()">{{ settings.cookies_banner_decline }}</button>
+        <button class="ps-btn text-capitalize" style="margin-left: 1em;" onclick="handleAccept()">{{ settings.cookies_banner_accept }}</button>
+    </div>
+    <script>
+        // Key under which name the cookie is saved
+        const cookieName = 'cookieconsent';
+        // The value could be used to store different levels of consent
+        const cookieValue = 'dismissed';
+
+        function getBannerEl() {
+            return document.getElementById('cookies-banner');
+        }
+    
+        function hideBanner(res) {
+            getBannerEl().classList.remove('active');
+        }
+    
+        function showBanner() {
+            getBannerEl().classList.add('active');
+        }
+
+        function dismiss() {
+            const date = new Date();
+            // Cookie is valid 1 year: now + (days x hours x minutes x seconds x milliseconds)
+            date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+            // Set cookie
+            document.cookie = `${cookieName}=${cookieValue};expires=${date.toUTCString()};path=/`;
+        
+            // You probably want to remove the banner
+            hideBanner('');
+        }
+
+        function isDismissed() {
+            // Get all cookies as string
+            const decodedCookie = decodeURIComponent(document.cookie);
+            // Separate cookies
+            const cookies = decodedCookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                // Check if cookie is present
+                if (cookie === `${cookieName}=${cookieValue}`) {
+                    return true;
+                }
+            }
+        
+            return false;
+        }
+    
+        function handleAccept(e) {
+            window.Shopify.customerPrivacy.setTrackingConsent(true, hideBanner);
+        
+            document.addEventListener('trackingConsentAccepted',function() {
+                console.log('trackingConsentAccepted event fired');
+            });
+
+            dismiss();
+        }
+    
+        function handleDecline() {
+            window.Shopify.customerPrivacy.setTrackingConsent(false,hideBanner);
+        }
+    
+        function initCookieBanner() {
+            const userCanBeTracked = window.Shopify.customerPrivacy.userCanBeTracked();
+            const userTrackingConsent = window.Shopify.customerPrivacy.getTrackingConsent();
+
+            if(isDismissed()) {
+                hideBanner('');
+            }else{
+                showBanner();
+            }
+        }
+    
+        window.Shopify.loadFeatures([
+            {
+                name: 'consent-tracking-api',
+                version: '0.1',
+            }
+        ],
+        function(error) {
+            
+            if (error) {
+                throw error;
+            }
+        
+            initCookieBanner();
+        });
+    </script>
+{%- endif -%}

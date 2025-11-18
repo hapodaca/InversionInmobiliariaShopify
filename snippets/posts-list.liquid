@@ -1,0 +1,91 @@
+{% liquid
+    assign articles = blog.articles
+    assign postsLeft = articles | first
+%}
+<div class="ps-section ps-section--home-posts">
+    <div class="container">
+        <div class="ps-section__header">
+            <h3 class="ps-section__heading">{{ section.settings.title }} </h3>
+
+            {%- if section.settings.show_view_all -%}
+                <a class="ps-section__morelink" href="{{ blog.url }}">{{ section.settings.view_all_text }}<i class="lnil lnil-arrow-top-right"></i></a>
+            {%- endif -%}
+        </div>
+        <div class="ps-blog--feature-posts">
+            <div class="ps-blog__left">
+                <div class="ps-post ps-post--grid large">
+
+                    {%- if postsLeft.image -%}
+                        <div class="ps-post__thumbnail">
+                            <img src="{{ postsLeft.image | image_url: width: 627 }}" alt="{{ postsLeft.title | escape }}" />
+                            <a class="ps-post__overlay" aria-lable="blog article" href="{{ postsLeft.url }}"></a>
+                        </div>
+                    {%- endif -%}
+
+                    <div class="ps-post__content">
+                        <div class="ps-post__meta">
+                            <div class="ps-post__categories">
+                                <a href="{{ blog.url }}">{{ blog.title }}</a>
+                            </div>
+                            {%- if section.settings.blog_show_date -%}
+                                <span class="ps-post__created-at">{{ postsLeft.published_at | time_tag: format: 'date' }}</span>
+                            {%- endif -%}
+                        </div>
+                        <h4 class="ps-post__title">
+                            <a href="{{ postsLeft.url }}">{{ postsLeft.title | escape }}</a>
+                        </h4>
+                        <div class="ps-post__desc">
+                            <p>
+                                {%- if postsLeft.excerpt.size > 0 -%}
+                                    {{ postsLeft.excerpt | strip_html | truncatewords: 30 }}
+                                {%- else -%}
+                                    {{ postsLeft.content | strip_html | truncatewords: 30 }}
+                                {%- endif -%}
+                            </p>
+                        </div>
+                        <div class="ps-post__bottom">
+                            {%- if section.settings.blog_show_author -%}
+                                <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ postsLeft.author }}</span></span>
+                            {%- endif -%}
+                            
+                            {%- if section.settings.blog_show_comments -%}
+                                <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: postsLeft.comments_count }}</span>
+                            {%-  endif -%}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ps-blog__right">
+
+                {%- for article in articles limit: 4 offset: 1 -%}
+                    <div class="ps-post ps-post--only-text">
+                        <div class="ps-post__left">
+                            <div class="ps-post__created">
+                                {%- if section.settings.blog_show_date -%}
+                                    <span class="ps-post__date">{{ article.published_at | date: '%d' }}</span>
+                                    <span class="ps-post__month-and-year">{{ article.published_at | date: '%B' }} <br/> {{ article.published_at | date: '%Y' }}</span>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                        <div class="ps-post__right">
+                            <h4 class="ps-post__title">
+                                <a href="{{ article.url }}">{{ article.title | escape }}</a>
+                            </h4>
+                            <div class="ps-post__header">
+                                <div class="ps-post__meta">
+                                    <div class="ps-post__categories">
+                                        <a href="{{ blog.url }}">{{ blog.title }}</a>
+                                    </div>
+                                    {%- if section.settings.blog_show_author -%}
+                                        <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ article.author }}</span></span>
+                                    {%- endif -%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {%- endfor -%}
+
+            </div>
+        </div>
+    </div>
+</div>

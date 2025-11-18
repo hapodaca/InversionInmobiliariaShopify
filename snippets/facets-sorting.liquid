@@ -1,0 +1,29 @@
+{%- if enable_sorting -%}
+  <facet-sort-by data-ajax="{{ data_ajax }}">
+  <select
+    form="FacetFiltersForm"
+    name="sort_by"
+    class="form-control"
+    aria-describedby="a11y-refresh-page-message"
+    onchange="this.form.submit()"
+  >
+    {%- assign allowed_sorts = "title-ascending,title-descending,price-ascending,price-descending,created-ascending,created-descending" | split: "," -%}
+    {%- for option in results.sort_options -%}
+      {%- if allowed_sorts contains option.value -%}
+        <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>
+      {%- endif -%}
+    {%- endfor -%}
+  </select>
+</facet-sort-by>
+
+
+
+  <save-attr>
+    <view-mode>
+        <div class="ps-projects__layout-switchers view-mode--xl">
+          <a data-save-attr='{ "prd_per_row": "grid" }' data-view="grid" {% if prd_per_row == 'grid' %}class="active"{% endif %}><i class="lnil lnil-thumbnail"></i></a>
+          <a data-save-attr='{ "prd_per_row": "list" }' data-view="list" {% if prd_per_row == 'list' %}class="active"{% endif %}><i class="lnil lnil-list"></i></a>
+        </div>
+    </view-mode>
+  </save-attr>
+{%- endif -%}

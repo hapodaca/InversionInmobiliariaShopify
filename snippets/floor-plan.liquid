@@ -1,0 +1,45 @@
+{%- assign img = floor_plan_img | default: product.metafields.project.floor_plan -%}
+{%- assign desc_html = floor_plan_desc | metafield_tag | default: floor_plan_desc -%}
+{%- assign fp_alt = 'Plano ' | append: product.title | escape -%}
+
+
+{%- if img != blank -%}
+<section class="fp-section">
+  <div class="fp-card">
+    <header class="fp-header">
+      <div class="fp-title">
+        <i class="lnil lnil-architect" aria-hidden="true"></i>
+        <h3>Plano arquitectónico</h3>
+      </div>
+      <a class="fp-action" href="{{ img | image_url: width: 2400 }}" target="_blank" rel="noopener">
+        Descargar
+      </a>
+    </header>
+
+    <div class="fp-grid">
+      <div class="fp-media">
+        <figure class="fp-viewport fp-zoomable">
+        {{ img
+        | image_url: width: 1400
+        | image_tag:
+            alt: fp_alt,
+            loading: 'lazy',
+            decoding: 'async',
+            class: 'fp-img',
+            widths: '480,720,960,1200,1400,2000'
+        }}
+        </figure>
+        <figcaption class="fp-caption">Referencia ilustrativa. Sujeta a cambios del constructor.</figcaption>
+      </div>
+
+      {%- if desc_html != blank -%}
+      <aside class="fp-aside">
+        <div class="fp-highlights">
+          {{ desc_html }}
+        </div>
+      </aside>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}

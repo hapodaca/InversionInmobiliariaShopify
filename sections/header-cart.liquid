@@ -1,0 +1,25 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+<div class="ps-drawer ps-drawer-cart" id="drawer-cart">
+  <div class="ps-drawer__top">
+      <div class="ps-drawer__heading">{{ section.settings.title }}</div>
+      <a class="ps-drawer__close" aria-label="Close" href="#"><i class="icon-cross"></i></a>
+  </div>
+  <div class="ps-drawer__bottom">
+    {% render 'header-cart' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.min-cart.name",
+  "class": "section-header-cart",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.min-cart.settings.title",
+      "default": "Shopping Cart"
+    }
+  ]
+}
+{% endschema %}

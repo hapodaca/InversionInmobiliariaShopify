@@ -1,0 +1,111 @@
+{%- liquid
+  # 0) Título y divisor desde el bloque (te pasé section: block en el render)
+  assign heading = section.settings.title | default: 'Amenidades'
+  assign show_divider = section.settings.show_divider
+
+  # 1) Si ya viene un array desde el render, úsalo
+  assign list = ''
+  if amenities_list and amenities_list.size > 0
+    assign tmp = ''
+    for x in amenities_list
+      assign label = x | strip | strip_newlines | replace: '"', ''
+      if label != ''
+        if tmp == '' 
+          assign tmp = label
+        else
+          assign tmp = tmp | append: '||' | append: label
+        endif
+      endif
+    endfor
+    assign list = tmp | split: '||'
+  else
+    # 2) Fallbacks: metafields
+    assign src = product.metafields.campos_inmobiliaria.amenidades
+    if src == blank
+      assign src = product.metafields.project.amenities
+    endif
+    if src == blank
+      assign src = product.metafields.custom.amenidades
+    endif
+
+    # 3) Normaliza (lista nativa o texto crudo)
+    assign items = ''
+    if src and src.value
+      for x in src.value
+        assign label = x | strip
+        if label != ''
+          if items == '' 
+            assign items = label
+          else
+            assign items = items | append: '||' | append: label
+          endif
+        endif
+      endfor
+      assign items = items | split: '||'
+    else
+      assign text = src | append: '' | strip
+      assign text = text | replace: '<br />', ',' 
+      assign text = text | replace: '<br>', ','
+      assign text = text | replace: '\r\n', ','
+      assign text = text | replace: '\n', ','
+      assign text = text | remove: '['
+      assign text = text | remove: ']'
+      assign text = text | replace: '"', ''
+      assign text = text | replace: ';', ','
+      assign text = text | replace: ', ,', ','
+      assign text = text | replace: ',,', ','
+      assign items = text | split: ','
+    endif
+
+    # 4) Dedupe case-insensitive
+   assign uniq = ''
+    assign out  = ''
+    for it in items
+      assign label = it | strip | strip_newlines
+      assign key   = label | downcase
+      if label != ''
+        assign needle = '||' | append: key | append: '||'
+        assign hay    = '||' | append: uniq | append: '||'
+        unless hay contains needle
+          if uniq == ''
+            assign uniq = key
+          else
+            assign uniq = uniq | append: '||' | append: key
+          endif
+          if out == ''
+            assign out = label
+          else
+            assign out = out | append: '||' | append: label
+          endif
+        endunless
+      endif
+    endfor
+    assign list = out | split: '||'
+  endif
+-%}
+
+{%- if list and list.size > 0 -%}
+<section class="ProductAmenities {{ show_divider | default: true | if: 'is-divided', '' }}">
+  <div class="amenities-header">
+    <h3 class="amenities-title">{{ heading }}</h3>
+  </div>
+  <div class="amenities-grid">
+    {%- for a in list -%}
+      {%- assign k = a | downcase | strip -%}
+      {%- case k -%}
+        {%- when 'coworking' -%}{% assign icon = 'lnil lnil-briefcase' %}
+        {%- when 'gimnasio','gym' -%}{% assign icon = 'lnil lnil-dumbbell' %}
+        {%- when 'piscina','pool' -%}{% assign icon = 'lnil lnil-swimming' %}
+        {%- when 'amueblada','amoblada','muebles' -%}{% assign icon = 'lnil lnil-sofa' %}
+        {%- when 'parqueadero','parking','parqueaderos' -%}{% assign icon = 'lnil lnil-car' %}
+        {%- when 'vigilancia','porteria','seguridad' -%}{% assign icon = 'lnil lnil-shield' %}
+        {%- else -%}{% assign icon = 'lnil lnil-checkmark-circle' %}
+      {%- endcase -%}
+      <div class="amenity-card amenity-card--icon">
+        <i class="{{ icon }}" aria-hidden="true"></i>
+        <span class="amenity-label">{{ a }}</span>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+{%- endif -%}

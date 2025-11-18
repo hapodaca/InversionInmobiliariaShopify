@@ -1,0 +1,235 @@
+/* Custom CSS to hide duplicate Floor Plan dropdown */
+
+/* Hide the duplicate Floor Plan dropdown that appears when clicking the Reservar ahora button */
+button-animated .cowlendar-btn + .form-group,
+.cowlendar-btn ~ .form-group,
+button-animated ~ variant-selects,
+.cowlendar-btn ~ variant-selects,
+.cowlendar-btn + variant-selects,
+form[data-cowlendar-form="true"] ~ variant-selects,
+form[data-cowlendar-form="true"] + variant-selects {
+  display: none !important;
+}
+
+/* Target the specific variant-selects element provided by the user */
+variant-selects[data-section="template--15190205497393__main"],
+variant-selects[data-section="template--15190114795569__main"],
+variant-selects[data-url="/products/rio-danubio-vista-hermosa-cuernavaca"] {
+  display: none !important;
+}
+
+/* Hide any variant-selects that appears after cowlendar elements */
+.cowlendar-hidden ~ variant-selects,
+.cowlendar-btn ~ variant-selects,
+*[data-cowlendar-form="true"] ~ variant-selects {
+  display: none !important;
+}
+
+/* Ensure the original Floor Plan dropdown in the product form is visible */
+product-form variant-selects {
+  display: block !important;
+}
+
+
+
+/* ======================= CUSTOM INVERSIONINMOBILIARIA
+
+/* ================== LOGO GENERAL ================== */
+.header__logo {
+  width: auto !important;
+  max-width: none !important;
+}
+
+.logo-image,
+.logo-image-sticky,
+.logo-image-mobile {
+  height: auto !important;
+  width: auto !important;
+}
+
+.logo-image {
+  max-height: 100px !important;
+}
+
+.logo-image-sticky {
+  max-height: 100px !important;
+}
+
+.logo-image-mobile {
+  max-height: 40px !important;
+}
+
+/* ================== DESKTOP ================== */
+
+/* Solo muestra el logo .ps-logo.light */
+.ps-logo.light {
+  display: inline-block !important;
+  margin-right: 0 !important;
+}
+
+.ps-logo:not(.light),
+.ps-logo.sticky {
+  display: none !important;
+}
+
+
+/* Separacion entre LOGO y MENU  */
+.ps-logo.light {
+  margin-right: 60px !important;
+}
+
+.ps-logo.light img {
+  max-height: 130px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+header.header--desktop.header--sticky .ps-logo.light img {
+  max-height: 130px !important;
+}
+
+
+
+/* ========== FORZAR FONDO EN HEADER DESKTOP STICKY ========== */
+
+/* Aplica fondo solo cuando el header está sticky y es desktop */
+@media (min-width: 768px) {
+  header.header--desktop.header--sticky {
+    background-color: #687782 !important;
+  }
+}
+@media (min-width: 768px) {
+  header.header--desktop.header--sticky .menu-item a,
+  header.header--desktop.header--sticky .header__phone,
+  header.header--desktop.header--sticky .header__phone a,
+  header.header--desktop.header--sticky .header__phone-text {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+@media (min-width: 768px) {
+  header.header--desktop.header--sticky .menu-item a,
+  header.header--desktop.header--sticky .header__phone,
+  header.header--desktop.header--sticky .header__phone a,
+  header.header--desktop.header--sticky .header__phone-text {
+    color: white !important;
+    fill: white !important;
+  }
+}
+
+
+/* Submenús sticky - texto negro */
+.menu.menu--desktop .sub-menu,
+.menu.menu--desktop .sub-menu a {
+  background-color: white !important;
+  color: black !important;
+}
+/* Forzar submenús en HEADER NO sticky (cuando no tiene .header--sticky) */
+header.header--desktop:not(.header--sticky) .menu.menu--desktop .sub-menu,
+header.header--desktop:not(.header--sticky) .menu.menu--desktop .sub-menu a {
+  background-color: white !important;
+  color: black !important;
+}
+
+
+/* ========  ======== */
+
+@media (min-width: 768px) {
+  header.header--desktop.header--sticky .menu-item-has-children:hover .sub-menu {
+    background-color: white !important;
+  }
+
+  header.header--desktop.header--sticky .menu-item-has-children:hover .sub-menu a {
+    color: #000 !important;
+  }
+}
+
+/* ======== FONDO Y TEXTO EN HEADER NO-STICKY (solo fuera del home) ======== */
+body:not(.template-index) header.header--desktop:not(.header--sticky) {
+  background-color: #687782 !important;
+}
+
+body:not(.template-index) header.header--desktop:not(.header--sticky) .menu-item a,
+body:not(.template-index) header.header--desktop:not(.header--sticky) .header__phone,
+body:not(.template-index) header.header--desktop:not(.header--sticky) .header__phone a,
+body:not(.template-index) header.header--desktop:not(.header--sticky) .header__phone-text {
+  color: white !important;
+  fill: white !important;
+}
+
+
+/* ================== MOBILE ================== */
+header.header.header--mobile {
+  background-color: #687782 !important;
+  height: 60px !important;
+}
+
+header.header--mobile.header--sticky .ps-logo {
+  display: inline-block !important;
+}
+
+header.header--mobile:not(.header--sticky) .header__menu-toggle {
+  color: white !important;
+  fill: white !important;
+}
+
+header.header--mobile.header--sticky .header__menu-toggle,
+header.header--mobile.header--sticky .lnil-menu {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Logo mobile visible cuando no está sticky */
+header.header--mobile .ps-logo {
+  display: inline-block !important;
+}
+
+/* Ajustes del logo mobile */
+.logo-image,
+.logo-image-mobile {
+  max-height: 40px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+
+/* ================== DRAWER MOBILE ================== */
+#drawer-menu {
+  background-color: #3a505d !important;
+  color: white !important;
+}
+
+#drawer-menu *,
+#drawer-menu a {
+  color: white !important;
+  fill: white !important;
+}
+
+span.sub-toggle::before,
+span.sub-toggle::after {
+  background-color: white !important;
+}
+
+#drawer-menu .menu-item-has-children ul,
+#drawer-menu .menu-item-has-children .sub-menu,
+#drawer-menu .menu-item-has-children li {
+  background-color: #3a505d !important;
+}
+
+#drawer-menu .menu-item-has-children li a {
+  color: white !important;
+}
+
+
+
+/* ================== TAMAÑO DE FUENTE PAGINA HOME ================== */
+.ps-section__stats {
+  font-size: 17px !important; /* o el tamaño que prefieras */
+  font-weight: 400; /* opcional para más énfasis */
+}
+.ps-form__top .ps-form__type-toggle {
+  font-size: 16px !important; /* reduce el tamaño */
+  font-weight: 400 !important; /* normal, no bold */
+}
+/* ================== AJUSTES =========*

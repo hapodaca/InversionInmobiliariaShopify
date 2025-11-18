@@ -1,0 +1,38 @@
+{%- assign assign image = product.featured_media | default: product.selected_or_first_available_variant.featured_media -%}
+{%- liquid
+    if product.title
+        assign price = product.price
+    else
+        assign price = 1999
+    endif
+
+    if settings.currency_code_enabled
+        assign money_price = price | money_with_currency
+    else
+        assign money_price = price | money
+    endif
+-%}
+<div class="ps-post ps-post--horizontal small">
+    <div class="ps-post__thumbnail">
+        <div class="ps-post__image">
+            <img src="{{ image | image_url: width: '100x65' }}" alt="{{ product.title | escape }}" />
+            <a class="ps-post__overlay"  aria-lable="blog article" href="{{ product.url }}"></a>
+        </div>
+    </div>
+    <div class="ps-post__wrapper">
+        <div class="ps-post__header">
+            <h4 class="ps-post__title mb-3"><a href="{{ product.url }}" aria-lable="blog article" >{{ product.title | escape }}</a></h4>
+            <div class="ps-post__meta">
+                <p class="ps-project__price">
+                    <strong>
+                        {%- if product.price_varies -%}
+                            {{ 'products.product.from_lowest_price_html' | t: lowest_price: money_price }}
+                        {%- else -%}
+                            {{ money_price }}
+                        {%- endif -%}
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

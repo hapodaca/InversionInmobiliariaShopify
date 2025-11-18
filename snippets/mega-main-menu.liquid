@@ -1,0 +1,127 @@
+{%- for link in section.settings.menu.links -%}
+    {% liquid
+        assign link_title_downcase = link.title | downcase
+        assign mega_menu_block = ''
+
+        for block in section.blocks
+          assign menu_item_downcase = block.settings.menu_item | strip | downcase
+
+          if menu_item_downcase == link_title_downcase
+            assign mega_menu_block = block
+            break
+          endif
+
+        endfor
+    %}
+
+    {%- if mega_menu_block != '' -%}
+        <li class="menu-item-has-children has-mega-menu menu-item {% if link.links != blank %} menu-item-has-children{% endif %} {% if link.child_active %} menu-item-active{% endif %}">
+    {%- else -%}
+        <li class="menu-item {% if link.links != blank %} menu-item-has-children{% endif %} {% if link.child_active %} menu-item-active{% endif %}">
+    {%- endif-%}
+
+        {%- if link.levels == 0 and mega_menu_block == '' -%}
+            <a
+                id="HeaderMenu-{{ link.handle }}"
+                href="{{ link.url }}"
+                class="{% if link.current %} menu-item-active{% endif %}">
+                {{- link.title | escape -}}
+            </a>
+        {%- else -%}
+            {%- if mega_menu_block != '' -%}
+                <a href="{{ link.url }}">{{- link.title | escape -}}</a><span class="sub-toggle"></span>
+                {%- if link.links.size > 0 -%}
+                    <div class="mega-menu">
+                        <div class="mega-menu__wrapper" data-columns="4">
+                            {%- for sub_link in link.links -%}
+                                <div class="mega-menu__column">
+                                    <h4>{{- sub_link.title -}}<span class="sub-toggle"></span></h4>
+                                    {%- if sub_link.levels > 0 -%}
+                                        <ul class="mega-menu__list menu--single">
+                                            {%- for sub_sub_link in sub_link.links -%}
+                                                <li>
+                                                    <a href="{{ sub_sub_link.url }}">{{- sub_sub_link.title -}}</a>
+                                                </li>
+                                            {%- endfor -%}
+                                        </ul>
+                                    {%- endif -%}
+                                </div>
+                            {%- endfor -%}
+
+                            {%- if mega_menu_block.settings.image_1 != blank -%}
+                                <div class="mega-menu__column">
+                                    <h4><a style="color: {{ mega_menu_block.settings.image_text_color_1 }}" href="{{ mega_menu_block.settings.image_link_1 }}">{{ mega_menu_block.settings.image_heading_1 }}</a><span class="sub-toggle"></span></h4>
+                                    <div class="mega-menu__list menu--single menu--image">
+                                        <a href="{{ mega_menu_block.settings.image_link_1 }}">
+                                            <img src="{{ mega_menu_block.settings.image_1 | image_url }}" alt="{{ mega_menu_block.settings.image_heading_1 }}" />
+                                        </a>
+                                    </div>
+                                </div>
+                            {%- endif-%}
+
+                            {%- if mega_menu_block.settings.image_2 != blank -%}
+                                <div class="mega-menu__column">
+                                    <h4><a style="color: {{ mega_menu_block.settings.image_text_color_2 }}" href="{{ mega_menu_block.settings.image_link_2 }}">{{ mega_menu_block.settings.image_heading_2 }}</a><span class="sub-toggle"></span></h4>
+                                    <div class="mega-menu__list menu--single menu--image">
+                                        <a href="{{ mega_menu_block.settings.image_link_2 }}">
+                                            <img src="{{ mega_menu_block.settings.image_2 | image_url }}" alt="{{ mega_menu_block.settings.image_heading_2 }}" />
+                                        </a>
+                                    </div>
+                                </div>
+                            {%- endif-%}
+
+                            {%- if mega_menu_block.settings.image_3 != blank -%}
+                                <div class="mega-menu__column">
+                                    <h4><a style="color: {{ mega_menu_block.settings.image_text_color_3 }}" href="{{ mega_menu_block.settings.image_link_3 }}">{{ mega_menu_block.settings.image_heading_3 }}</a><span class="sub-toggle"></span></h4>
+                                    <div class="mega-menu__list menu--single menu--image">
+                                        <a href="{{ mega_menu_block.settings.image_link_3 }}">
+                                            <img src="{{ mega_menu_block.settings.image_3 | image_url }}" alt="{{ mega_menu_block.settings.image_heading_3 }}" />
+                                        </a>
+                                    </div>
+                                </div>
+                            {%- endif-%}
+                        </div>
+                    </div>
+                {%- endif -%}
+            {%- else -%}
+                {%- if link.links != blank -%}
+                    <a id="HeaderMenu-{{ link.handle }}" href="{{ link.url }}">{{- link.title | escape -}}</a>
+                    <span class="sub-toggle"></span>
+                    <ul class="sub-menu">
+                        {%- for childlink in link.links -%}
+                            <li  class=" {% if childlink.links != blank %} menu-item-has-children{% endif %}">
+                                <a 
+                                    id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}"
+                                    href="{{ childlink.url }}"
+                                >
+                                    {{ childlink.title | escape }}
+                                </a>
+                                {%- if childlink.links != blank -%}
+                                    <span class="sub-toggle"></span>
+                                    <ul class="sub-menu">
+                                        {%- for grandchildlink in childlink.links -%}
+                                            <li>
+                                                <a
+                                                    id="HeaderMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                                    href="{{ grandchildlink.url }}">
+                                                    {{ grandchildlink.title | escape }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                {%- endif -%}
+                            </li>
+                        {%- endfor -%}
+                    </ul>
+                {%- else -%}
+                    <a
+                        id="HeaderMenu-{{ link.handle }}"
+                        href="{{ link.url }}"
+                        class="{% if link.current %} menu-item-active{% endif %}">
+                        {{- link.title | escape -}}
+                    </a>
+                {%- endif -%}
+            {%- endif -%}
+        {%- endif -%}
+    </li>
+{%- endfor -%}

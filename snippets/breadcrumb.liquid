@@ -1,0 +1,61 @@
+{%- if settings.breadcrumbs_on -%}
+    {%- unless template == 'index' or template == '404' -%}
+        <ul class="breadcrumb">
+            <li><a href="/">{{ 'general.home' | t }}</a></li>
+            {%- case request.page_type -%}
+                {%- when 'page' -%}
+                    <li>
+                    <a href="{{ page.url }}">{{ page.title }}</a>
+                    </li>
+                {%- when 'product' -%}
+                    {%- if collection.url -%}
+                    <li>
+                        {{ collection.title | link_to: collection.url }}
+                    </li>
+                    {%- endif -%}
+                    <li>
+                    <a href="{{ product.url }}">{{ product.title }}</a>
+                    </li>
+                {%- when 'collection' and collection.handle -%}
+                    {%- if current_tags -%}
+                    <li>
+                        {{ collection.title | link_to: collection.url }}
+                    </li>
+                    <li>
+                        {%- capture tag_url -%}{{ collection.url }}/{{ current_tags | join: "+"}}{%- endcapture -%}
+                        <a href="{{ tag_url }}">{{ current_tags | join: " + "}}</a>
+                    </li>
+                    {%- else -%}
+                    <li>
+                        <a href="{{ collection.url }}">{{ collection.title }}</a>
+                    </li>
+                    {%- endif -%}
+                {%- when 'blog' -%}
+                    {%- if current_tags -%}
+                    <li>
+                        {{ blog.title | link_to: blog.url }}
+                    </li>
+                    <li>
+                        {%- capture tag_url -%}{{blog.url}}/tagged/{{ current_tags | join: "+" }}{%- endcapture -%}
+                        <a href="{{ tag_url }}">{{ current_tags | join: " + " }}</a>
+                    </li>
+                    {%- else -%}
+                    <li>
+                        <a href="{{ blog.url }}">{{ blog.title }}</a>
+                    </li>
+                    {%- endif -%}
+                {%- when 'article' -%}
+                    <li>
+                    {{ blog.title | link_to: blog.url }}
+                    </li>
+                    <li>
+                    <a href="{{ article.url }}">{{ article.title }}</a>
+                    </li>
+                {%- else -%}
+                    <li>
+                    <a href="{{ request.path }}">{{ page_title }}</a>
+                    </li>
+            {%- endcase -%}
+        </ul>
+    {%- endunless -%}
+{%- endif -%}

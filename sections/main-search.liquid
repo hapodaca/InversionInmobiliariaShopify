@@ -1,0 +1,183 @@
+{%- liquid
+    assign sort_by = search.sort_by | default: search.default_sort_by
+    assign terms = search.terms | escape
+    assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  
+    assign prd_per_row = cart.attributes.prd_per_row | default: 'grid'
+    assign prd_per_row = prd_per_row | append: ''
+-%}
+
+<div class="ps-page--inner ps-page--projects" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    {%- paginate search.results by section.settings.products_per_page -%}
+        <div class="ps-page__header">
+            <div class="container">
+                <form class="ps-form--projects-search" action="{{ routes.search_url }}" method="get" role="search">
+                    <div class="ps-form__top">
+                        <div class="ps-form__top-left">
+                            {% for product_type in shop.types %}
+                                {{ product_type | link_to_type : class: 'ps-btn ps-btn--gray' }}
+                            {% endfor %}
+                        </div>
+                        <div class="ps-form__top-right">
+                            <div class="ps-form underline with-icon"><i class="lnil lnil-map-marker ps-form__icon"></i>
+                                <input class="form-control" type="text" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'sections.image-banner-with-search.search.placeholder' | t }}" />
+                            </div>
+                            <div class="ps-form__actions">
+                                <button class="ps-btn">{{ 'sections.image-banner-with-search.search.button' | t }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                {%- if search.performed -%}
+                    <h1 class="ps-page__heading">{{ 'templates.search.title' | t }}</h1>
+                {%- else -%}
+                    <h1 class="ps-page__heading">{{ 'general.search_products' | t }}</h1>
+                {%- endif -%}
+
+                {% render 'breadcrumb' %}
+            </div>
+        </div>
+        <div class="ps-page__content">
+            <div class="container">
+                <div id="ProductGridContainer" class="ps-projects ps-projects--with-sidebar">
+                    <div id="filterColumn" class="facets-container ps-projects__left" data-facets-sorting>
+                        {% render 'facets',
+                            results: search,
+                            enable_filtering: true,
+                            section: section,
+                            id: 'FacetFiltersForm'
+                        %}
+                    </div>
+                    <div class="collection position-relative ps-projects__right">
+                        <div class="collection-loading-overlay"></div>
+                        <div class="ps-projects__top">
+                            <div class="ps-projects__top-left">
+                                <p class="ProductCountDesktop">
+                                    
+                                    {%- if request.page_type == 'search' -%}
+                                        {%- if search.results_count > 0 -%}
+                                            {{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
+                                        {%- endif -%}
+                                    {%- endif -%}
+                                </p>
+                            </div>
+                            <div class="ps-projects__top-right">
+                                {%- if search.results.size > 0 -%}
+                                    {% render 'facets-sorting',
+                                        results: search,
+                                        enable_sorting: section.settings.enable_sorting,
+                                        section: section,
+                                        prd_per_row: prd_per_row
+                                    %}
+                                {%- endif -%}
+
+                            </div>
+                        </div>
+
+                        {% render 'facets-active',
+                            results: search,
+                            section: section,
+                            show_sizes: true
+                            size_options_name: "Size"
+                            show_colorpics: false
+                        %}
+
+                        {%- if search.results.size == 0 -%}
+                            <div class="category-empty text-center">
+                                <h2 class="category-empty-title">{{ 'sections.collection_template.empty' | t }}</h2>
+                                <div class="category-empty-text fw-light">{{ 'sections.collection_template.use_fewer_filters_html' | t: link: search_url, class: "underlined-link link" }}</div>
+                                <div class="mt-3">
+                                    <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
+                                </div>
+                            </div>
+                        {%- else -%}
+                            <div id="product-grid"  data-id="{{ section.id }}" class="ps-projects__items ps-{{ prd_per_row }}" data-columns="3" data-product-grid>
+                                {%- assign products = search.results | where: 'object_type', 'product' -%}
+                                {%- for product in products -%}
+                                    {% render 'product-item', product: product, settings: settings, layout: prd_per_row %}
+                                {%- endfor -%}
+                            </div>
+                            {%- if paginate.pages > 1 -%}
+                                {% render 'pagination', paginate: paginate %}
+                            {%- endif -%}
+                        {%- endif -%}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+    "name": "t:sections.main-collection.name",
+    "class": "main-collection-section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.main-collection.settings.general"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_sorting",
+            "default": true,
+            "label": "Enable sorting"
+        },
+        {
+            "type": "range",
+            "id": "products_per_page",
+            "label": "t:sections.products.settings.post_limit.label",
+            "min": 3,
+            "max": 20,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+    ]
+}
+{% endschema %}

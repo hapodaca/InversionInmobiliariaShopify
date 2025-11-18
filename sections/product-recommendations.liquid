@@ -1,0 +1,98 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- if recommendations.products_count > 0 -%}
+    <div class="ps-section with-carousel ps-project-listing with-desktop-slider" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+        <div class="container">
+            <div class="ps-section__header">
+                <h3 class="ps-section__heading">{{ section.settings.title }}</h3>
+                <div class="ps-section__carousel-navigation">
+                    <a class="ps-btn--carouse-arrow prev" aria-label="Button prev" href="#product-recommendations"><i class="lnil lnil-chevron-left"></i></a>
+                    <a class="ps-btn--carouse-arrow next" aria-label="Button next" href="#product-recommendations"><i class="lnil lnil-chevron-right"></i></a>
+                </div>
+            </div>
+            <div class="ps-section__content">
+                <div class="owl-slider ps-carousel desktop-slider"  
+                  data-owl-nav="true" 
+                  data-owl-auto="{{ settings.slider_autoplay }}" 
+                  data-owl-loop="{{ settings.slider_loop }}" 
+                  data-owl-speed="{{ settings.slider_speed }}" 
+                  data-owl-gap="{{ settings.slider_gap }}"
+                  data-owl-item="{{ settings.slider_item }}" 
+                  data-owl-item-xs="{{ settings.slider_item_xs }}" 
+                  data-owl-item-sm="{{ settings.slider_item_sm }}" 
+                  data-owl-item-md="{{ settings.slider_item_md }}" 
+                  data-owl-item-lg="{{ settings.slider_item_lg }}" 
+                  data-owl-duration="{{ settings.slider_duration }}" 
+                  data-owl-mousedrag="{{ settings.slider_mousedrag }}"  
+                  id="product-recommendations">
+                    {%- for product in recommendations.products limit: 5 -%}
+                        {% render 'product-carouse', section: section, product: product, settings: settings %}
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "t:sections.product-recommendations.name",
+    "tag": "section",
+    "class": "ps-page--single-property",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:sections.product-recommendations.settings.content.general"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "default": "Customers also purchased",
+        "label": "Heading"
+      },
+      {
+        "type": "header",
+        "content": "Spacing Options"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      }
+    ]
+  }
+{% endschema %}

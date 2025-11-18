@@ -1,0 +1,32 @@
+{%- liquid
+  assign use_global_desktop_space = use_global_desktop_space | default: section.settings.use_global_desktop_space, allow_false: true
+  assign use_global_mobile_space = use_global_mobile_space | default: section.settings.use_global_mobile_space, allow_false: true
+  assign use_global_desktop_space_padding = use_global_desktop_space_padding | default: section.settings.use_global_desktop_space_padding, allow_false: true
+  assign use_global_mobile_space_padding = use_global_mobile_space_padding | default: section.settings.use_global_mobile_space_padding, allow_false: true
+
+  unless use_global_desktop_space
+    assign style = style | append: '--margin-top-desktop:' | append: section.settings.spacing_sections | append: 'px;'
+  endunless
+
+  unless use_global_mobile_space
+    assign style = style | append: '--margin-top-mobile:' | append: section.settings.spacing_sections_mobile | append: 'px;'
+  endunless
+
+  unless use_global_desktop_space_padding
+    assign style = style | append: '--padding-top-desktop:' | append: section.settings.spacing_padding_sections | append: 'px;'
+  endunless
+
+  unless use_global_mobile_space_padding
+    assign style = style | append: '--padding-top-mobile:' | append: section.settings.spacing_padding_sections_mobile | append: 'px;'
+  endunless
+
+  if section.settings.section_width == 'custom'
+    assign style = style | append: '--container-max-width:' | append: section.settings.container_max_width | append: 'px;'
+  endif
+
+  if style != blank
+    assign style = 'style="' | append: style | append: '"'
+  endif
+
+  echo style
+-%}

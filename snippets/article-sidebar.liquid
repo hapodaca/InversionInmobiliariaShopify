@@ -1,0 +1,22 @@
+{%- if article != blank -%}
+    <div class="ps-post ps-post--horizontal small">
+        {%- if article.image != blank -%}
+            <div class="ps-post__thumbnail">
+                <div class="ps-post__image">
+                    <img src="{{ article.image | image_url: width: '353x230' }}" alt="{{ article.title | escape }}" />
+                    <a class="ps-post__overlay" aria-lable="blog article" href="{{ article.url }}"></a>
+                </div>
+            </div>
+        {%- endif -%}
+        <div class="ps-post__wrapper">
+            <div class="ps-post__header">
+                <div class="ps-post__meta">
+                    <div class="ps-post__categories">
+                        <a href="{{ article.url }}">{{ article.published_at | time_tag: format: 'date' }}</a>
+                    </div>
+                </div>
+                <h4 class="ps-post__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h4>
+            </div>
+        </div>
+    </div>
+{%- endif -%}

@@ -1,0 +1,91 @@
+<cart-items class="{% if cart == empty %}is-empty{% endif %}" id="header-cart" data-on-cart-page="{% if request.page_type == 'cart' %}true{% else %}false{% endif %}">
+    {%- if cart != empty -%}
+        <div class="cart-form-element">
+            <div data-scrollbar  class="minicart-drop-content js-dropdn-content-scroll">
+                <div class="js-contents-cart-items">
+                    {%- assign cart_items = cart.items -%}
+                    {% render 'header-cart-line-item' for cart_items as item %}
+                </div>
+                <div class="scrollbar-track scrollbar-track-x">
+                    <div class="scrollbar-thumb scrollbar-thumb-x"></div>
+                </div>
+                <div class="scrollbar-track scrollbar-track-y">
+                    <div class="scrollbar-thumb scrollbar-thumb-y"></div>
+                </div>
+            </div>
+            <div class="minicart-drop-fixed is-opened"  data-slide>
+                <form action="{{ routes.cart_url }}" method="post">
+                    <div class="row gx-2 gx-sm-3 gx-md-5 js-hide-empty">
+                        <div class="col">
+                            <div class="js-contents-subtotal"  data-slide-visible>
+                                {%- if cart.cart_level_discount_applications.size > 0 -%}
+                                <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                                    {%- for discount in cart.cart_level_discount_applications -%}
+                                    <li class="discounts__discount discounts__discount--end">
+                                        {%- render 'icon-discount' -%}
+                                        {{ discount.title }}
+                                        (-{{ discount.total_allocated_amount | money }})
+                                    </li>
+                                    {%- endfor -%}
+                                </ul>
+                                {%- endif -%}
+                                <div class="minicart-drop-total js-minicart-drop-total d-flex align-items-center">
+                                <div class="minicart-drop-total-txt">{{ 'sections.cart.subtotal' | t }}</div>
+                                <div class="minicart-drop-total-price">{{ cart.total_price | money_with_currency }}</div>
+                                </div>
+                            </div>
+                            <div class="mt-2 mt-md-3"></div>
+                            <div class="minicart-drop-actions">
+                                <div class="js-contents-buttons">
+                                <div class="row gy-2 gx-2">
+                                    <div class="col-sm">
+                                    <a href="{{ routes.cart_url }}" class="ps-btn ps-btn--fullwidth"><i class="icon-basket"></i><span>{{ 'general.cart.view' | t: count: cart.item_count }}</span></a>
+                                    </div>
+                                    <div class="col-sm position-relative">
+                                    <button type="submit" class="ps-btn ps-btn--fullwidth" name="checkout"{% if cart == empty %} disabled{% endif %}>
+                                        {{ 'sections.cart.checkout' | t }}
+                                    </button>
+                                    </div>
+                                </div>
+                                </div>
+                                {%- if additional_checkout_buttons -%}
+                                <div class="cart__dynamic-checkout-buttons position-relative additional-checkout-buttons">
+                                    {{ content_for_additional_checkout_buttons }}
+                                </div>
+                                {%- endif -%}
+
+                                <div class="row align-items-center mt-1">
+                                <div class="col text-start">
+                                    <cart-clear-button>
+                                        <a href="{{ routes.cart_clear_url }}" class="link-clear-cart btn-link btn-link--sm position-relative">
+                                            <span class="icon-wrap">{% render 'icon-remove2' %}</span><span>{{ 'general.cart.clear_cart' | t }}</span>
+                                            <div class="loading-overlay hidden">
+                                                <div data-load="loading"></div>
+                                            </div>
+                                        </a>
+                                    </cart-clear-button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {%- else -%}
+        <div class="minicart-empty-wrap">
+            <div class="minicart-empty js-minicart-empty">
+                <div class="minicart-empty-icon">
+                    {% render 'icon-empty-cart' %}
+                </div>
+                <div class="minicart-empty-title h2-style">{{ 'sections.cart.empty' | t }}</div>
+                <div class="minicart-empty-text">
+                    {{ 'general.cart_empty_description' | t }} 
+                    <a href="{{ routes.all_products_collection_url }}">{{ 'general.checkout_our_catalog' | t }}</a>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+    <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
+    <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">{{ 'accessibility.loading' | t }}</p>
+</cart-items>

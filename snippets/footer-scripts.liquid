@@ -1,0 +1,80 @@
+<script>
+  window.shopUrl = window.Shopify.routes.root + '{{ request.origin }}';
+  window.routes = {
+    cart_url: '{{ routes.cart_url }}',
+    cart_add_url: '{{ routes.cart_add_url }}',
+    cart_change_url: '{{ routes.cart_change_url }}',
+    cart_update_url: '{{ routes.cart_update_url }}',
+    cart_clear_url: '{{ routes.cart_clear_url }}',
+    predictive_search_url: '{{ routes.predictive_search_url }}',
+    search_url: '{{ routes.search_url }}',
+    prepare_shipping_rates: window.Shopify.routes.root+'cart/prepare_shipping_rates.json',
+    async_shipping_rates: window.Shopify.routes.root+'cart/async_shipping_rates.json',
+  };
+  window.cartStrings = {
+    error: `{{ 'sections.cart.cart_error' | t }}`,
+    quantityError: `{{ 'sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+    successfully_added: `{{ 'general.successfully_added' | t }}`,
+    successfully_updated: `{{ 'general.successfully_updated' | t }}`,
+    successfully_line_item_updated: `{{ 'general.successfully_line_item_updated' | t }}`
+  };
+  window.variantStrings = {
+    addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+    soldOut: `{{ 'products.product.sold_out' | t }}`,
+    unavailable: `{{ 'products.product.unavailable' | t }}`,
+    preOrder: `{{ 'general.pre_order' | t }}`,
+    addSubscriptionToCart: `{{ 'general.add_subscription_to_cart' | t }}`,
+    addSelectedToCart: `{{ 'general.add_selected_to_cart_html' | t }}`,
+    addSelectAll: `{{ 'general.add_select_all' | t }}`,
+  };
+  window.accessibilityStrings = {
+    shareSuccess: `{{ 'general.share.success_message' | t }}`,
+  };
+  window.themeStrings = {
+    search: `{{ 'general.search' | t }}`,
+    shippingServerIssue: `{{ 'general.shipping_server_issue' | t }}`,
+    askTheSeller: `{{ 'general.ask_the_seller' | t }}`,
+    selectShipping: `{{ 'general.select_shipping' | t }}`,
+    freeShipping: `{{ 'general.free_shipping' | t }}`,
+    productCountOne: `{{ 'general.product_count_simple.one' | t }}`,
+    productCountOther: `{{ 'general.product_count_simple.other' | t }}`,
+    loading: `{{ 'general.loading' | t }}`,
+    addToWishlist: `{{ 'general.add_to_wishlist_small' | t }}`,
+    removeFromWishlist: `{{ 'general.remove_from_wishlist_small' | t }}`,
+    search_placeholder: `{{ 'general.search_by' | t }}`,
+    search_placeholder_short: `{{ 'general.search_by_short' | t }}`,
+    shipping_absent: `{{ 'general.shipping_absent' | t }}`,
+    shareSuccess: `{{ 'general.share_success' | t }}`,
+    new: `{{ 'general.new' | t }}`,
+    sale: `{{ 'products.product.on_sale' | t }}`,
+  };
+  window.shippingLogos = {
+    usps: `{{ 'usps.png' | asset_img_url: '230x230' }}`,
+    ups: `{{ 'ups.png' | asset_img_url: '230x230' }}`,
+    dhl_express: `{{ 'dhl_express.png' | asset_img_url: '230x230' }}`,
+    freeDelivery: `{{ 'free-delivery.svg' | asset_url }}`,
+    shopify: `{{ 'shipping-default.jpg' | asset_img_url: '230x260' }}`,
+  };
+</script>
+
+{%- if settings.predictive_search_enabled -%}
+    <script src="{{ 'predictive-search.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
+
+
+<script src="{{ 'popper.min.js' | asset_url }}" defer></script>
+<script src="{{ 'bootstrap.min.js' | asset_url }}" defer></script>
+<script src="{{ 'owl.carousel.min.js' | asset_url }}" defer></script>
+<script src="{{ 'lazysizes.min.js' | asset_url }}" defer></script>
+<script src="{{ 'bodyScrollLock.min.js' | asset_url }}" defer></script>
+<script src="{{ 'smooth-scrollbar.min.js' | asset_url }}" defer></script>
+<script src="{{ 'jquery.fancybox.min.js' | asset_url }}" defer></script>
+<script src="{{ 'main.js' | asset_url }}" defer></script>
+
+{% if request.page_type == 'product' %}
+  <script src="{{ 'apexcharts.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'chart.js' | asset_url }}" defer></script>
+
+  <script src="{{ 'slick.min.js' | asset_url }}" defer></script>
+{% endif %}

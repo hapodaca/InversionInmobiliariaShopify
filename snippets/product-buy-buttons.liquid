@@ -1,0 +1,78 @@
+{%- unless settings.catalog_mode -%}
+  {%- liquid
+    assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+    assign image = product.selected_variant.featured_media | default: product.featured_media
+    assign product_title = product.title | append: ' ' | append: current_variant.title
+    assign inventory_quantity = current_variant.inventory_quantity
+  -%}
+
+  <div class="prd-block-actions {{ class }}" {{ bsa }}>
+    <product-form class="product-form" data-form>
+      {%- form 'product', product, id: product_form_id, class: 'form js-product-form' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}">
+        {%- unless settings.catalog_mode -%}
+        {%- liquid
+          if current_variant.available and current_variant.inventory_management and inventory_quantity < 1
+            assign pre_order = true
+          endif
+        -%}
+        <input type="hidden" name="properties[{{ 'general.status' | t }}]" value="{{ 'general.pre_order' | t }}" {% unless pre_order %}disabled{% endunless %} data-form-preorder>
+
+        <div class="prd-block-actions js-sticky-add-to-cart-marker">
+          {% render 'error' %}
+          <div class="row">
+            {%- if hide_quantity -%}
+            <div class="col-12 col-sm-6 col-lg-4">
+              {% render 'quantity',
+                name: "quantity"
+                min: 1,
+                value: 1,
+                product_title: product_title,
+                current_variant: current_variant,
+                layout: layout
+              %}
+            </div>
+            {%- endif -%}
+            <div class="col-12 {% if hide_quantity%}col-sm-6 col-lg-8 {% else %}col-sm-12 col-lg-12 {% endif %}position-relative">
+              <button-animated data-pause="1000" data-delay-start="1000" data-delay-after-stop="15000" data-style="shakeY">
+                <button
+                  id="product-form-add-to-cart"
+                  type="submit"
+                  name="add"
+                  class="ps-btn ps-btn--fullwidth {% if hide_add_to_cart %}hidden{% endif %}"
+                  {% if current_variant.available == false %}disabled{% endif %}
+                >
+                  <div class="loading-overlay__spinner hidden">
+                    <div data-load="loading"></div>
+                  </div>
+                  <span>
+                      {%- if current_variant.available -%}
+                        {%- if booking -%}
+                        {{'general.add_subscription_booking' | t}}
+                      {%- else -%}
+                        {%- if current_variant.selected_selling_plan_allocation != nil or current_variant.requires_selling_plan -%}
+                          {{ 'general.add_subscription_to_cart' | t }}
+                        {%- else -%}
+                          {%- if current_variant.inventory_management and inventory_quantity < 1 -%}
+                            {{ 'general.pre_order' | t }}
+                          {%- else -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- endif -%}
+                        {%- endif -%}
+                      {%- else -%}
+                        {{ 'products.product.sold_out' | t }}
+                      {%- endif -%}
+                    {%- endif -%}
+                    </span>
+                </button>
+              </button-animated>
+            </div>
+          </div>
+        </div>
+        
+          <div id="addToCartTarget" class="invisible"></div>
+        {%- endunless -%}
+      {%- endform -%}
+    </product-form>
+  </div>
+{%- endunless -%}

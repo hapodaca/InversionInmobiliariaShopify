@@ -1,0 +1,15 @@
+{%- if settings.logo_text_enabled -%}
+    <span>{{ settings.logo_text }}</span>
+{%- else -%}
+    {%- if settings.logo_mobile != blank -%}
+        <img 
+            src="{{ settings.logo_mobile | image_url | prepend: "https:" }}" 
+            alt="{{ shop.name }}" 
+            {% if settings.logo_width_mobile %}width="{{ settings.logo_width_mobile }}"{% endif %}
+            style="max-width: 100%; height: auto;" 
+            class="logo-image-mobile"
+        />
+    {%- else -%}                            
+        <span>{{ settings.logo_text }}</span>
+    {%- endif -%}
+{%- endif -%}

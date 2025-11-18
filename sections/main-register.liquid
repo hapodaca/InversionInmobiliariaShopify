@@ -1,0 +1,236 @@
+<div class="ps-page ps-page--inner ps-page--auth" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="ps-page__header">
+      {% render 'breadcrumb' %}
+    </div>
+  </div>
+  <div class="ps-page__content">
+    <div class="container">
+      {%- form 'create_customer', class: 'ps-form--auth ps-form--sinup', novalidate: 'novalidate' -%}
+        <div class="ps-form__top">
+          <h3>{{ section.settings.title_login }}</h3>
+          <p>{{ section.settings.subtext_login }}</p>
+          {%- if form.errors -%}
+            <div class="alert alert-danger" role="alert">
+              <p class="form__message errors" tabindex="-1" autofocus>
+                {{ 'contact.form.error_heading' | t }}
+              </p>
+              <ul class="mt-2 errors">
+                {%- for field in form.errors -%}
+                  <li>
+                    {%- if field == 'form' -%}
+                      {{ form.errors.messages[field] }}
+                    {%- else -%}
+                      <a href="#RegisterForm-{{ field }}">
+                        {{ form.errors.translated_fields[field] | capitalize }}
+                        {{ form.errors.messages[field] }}
+                      </a>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        </div>
+        <div class="ps-form__fields">
+          <div class="form-group">
+            <div class="ps-form underline">
+              <input
+                class="form-control" 
+                type="text"
+                name="customer[first_name]"
+                id="RegisterForm-FirstName"
+                {% if form.first_name %}
+                  value="{{ form.first_name }}"
+                {% endif %}
+                autocomplete="given-name"
+                placeholder=" "
+              >
+              <label for="RegisterForm-FirstName">{{ section.settings.field_first_name_label }}</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="ps-form underline">
+              <input
+                class="form-control" 
+                type="text"
+                name="customer[last_name]"
+                id="RegisterForm-LastName"
+                {% if form.last_name %}
+                  value="{{ form.last_name }}"
+                {% endif %}
+                autocomplete="family-name"
+                placeholder=" "
+              >
+              <label for="RegisterForm-LastName">{{ section.settings.field_last_name_label }}</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="ps-form underline">
+              <input
+                class="form-control" 
+                type="email"
+                name="customer[email]"
+                id="RegisterForm-email"
+                {% if form.email %}
+                  value="{{ form.email }}"
+                {% endif %}
+                spellcheck="false"
+                autocapitalize="off"
+                autocomplete="email"
+                aria-required="true"
+                {% if form.errors contains 'email' %}
+                  aria-invalid="true"
+                  aria-describedby="RegisterForm-email-error"
+                {% endif %}
+                placeholder=" "
+              >
+              <label for="RegisterForm-email">{{ section.settings.field_email_label }}</label>
+            </div>
+            {%- if form.errors contains 'email' -%}
+              <div class="alert alert-danger" role="alert">
+                <span id="RegisterForm-email-error" class="form__message errors">
+                  {{ form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email }}.
+                </span>
+              </div>
+            {%- endif -%}
+          </div>
+          
+          <div class="form-group">
+            <div class="ps-form underline">
+              <input
+                class="form-control" 
+                type="password"
+                name="customer[password]"
+                id="RegisterForm-password"
+                aria-required="true"
+                {% if form.errors contains 'password' %}
+                  aria-invalid="true"
+                  aria-describedby="RegisterForm-password-error"
+                {% endif %}
+                placeholder=" "
+              >
+              <label for="RegisterForm-password">{{ section.settings.field_password_label }}</label>
+            </div>
+            {%- if form.errors contains 'password' -%}
+              <div class="alert alert-danger" role="alert">
+                <span id="RegisterForm-password-error" class="form__message errors">
+                  {{ form.errors.translated_fields.password | capitalize }}
+                  {{ form.errors.messages.password }}.
+                </span>
+              </div>
+            {%- endif -%}
+          </div>
+          
+        </div>
+        <div class="ps-form__submit">
+          <button class="ps-btn" type="submit">{{ section.settings.field_submit_label }}</button>
+        </div>
+        <div class="ps-form__links">
+          <p>{{ 'general.already_an_account' | t }}<a href="{{ routes.account_login_url }}"> {{ 'customer.login_page.sign_in' | t }}</a></p>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-register.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-register.settings.login.name"
+    },
+    {
+      "type": "text",
+      "id": "title_login",
+      "default": "Register New Account",
+      "label": "t:sections.main-register.settings.login.title"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext_login",
+      "default": "Let's get you all set up so you can verify your personal account and begin setting up your profile.",
+      "label": "t:sections.main-register.settings.login.subtext"
+    },
+    {
+      "type": "text",
+      "id": "field_first_name_label",
+      "default": "First name",
+      "label": "t:sections.main-register.settings.login.first_name"
+    },
+    {
+      "type": "text",
+      "id": "field_last_name_label",
+      "default": "Last name",
+      "label": "t:sections.main-register.settings.login.last_name"
+    },
+    {
+      "type": "text",
+      "id": "field_email_label",
+      "default": "Your Email",
+      "label": "t:sections.main-register.settings.login.email"
+    },
+    {
+      "type": "text",
+      "id": "field_password_label",
+      "default": "Your Password",
+      "label": "t:sections.main-register.settings.login.password"
+    },
+    {
+      "type": "text",
+      "id": "field_submit_label",
+      "default": "Create Account",
+      "label": "t:sections.main-register.settings.login.submit"
+    },
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

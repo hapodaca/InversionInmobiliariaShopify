@@ -1,0 +1,111 @@
+<div class="product-carousel-section">
+  {%- include 'product-card-styles.css' -%}
+  {%- assign collection = collections[section.settings.collection] -%}
+  {%- if collection.products.size > 0 -%}
+  <div class="ps-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+      <div class="container">
+          <div class="ps-section__header">
+              <h3 class="ps-section__heading">{{ section.settings.title }}</h3>
+              <div class="ps-section__carousel-navigation">
+                  <a class="ps-btn--carouse-arrow prev" href="#carousel-featured-{{ section.id }}" aria-label="Button prev"><i class="lnil lnil-chevron-left"></i></a>
+                  <a class="ps-btn--carouse-arrow next" href="#carousel-featured-{{ section.id }}" aria-label="Button next"><i class="lnil lnil-chevron-right"></i></a>
+              </div>
+          </div>
+          <div class="ps-section__content">
+              <div 
+                class="owl-slider ps-carousel" 
+                id="carousel-featured-{{ section.id }}" 
+                data-owl-nav="{{ section.settings.enable_nav }}"
+                data-owl-loop="{{ section.settings.enable_loop }}"
+                data-owl-autoplay="{{ section.settings.enable_autoplay }}"
+                data-owl-autoplay-timeout="{{ section.settings.autoplay_speed }}"
+                data-owl-gap="30"
+                data-owl-item="4"
+                data-owl-item-xs="1"
+                data-owl-item-sm="2"
+                data-owl-item-md="3"
+                data-owl-item-lg="4"
+              >
+                  {%- for product in collection.products limit: section.settings.product_limit -%}
+                      {%- render 'product-carouse', product: product -%}
+                  {%- endfor -%}
+              </div>
+          </div>
+      </div>
+  </div>
+  {%- endif -%}
+</div>
+
+<style>
+  /* FIX específico para ESTE carrusel (no toca los demás) */
+  #carousel-featured-{{ section.id }} .owl-stage {
+    display: block !important;      /* ← restablece el comportamiento nativo de Owl */
+    align-items: unset !important;
+  }
+  #carousel-featured-{{ section.id }} .owl-item {
+    display: block !important;      /* ← no usar flex en los items */
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var $carousel = $('#carousel-featured-{{ section.id }}');
+
+    if ($carousel.length && typeof $carousel.owlCarousel === 'function') {
+      // Evita doble inicialización si algún JS global ya lo montó
+      if ($carousel.hasClass('owl-loaded')) {
+        $carousel.trigger('destroy.owl.carousel');
+        $carousel.find('.owl-stage-outer').children().unwrap();
+        $carousel.removeClass('owl-center owl-loaded owl-text-select-on');
+      }
+
+      $carousel.owlCarousel({
+        loop: {{ section.settings.enable_loop | default: false }},
+        nav: {{ section.settings.enable_nav | default: false }},
+        autoplay: {{ section.settings.enable_autoplay | default: false }},
+        autoplayTimeout: {{ section.settings.autoplay_speed | default: 5000 }},
+        dots: false,               // sin puntitos en móvil
+        margin: 30,
+        responsive: {
+          0:    { items: 1 },      // móvil: 1 tarjeta
+          480:  { items: 2 },      // móvil ancho / phablet: 2
+          768:  { items: 3 },      // tablet
+          1024: { items: 4 }       // desktop (sin cambios)
+        }
+      });
+
+      // Flechas externas
+      $('.ps-btn--carouse-arrow.prev[href="#carousel-featured-{{ section.id }}"]').on('click', function(e) {
+        e.preventDefault();
+        $carousel.trigger('prev.owl.carousel');
+      });
+      $('.ps-btn--carouse-arrow.next[href="#carousel-featured-{{ section.id }}"]').on('click', function(e) {
+        e.preventDefault();
+        $carousel.trigger('next.owl.carousel');
+      });
+    }
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "Carrusel Propiedades",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Título", "default": "Mas Propiedades" },
+    { "type": "collection", "id": "collection", "label": "Colección" },
+
+    { "type": "range", "id": "product_limit", "min": 4, "max": 20, "step": 1, "label": "Límite de productos", "default": 8 },
+
+    { "type": "checkbox", "id": "enable_autoplay", "label": "Activar autoplay", "default": true },
+    { "type": "range", "id": "autoplay_speed", "label": "Velocidad del autoplay (ms)", "min": 1000, "max": 9500, "step": 500, "unit": "ms", "default": 5000 },
+    { "type": "checkbox", "id": "enable_loop", "label": "Habilitar loop infinito", "default": true },
+    { "type": "checkbox", "id": "enable_nav", "label": "Mostrar botones de navegación", "default": true },
+
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Padding Top", "default": 50 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Padding Bottom", "default": 50 }
+  ]
+}
+{% endschema %}
+
+

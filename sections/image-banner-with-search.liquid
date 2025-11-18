@@ -1,0 +1,391 @@
+{%- if section.settings.image != blank -%}
+    <div class="ps-home-search bg--cover" data-background="{{ section.settings.image | image_url }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+{%- else -%}
+    <div class="ps-home-search bg--cover" data-background="{{ 'home-bg.jpg' | asset_url }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+{%- endif -%}
+
+    <div class="container ps-section__wrapper">
+        <div class="ps-section__content">
+            <div class="ps-section__top">
+                <h3>{{ section.settings.heading }}</h3>
+                <p>{{ section.settings.text }}</p>
+            </div>
+            <div class="ps-section__form">
+                <form class="ps-form--projects-search-2" action="{{ routes.search_url }}" method="get">
+                    <div class="ps-form__top">
+                        {% for product_type in shop.types %}
+                            {{ product_type | link_to_type : class: 'ps-btn ps-form__type-toggle' }}
+                        {% endfor %}
+                    </div>
+                    <div class="ps-form__bottom">
+                        <div class="ps-form__fields">
+                            <div class="form-group">
+                                <div class="ps-form underline with-icon"><i class="lnil lnil-map-marker ps-form__icon"></i>
+                                    <input 
+                                        class="form-control" 
+                                        type="search"
+                                        name="q"
+                                        value="{{ search.terms | escape }}"
+                                        placeholder="{{ 'sections.image-banner-with-search.search.placeholder' | t }}" />
+                                        <i class="lnil lnil-target-alt ps-form__icon second"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-form__actions">
+                            <button class="ps-btn ps-btn--fullwidth" type="submit">{{ 'sections.image-banner-with-search.search.button' | t }}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <p class="ps-section__stats">
+                {%- if section.settings.sub_text_1 != blank -%}
+                    <span><i class="lnil lnil-apartment"></i>{{ section.settings.sub_text_1 }}</span>
+                {%- endif -%}
+
+                {%- if section.settings.sub_text_2 != blank -%}
+                    <span><i class="lnil lnil-offer"></i>{{ section.settings.sub_text_2 }}</span>
+                {%- endif -%}
+            </p>
+        </div>
+    </div>
+
+
+
+<style>
+/* === SOLUCIÓN DEFINITIVA: HEADER + TABS + BOTÓN === */
+
+/* FIX CRÍTICO: Header fixed ocultando contenido */
+#shopify-section-{{ section.id }} .ps-home-search {
+  position: relative;
+  z-index: 1;
+  /* AUMENTAR padding-top para compensar header fixed */
+  padding-top: clamp(120px, 15vw, 180px) !important;
+}
+
+/* Título y descripción: más espacio superior */
+#shopify-section-{{ section.id }} .ps-section__top {
+  position: relative;
+  z-index: 1;
+  padding-top: 0; /* ya no necesario, se maneja arriba */
+}
+
+/* Botón Buscar: cambio de color a #002b5b */
+#shopify-section-{{ section.id }} .ps-btn[type="submit"],
+#shopify-section-{{ section.id }} .ps-form__actions .ps-btn {
+  background-color: #002b5b !important;
+  border-color: #002b5b !important;
+}
+
+#shopify-section-{{ section.id }} .ps-btn[type="submit"]:hover,
+#shopify-section-{{ section.id }} .ps-form__actions .ps-btn:hover {
+  background-color: #001a3d !important;
+  border-color: #001a3d !important;
+}
+
+/* Contenedor del formulario */
+#shopify-section-{{ section.id }} .ps-section__form {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+#shopify-section-{{ section.id }} .ps-form__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+}
+
+/* TABS: altura absolutamente fija para evitar saltos */
+#shopify-section-{{ section.id }} .ps-form__type-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  min-width: 100px;
+  
+  /* ALTURA FIJA CRÍTICA - sin cambios */
+  min-height: 40px !important;
+  height: 40px !important;
+  max-height: 40px !important;
+  
+  padding: 6px 12px !important;
+  
+  /* Tipografía estable */
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  
+  /* Texto sin desbordamiento */
+  white-space: normal !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  word-wrap: break-word !important;
+  
+  /* Apariencia base */
+  background: rgba(255,255,255,0.92) !important;
+  color: #1e4d8a !important;
+  border: 1px solid #CDD1D5 !important;
+  border-radius: 6px 6px 0 0 !important;
+  
+  /* CRÍTICO: sin movimientos que cambien layout */
+  transform: none !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  
+  box-shadow: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+
+/* === DESKTOP (1200px+): Tabs integrados === */
+@media (min-width: 1200px) {
+  #shopify-section-{{ section.id }} .ps-home-search {
+    padding-top: clamp(140px, 18vw, 200px) !important; /* más espacio en desktop */
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__top { 
+    margin-bottom: -1px;
+    gap: 2px;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__type-toggle {
+    font-size: 13px !important;
+    padding: 8px 14px !important;
+    min-height: 42px !important;
+    height: 42px !important;
+    max-height: 42px !important;
+    border-radius: 8px 8px 0 0 !important;
+    min-width: 110px;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__type-toggle.is-active {
+    background: #ffffff !important;
+    color: #002b5b !important;
+    border-bottom-color: transparent !important;
+    z-index: 4 !important;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__bottom {
+    border-top: 1px solid #CDD1D5;
+    border-radius: 0 12px 12px 12px;
+    position: relative;
+    z-index: 3;
+  }
+}
+
+/* === TABLET (768px - 1199px): Separados === */
+@media (min-width: 768px) and (max-width: 1199px) {
+  #shopify-section-{{ section.id }} .ps-form__top { 
+    margin-bottom: 8px;
+    gap: 4px;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__type-toggle {
+    border-radius: 6px !important;
+    min-width: 100px;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__type-toggle.is-active {
+    background: #ffffff !important;
+    color: #002b5b !important;
+    border-color: #999 !important;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__bottom {
+    border: 1px solid #CDD1D5;
+    border-radius: 10px;
+  }
+}
+
+/* === MÓVIL (767px-): ALTURA ABSOLUTAMENTE FIJA === */
+@media (max-width: 767px) {
+  #shopify-section-{{ section.id }} .ps-form__top { 
+    margin-bottom: 8px; /* separación clara */
+    gap: 3px;
+    /* FORZAR altura del contenedor */
+    min-height: 40px !important;
+    height: 40px !important;
+    overflow: visible;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__type-toggle {
+    /* DIMENSIONES ABSOLUTAMENTE FIJAS */
+    min-height: 36px !important;
+    height: 36px !important;
+    max-height: 36px !important;
+    min-width: 80px;
+    max-width: 120px;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+    border-radius: 5px !important;
+    
+    /* ELIMINAR CUALQUIER EFECTO VISUAL */
+    box-shadow: none !important;
+    border-width: 1px !important;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__type-toggle.is-active {
+    background: #ffffff !important;
+    color: #002b5b !important;
+    border-color: #999 !important;
+    /* SIN efectos adicionales que cambien altura */
+    box-shadow: none !important;
+    transform: none !important;
+  }
+  
+  #shopify-section-{{ section.id }} .ps-form__bottom {
+    border: 1px solid #CDD1D5;
+    border-radius: 8px;
+  }
+}
+
+/* === MÓVIL ULTRA PEQUEÑO (480px-) === */
+@media (max-width: 480px) {
+  #shopify-section-{{ section.id }} .ps-form__type-toggle {
+    min-height: 34px !important;
+    height: 34px !important;
+    max-height: 34px !important;
+    min-width: 75px;
+    max-width: 110px;
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+  }
+}
+
+/* === HOVER: SIN CAMBIOS DE DIMENSIÓN === */
+#shopify-section-{{ section.id }} .ps-form__type-toggle:hover:not(.is-active) {
+  background: rgba(245,247,250,0.95) !important;
+  border-color: #aab5c3 !important;
+  color: #002b5b !important;
+  /* CRÍTICO: sin efectos que cambien layout */
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* === ESTABILIDAD TOTAL: fuerza todos los estados === */
+#shopify-section-{{ section.id }} .ps-form__type-toggle,
+#shopify-section-{{ section.id }} .ps-form__type-toggle:hover,
+#shopify-section-{{ section.id }} .ps-form__type-toggle:focus,
+#shopify-section-{{ section.id }} .ps-form__type-toggle:active,
+#shopify-section-{{ section.id }} .ps-form__type-toggle.is-active,
+#shopify-section-{{ section.id }} .ps-form__type-toggle:visited {
+  /* Posición estática */
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  
+  /* Sin movimientos */
+  transform: none !important;
+  translate: none !important;
+  
+  /* Box model estable */
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  
+  /* Sin efectos de profundidad en móvil */
+  outline: none !important;
+}
+
+/* Responsive padding del contenedor principal */
+@media (max-width: 767px) {
+  #shopify-section-{{ section.id }} .ps-home-search {
+    padding-top: clamp(80px, 12vw, 120px) !important;
+  }
+}
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.image-banner-with-search.name",
+  "tag": "section",
+  "class": "homepage-one",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.image-banner-with-search.settings.image.label"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "heading",
+        "default": "Find your best Real Estate",
+        "label": "t:sections.image-banner-with-search.settings.heading.label"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "text",
+        "default": "Easy to buy & sell your property with our Finderland, Top-Class Real Estate Center",
+        "label": "t:sections.image-banner-with-search.settings.text.label"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "sub_text_1",
+        "default": "Over 2M properties",
+        "label": "t:sections.image-banner-with-search.settings.sub_text_1.label"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "sub_text_2",
+        "default": "Without commision",
+        "label": "t:sections.image-banner-with-search.settings.sub_text_2.label"
+    },
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

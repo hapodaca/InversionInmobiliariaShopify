@@ -1,0 +1,50 @@
+{%- liquid
+  assign show_badge_sale = settings.badge_sale
+  assign show_badge_new = settings.badge_new
+  assign show_badge_sold_out = settings.badge_sold_out
+  assign badge_sale_style = settings.badge_sale_style
+  assign current_variant = product.selected_or_first_available_variant
+
+  if show_badge_sale and settings.badge_sale_show_method == 'individually'
+    assign show_badge_sale = product.metafields.custom.badge_sale
+  endif
+-%}
+<div class="prd-labels{{ class }}" {% if render %}data-render="badges-{{ product_form_id }}"{% endif %}>
+  {%- if layout != 'product-card-compact' and current_variant.selling_plan_allocations.size > 0 and layout != 'product-card-lookbook' -%}
+    {%- if product.requires_selling_plan -%}
+      <div class="prd-label prd-label--subscription">{{ 'general.subscribe_only' | t }}</div>
+    {%- else -%}
+      <div class="prd-label prd-label--subscription-icon" data-toggle="tooltip" data-tippy-content="{{ 'general.has_subscription' | t | escape }}" data-tippy-placement="right">{% render 'icon-return3' %}</div>
+    {%- endif -%}
+  {%- endif -%}
+  {%- liquid
+    assign on_sale = false
+    if current_variant.compare_at_price > current_variant.price
+      assign on_sale = true
+    endif
+    assign new = 0
+    for tag in product.tags
+      if tag == 'new' or tag == 'NEW' or tag == 'New' or tag contains '_new'
+        assign new = 1
+      endif
+    endfor
+  -%}
+  {%- if new == 1 and show_badge_new -%}
+    <div class="prd-label prd-label--new">{{ 'general.new' | t | upcase }}</div>
+  {%- endif -%}
+  {%- if on_sale and show_badge_sale -%}
+    <div class="prd-label prd-label--sale">
+      {%- assign percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | times: 100 | divided_by: 100 | floor -%}
+      {%- if badge_sale_style == 'all' -%}
+        <span>-{{ percent }}% <span class="sale-text">{{ 'products.product.on_sale' | t | upcase }}</span></span>
+        {%- elsif badge_sale_style == 'text' -%}
+        <span><span class="sale-text">{{ 'products.product.on_sale' | t | upcase }}</span></span>
+      {%- else -%}
+        <span>-{{ percent }}%</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+  {%- if show_badge_sold_out and current_variant.available == false -%}
+    <div class="prd-label prd-label--soldout">{{ 'products.product.sold_out' | t | upcase }}</div>
+  {%- endif -%}
+</div>

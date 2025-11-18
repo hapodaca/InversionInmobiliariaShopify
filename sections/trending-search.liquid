@@ -1,0 +1,99 @@
+{%- if section.settings.predictive_search_quick_tags != blank -%}
+<div class="ps-section ps-trending-seacrch" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="container">
+        <div class="ps-section__header">
+            <h3 class="ps-section__heading">{{ section.settings.title }}</h3>
+            <p>{%- liquid
+                echo 'sections.trending-search.last_update_text' | t
+            -%} {{ "now" | date: '%l:%M %p, %d/%m/%Y' }}</p>
+        </div>
+        <div class="ps-section__content">
+            <div class="ps-section__links">
+                {%- liquid assign quick_search_tags = section.settings.predictive_search_quick_tags | strip_html | split: ',' -%}
+                {%- for tag in quick_search_tags -%}
+                    <a class="ps-section__link" href="{{ routes.search_url }}?q={{ tag | strip }}&product=product">{{ tag | strip }}</a>
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+    "name": "t:sections.trending-search.name",
+    "tag": "section",
+    "class": "homepage-one",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings": [
+        {
+            "type": "text",
+            "id": "title",
+            "label": "t:sections.trending-search.settings.heading.label",
+            "default": "Trending Search"
+        },
+        {
+            "type": "textarea",
+            "id": "predictive_search_quick_tags",
+            "label": "Keywords",
+            "default": "Property New York, Property California, Shop House, San Jose Real Estate, Villa, Commercial Office, Garden Rose Project, Amia Residence Apartment, Brooklyn Town, Mahattan, To Rent, To Sell, Townhouse Beverly Hill, Indochona Plaza Project"
+        },
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+    ],
+    "presets": [
+        {
+            "name": "Trending Search",
+            "category": "Blog",
+            "settings": {
+                "title": "Trending Search",
+                "predictive_search_quick_tags": "Property New York, Property California, Shop House, San Jose Real Estate, Villa, Commercial Office, Garden Rose Project, Amia Residence Apartment, Brooklyn Town, Mahattan, To Rent, To Sell, Townhouse Beverly Hill, Indochona Plaza Project"
+            }
+        }
+    ]
+}
+{% endschema %}

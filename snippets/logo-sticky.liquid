@@ -1,0 +1,23 @@
+{%- if settings.logo_text_enabled -%}
+    <span style="color: {{ settings.logo_text_color_sticky }};">{{ settings.logo_text }}</span>
+{%- else -%}
+    {%- if settings.logo_sticky != blank -%}
+        <img 
+            src="{{ settings.logo_sticky | image_url | prepend: "https:" }}" 
+            alt="{{ shop.name }}" 
+            {% if settings.logo_width_sticky %}width="{{ settings.logo_width_sticky }}"{% endif %}
+            style="max-width: 100%; height: auto;" 
+            class="logo-image-sticky"
+        />
+    {%- elsif settings.logo != blank -%}
+        <img 
+            src="{{ settings.logo | image_url | prepend: "https:" }}" 
+            alt="{{ shop.name }}" 
+            {% if settings.logo_width_sticky %}width="{{ settings.logo_width_sticky }}"{% endif %}
+            style="max-width: 100%; height: auto;" 
+            class="logo-image-sticky"
+        />
+    {%- else -%}                            
+        <span style="color: {{ settings.logo_text_color_sticky }};">{{ settings.logo_text }}</span>
+    {%- endif -%}
+{%- endif -%}

@@ -1,0 +1,98 @@
+
+    <div class="ps-layout__right">
+        <div class="ps-sidebar--blog">
+            
+            {%- for block in blocks -%}
+                {%- case block.type -%}
+                {%- when 'featured_posts' -%}
+                    {%- if block.settings.article_1 != blank or block.settings.article_2 != blank or block.settings.article_3 != blank or block.settings.article_4 != blank -%}
+                        <div class="ps-widget ps-widget--blog ps-widget--popular-posts">
+                            <h4 class="ps-widget__heading">{{ block.settings.title }}</h4>
+                            <div class="ps-widget__content">
+
+                                {%- if block.settings.article_1 != blank -%}
+                                    {%- render 'article-sidebar', article: block.settings.article_1 -%}
+                                {%- endif -%}
+
+                                {%- if block.settings.article_2 != blank -%}
+                                    {%- render 'article-sidebar', article: block.settings.article_2 -%}
+                                {%- endif -%}
+
+                                {%- if block.settings.article_3 != blank -%}
+                                    {%- render 'article-sidebar', article: block.settings.article_3 -%}
+                                {%- endif -%}
+
+                                {%- if block.settings.article_4 != blank -%}
+                                    {%- render 'article-sidebar', article: block.settings.article_4 -%}
+                                {%- endif -%}
+
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- when 'social' -%}
+                    {%- if block.settings.social -%}
+                        <div class="ps-widget ps-widget--blog">
+                            <h4 class="ps-widget__heading">{{ block.settings.sidebar_social_title }}</h4>
+                            <div class="ps-widget__content">
+                                <div class="ps-social-links ps-social-links--rounded">
+                                    {%- render 'social-links' -%}
+                                </div>
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- when 'tags' -%}
+                    {%- if block.settings.tags and blog.all_tags.size > 0 -%}
+                        <div class="ps-widget ps-widget--blog">
+                            <h4 class="ps-widget__heading">{{ 'general.tags' | t }}</h4>
+                            <div class="ps-widget__content">
+                                <ul class="tags-list post-tags-list">
+                                    {% for tag in blog.all_tags %}
+                                      <li>{{ tag | link_to_tag: tag }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- when 'products' -%}
+                    {%- if block.settings.sidebar_collection != blank -%}
+                        <div class="ps-widget ps-widget--blog ps-widget--popular-posts">
+                            <h4 class="ps-widget__heading">{{ block.settings.sidebar_collection_title }}</h4>
+                            <div class="ps-widget__content">
+                                {%- for product in collections[block.settings.sidebar_collection].products limit: block.settings.sidebar_products_limit -%}
+                                    {% render 'product-sidebar', product: product %}
+                                {%- endfor -%}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {%- when 'newsletter' -%}
+                    {%- if block.settings.newsletter_yes -%}
+                        <div class="ps-widget ps-widget--blog">
+                            {%- form 'customer', class: 'ps-form--widget-newsletter', name: 'newsletter' -%}
+                                <div class="ps-form__header">
+                                    <h3>{{ block.settings.newsletter_heading }}</h3>
+                                    <p>{{ block.settings.newsletter_subtext }}</p>
+                                </div>
+                                <div class="ps-form__content">
+                                    <div class="ps-form__icon"><i class="icon-envelope"></i></div>
+                                    <input 
+                                        class="form-control" 
+                                        type="email" 
+                                        name="contact[email]" 
+                                        value="{% if customer %}{{ customer.email }}{% endif %}"
+                                        aria-required="true"
+                                        autocorrect="off"
+                                        autocapitalize="off"
+                                        autocomplete="email"
+                                        placeholder="{{ block.settings.newsletter_input }}" required />
+                                </div>
+                                <div class="ps-form__submit">
+                                    <button class="ps-btn ps-btn--fullwidth" type="submit" name="commit">{{ block.settings.newsletter_button }}</button>
+                                </div>
+                            {%- endform -%}
+                        </div>
+                    {%- endif -%}
+                {%- endcase -%}
+            {%- endfor -%}
+
+        </div>
+    </div>

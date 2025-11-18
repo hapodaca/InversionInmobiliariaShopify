@@ -1,0 +1,58 @@
+{%- liquid
+  if product.requires_selling_plan == true and layout == 'product-card' or layout == 'product-sticky'
+    assign show = false
+  else
+    assign show = true
+  endif
+
+
+  assign current_variant = current_variant | default: false, allow_false: true
+  assign max = false
+
+  if current_variant != false
+    assign inventory_quantity = current_variant.inventory_quantity
+
+    if inventory_quantity > 0
+      assign max = true
+    endif
+  endif
+-%}
+{%- if show -%}
+  {%- if hide_quantity == 1 and layout == 'product-card' -%}
+    <div class="mt-15"></div>
+  {%- endif -%}
+  <div data-render="qty-{{ product_form_id }}">
+    <quantity-input {% if hide_quantity == 1 %} class="hidden"{% endif %}>
+      <div class="prd-quantity">
+        <input class="form-control"
+              type="number"
+              name="{{ name }}"
+              value="{{ value }}"
+              min="{{ min }}"
+
+              {%- if max -%}
+                max="{{ inventory_quantity }}"
+              {%- endif -%}
+
+              {% if product_form_id %}form="{{ product_form_id }}"{% endif %}
+              aria-label="{{ 'products.product.quantity.input_label' | t: product: product_title | escape }}"
+          {%- if in_cart -%}
+            id="Quantity-{{ item.index | plus: 1 }}"
+            data-index="{{ item.index | plus: 1 }}"
+          {% endif %}
+          {% if form != blank %}form="{{ form }}"{% endif %}
+        >
+        <div class="prd-quantity-nav">
+          <button class="prd-quantity-btn prd-quantity-up" name="plus">
+            <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product_title | escape }}</span>
+            {% render 'icon-plus' %}
+          </button>
+          <button class="prd-quantity-btn prd-quantity-down" name="minus">
+            <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product_title | escape }}</span>
+            {% render 'icon-minus' %}
+          </button>
+        </div>
+      </div>
+    </quantity-input>
+  </div>
+{%- endif -%}

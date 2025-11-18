@@ -1,0 +1,421 @@
+{% render 'air-aggregate-rating' %}
+{% comment %}theme-check-disable TemplateLength, NestedSnippet, UnusedAssign{% endcomment %}
+{%- liquid
+assign layout = 'product'
+assign section_id = section.id
+assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: product.id
+assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+assign hide_variants = product.metafields.custom.hide_variants
+if hide_variants.value != true
+assign hide_variants = section.settings.hide_variants
+endif
+assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
+assign media_count = product.media.size
+if hide_variants and media_count > 1 and variant_images.size > 0
+assign media_count = media_count | minus: variant_images.size | plus: 0
+endif
+-%}
+<div class="ps-page--single-property main-product-booking" data-section-render style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+<div class="ps-page__header">
+   <div class="container">
+      {% render 'breadcrumb' %}
+   </div>
+</div>
+<div class="ps-page__content">
+   <div class="container">
+      <div class="ps-section--single-project">
+         <div class="ps-section__wrapper">
+            <div class="ps-project ps-project--detail">
+               <div class="ps-project__top">
+                  {%- if product.images.size > 0 -%}
+                  <div class="ps-project__gallery">
+                     <div class="ps-project__nav">
+                        {%- for image in product.images -%}
+                           <div class="ps-block--gallery-image">
+                              <a href="{{ image | image_url: width: '1085x560' }}" data-fancybox="gallery">
+                                 <img src="{{ image | image_url: width: '1085x560' }}" alt="{{ product.title | escape }}" />
+                             </a>
+                           </div>
+                         {%- endfor -%}
+                     </div>
+                     <div class="ps-project__thumb">
+                        {%- for image in product.images -%}
+                           <div class="ps-block--gallery-image">
+                             <img src="{{ image | image_url: width: '560x560' }}" alt="{{ product.title | escape }}" />
+                           </div>
+                         {%- endfor -%}
+                     </div>
+                  </div>
+                  {%- endif -%}
+                  {%- if settings.product_show_add_cart -%}
+                     <div class="ps-project__header">
+                     {%- else -%}
+                     <div class="ps-project__header no-right">
+                     {%- endif -%}
+                         <div class="ps-project__header-left">
+                             <h1 class="ps-project__name">{{ product.title | escape }}</h1>
+
+                             <div class="ps-project__rating"><div class="AirReviews-Widget AirReviews-Widget--Stars"></div></div>
+
+                             {%- if product.metafields.custom.address != blank -%}
+                                 <p class="ps-project__address">{{ product.metafields.custom.address }}</p>
+                             {%- endif -%}
+
+                             <div class="ps-project__single-price">
+                                 {%- render 'price', render: true, product: product, use_variant: true, price_class: 'price--large', product_form_id: product_form_id, layout: layout -%}
+                             </div>
+
+                             {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+                                 <div class="prd-block-tax">
+                                   {%- if shop.taxes_included -%}
+                                     {{ 'products.product.include_taxes' | t }}
+                                   {%- endif -%}
+                                   {%- if shop.shipping_policy.body != blank -%}
+                                     {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+                                   {%- endif -%}
+                                 </div>
+                             {%-  endif -%}
+
+                             {%- if product.metafields.custom.short_description != blank -%}
+                                 <p class="ps-project__short_description">{{ product.metafields.custom.short_description }}</p>
+                             {%- endif -%}
+                         </div>
+
+                         {%- if settings.product_show_add_cart -%}
+                             <div class="ps-project__header-right">
+                                 <div class="ps-project__cart">
+                                     {%- liquid
+                                         assign swatches_width = product.metafields.custom.swatches_width
+                                         if swatches_width == blank
+                                         assign swatches_width = block.settings.swatches_width
+                                         endif
+                                     -%}
+                                     {%- render 'variant_picker',
+                                         product: product,
+                                         picker_type: block.settings.picker_type,
+                                         shopify_attributes: block.shopify_attributes,
+                                         section: section,
+                                         section_id: section_id,
+                                         layout: layout,
+                                         product_form_id: product_form_id,
+                                         use_pics: block.settings.use_pics,
+                                         use_variants_media: block.settings.use_variants_media,
+                                         color_options_name: settings.product_card_color_options_name,
+                                         swatches_width: swatches_width
+                                     -%}
+                                     {%- liquid assign buy_buttons_block_size = section.blocks | where: 'type', 'buy_buttons' | size -%}
+                                     {%- if buy_buttons_block_size == 0 -%}
+                                         {%- form 'product', product, id: product_form_id, class: 'form js-product-form', novalidate: 'novalidate' -%}
+                                         <input type="hidden" name="id" value="{{ current_variant.id }}">
+                                         {%- endform -%}
+                                     {%- endif -%}
+
+                                     {% render 'product-buy-buttons'
+                                       block: block,
+                                       product: product,
+                                       product_form_id: product_form_id,
+                                       section_id: section_id,
+                                       layout: layout,
+                                       show_dynamic_checkout: false,
+                                       checkout_agreement: false,
+                                       show_cart_note: false,
+                                       hide_quantity: false,
+                                       hide_add_to_cart: false,
+                                       booking: true
+                                     %}
+
+                                 </div>
+                             </div>
+                         {%- endif -%}
+                     </div>
+                     <div class="ps-project__information">
+                         <div class="ps-project__meta">
+
+                             {%- if product.type != blank -%}
+                                 <figure>
+                                     <figcaption>{{ 'products.product.type' | t }}</figcaption>
+                                     <p>{{ product.type }}</p>
+                                 </figure>
+                             {%- endif -%}
+
+                             {%- if product.vendor != blank -%}
+                                 <figure>
+                                     <figcaption>{{ 'products.product.vendor' | t }}</figcaption>
+                                     <p>{{ product.vendor }}</p>
+                                 </figure>
+                             {%- endif -%}
+
+                             {%- if product.metafields.custom.year_built != blank -%}
+                                 <figure>
+                                     <figcaption>{{ 'products.product.year_built' | t }}</figcaption>
+                                     <p>{{ product.metafields.custom.year_built }}</p>
+                                 </figure>
+                             {%- endif -%}
+                             
+                             {%- if product.metafields.custom.direction != blank -%}
+                                 <figure>
+                                     <figcaption>{{ 'products.product.direction' | t }}</figcaption>
+                                     <p>{{ product.metafields.custom.direction }}</p>
+                                 </figure>
+                             {%- endif -%}
+
+                             {%- if current_variant.sku != blank -%}
+                                 <figure>
+                                     <figcaption>{{ 'products.product.property_id' | t }}</figcaption>
+                                     <p>{{ current_variant.sku }}</p>
+                                 </figure>
+                             {%- endif -%}
+
+                         </div>
+                         <div class="ps-project__services">
+                             
+                             {%- if product.metafields.custom.property_size != blank -%}
+                                 <p><span><i class="lnil lnil-size"></i>{{ product.metafields.custom.property_size }}</span></p>
+                             {%- endif -%}
+
+                             {%- if product.metafields.custom.bedrooms != blank -%}
+                                 <p><span><i class="lnil lnil-hospital-bed"></i>{{ product.metafields.custom.bedrooms }} {{ 'products.product.rooms' | t }}</span></p>
+                             {%- endif -%}
+                 
+                             {%- if product.metafields.custom.bathrooms != blank -%}
+                                 <p><span><i class="icon icon-bathtub"></i>{{ product.metafields.custom.bathrooms }} {{ 'products.product.bath' | t }}</span></p>
+                             {%- endif -%}
+
+                             {%- if product.metafields.custom.gara != blank -%}
+                                 <p><span><i class="lnil lnil-car"></i>{{ product.metafields.custom.gara }} {{ 'products.product.gara' | t }}</span></p>
+                             {%- endif -%}
+                 
+                             {%- if product.metafields.custom.pool != blank -%}
+                                 <p><span><i class="icon icon-swim"></i>{{ product.metafields.custom.pool }} {{ 'products.product.pool' | t }}</span></p>
+                             {%- endif -%}
+                             {%- if product.metafields.custom.kitchen != blank -%}
+                                 <p><span><i class="icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="20" height="20" viewBox="0 0 20 20">
+                                 <path d="M20 6.5c0-2.481-2.019-4.5-4.5-4.5-0.464 0-0.917 0.070-1.353 0.207-0.925-1.371-2.476-2.207-4.147-2.207s-3.222 0.836-4.147 2.207c-0.436-0.138-0.889-0.207-1.353-0.207-2.481 0-4.5 2.019-4.5 4.5 0 2.312 1.753 4.223 4 4.472v8.528c0 0.276 0.224 0.5 0.5 0.5h11c0.276 0 0.5-0.224 0.5-0.5v-8.528c2.247-0.25 4-2.16 4-4.472zM6.558 10.502c0.482-0.249 0.92-0.587 1.285-0.991 0.67 0.321 1.408 0.488 2.157 0.488s1.486-0.168 2.157-0.488c0.365 0.404 0.802 0.742 1.285 0.991 0.484 0.249 1.015 0.408 1.558 0.469v5.028h-10v-5.028c0.543-0.061 1.074-0.22 1.558-0.469zM5 19v-2h10v2h-10zM15.5 10c-1.121 0-2.147-0.517-2.815-1.42-0.152-0.206-0.435-0.263-0.656-0.133-0.613 0.362-1.314 0.553-2.029 0.553s-1.417-0.191-2.029-0.553c-0.221-0.13-0.504-0.073-0.656 0.133-0.668 0.902-1.694 1.42-2.815 1.42-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5c0.297 0 0.588 0.036 0.87 0.109-0.175 0.426-0.288 0.874-0.34 1.336-0.030 0.274 0.168 0.522 0.442 0.552s0.522-0.167 0.552-0.442c0.058-0.528 0.219-1.030 0.477-1.494 0-0 0-0 0-0 0.706-1.271 2.047-2.060 3.499-2.060s2.793 0.789 3.499 2.060c0 0 0 0 0 0 0.258 0.464 0.418 0.967 0.477 1.495 0.030 0.274 0.278 0.472 0.552 0.442s0.472-0.277 0.442-0.552c-0.051-0.463-0.165-0.91-0.34-1.336 0.282-0.072 0.573-0.109 0.87-0.109 1.93 0 3.5 1.57 3.5 3.5s-1.57 3.5-3.5 3.5z" fill="#000000"/>
+                                 </svg></i>
+                                 {{ product.metafields.custom.kitchen }} {{ 'products.product.kitchen' | t }}</span></p>
+                             {%- endif -%}
+
+                         </div>
+                     </div>
+               </div>
+               <div class="ps-project--detail ps-project__content">
+                  {%- if section.blocks.size > 0 -%}
+                     {%- for block in section.blocks -%}
+                        {%- case block.type -%}
+                        {%- when '@app' -%}
+                        {%- liquid
+                        render block
+                        -%}
+                        {%- when 'floor-plan' -%}
+                           {% render 'floor-plan' product: product, section: block %}
+                        {%- when 'google_map' -%}
+                           {% render 'google_map' product: product, section: block %}
+                        {%- when 'content' -%}
+                           {% render 'product-content' product: product, section: block %}
+                        {%- when 'amenities' -%}
+                           {% render 'product-amenities' product: product, section: block %}
+                        {%- when 'product-review' -%}
+                           {% render 'product-review' product: product, section: block %}
+                        {%- endcase -%}
+                     {%- endfor -%}
+                  {%- endif -%}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+{%- liquid
+    if product.selected_or_first_available_variant.featured_media
+        assign seo_media = product.selected_or_first_available_variant.featured_media
+    else
+        assign seo_media = product.featured_media
+    endif -%}
+
+<script type="application/ld+json">
+    {
+      "@context": "http://schema.org/",
+      "@type": "Product",
+      "name": {{ product.title | json }},
+      "url": {{ request.origin | append: product.url | json }},
+      {% if seo_media -%}
+        "image": [
+          {{ seo_media | image_url: width: seo_media.preview_image.width | prepend: "https:" | json }}
+        ],
+      {%- endif %}
+      "description": {{ product.description | strip_html | json }},
+      {% if product.selected_or_first_available_variant.sku != blank -%}
+        "sku": {{ product.selected_or_first_available_variant.sku | json }},
+      {%- endif %}
+      "brand": {
+        "@type": "Brand",
+        "name": {{ product.vendor | json }}
+      },
+      "offers": [
+          {%- for variant in product.variants -%}
+            {
+              "@type" : "Offer",
+              {%- if variant.sku != blank -%}
+                "sku": {{ variant.sku | json }},
+              {%- endif -%}
+              {%- if variant.barcode.size == 12 -%}
+                "gtin12": {{ variant.barcode | json }},
+              {%- endif -%}
+              {%- if variant.barcode.size == 13 -%}
+                "gtin13": {{ variant.barcode | json }},
+              {%- endif -%}
+              {%- if variant.barcode.size == 14 -%}
+                "gtin14": {{ variant.barcode | json }},
+              {%- endif -%}
+              "availability" : "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+              "price" : {{ variant.price | divided_by: 100.00 | json }},
+              "priceCurrency" : {{ cart.currency.iso_code | json }},
+              "url" : {{ request.origin | append: variant.url | json }}
+            }{% unless forloop.last %},{% endunless %}
+          {%- endfor -%}
+        ]
+    }
+</script>
+
+<script>
+   $(document).ready(function() {
+      var productNavSlider = $('.ps-project__gallery .ps-project__nav');
+      var productThumbSlider = $('.ps-project__gallery .ps-project__thumb');
+
+      if (!productNavSlider.hasClass('slick-initialized')) {
+         productNavSlider.slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: productThumbSlider
+         });
+      }
+
+      if (!productThumbSlider.hasClass('slick-initialized')) {
+         productThumbSlider.slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: productNavSlider,
+            dots: true,
+            centerMode: true,
+            autoplay: true,
+            focusOnSelect: true,
+            autoplaySpeed: 3000,
+            prevArrow: '<button class="slide-arrow prev-arrow"><i class="icon-chevron-left"></i></button>',
+            nextArrow: '<button class="slide-arrow next-arrow"><i class="icon-chevron-right"></i></button>'
+         });
+      }
+   });
+
+</script>
+
+{% schema %}
+    {
+        "name": "t:sections.main-product.name",
+        "tag": "section",
+        "class": "product-section",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Spacing Options"
+            },
+            {
+                "type": "range",
+                "id": "margin_top",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Margin Top",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Margin Bottom",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Padding Top",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Padding Bottom",
+                "default": 0
+            }
+        ],
+        "blocks": [
+            {
+                "type": "@app"
+            },
+            {
+                "type": "content",
+                "name": "t:sections.main-product.blocks.content.name",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "default": "Description"
+                    }
+                ]
+            },
+            {
+                "type": "amenities",
+                "name": "t:sections.main-product.blocks.amenities.name",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "default": "Amenities"
+                    }
+                ]
+            },
+            {
+                "type": "floor-plan",
+                "name": "t:sections.main-product.blocks.floor-plan.name",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "default": "Floor Plan"
+                    }
+                ]
+            },
+            {
+                "type": "google_map",
+                "name": "Google map",
+                 "settings": []
+            },
+            {
+                "type": "product-review",
+                "name": "t:sections.main-product.blocks.product-review.name",
+                "limit": 1,
+                "settings": []
+            }
+        ]
+    }
+{% endschema %}

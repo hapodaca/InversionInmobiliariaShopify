@@ -1,0 +1,152 @@
+<div class="ps-page ps-page--post-single" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="ps-page__header">
+        <div class="container">
+            {% render 'breadcrumb' %}
+
+            {%- if page.metafields.custom.banner != blank -%}
+                <div class="ps-page__hero"><img src="{{ page.metafields.custom.banner | image_url: width: '1540' }}" alt="{{ page.title | escape }}" /></div>
+            {%- endif -%}
+        </div>
+    </div>
+    <div class="ps-page__content">
+        <div class="container">
+            <div class="ps-layout__left">
+                <article class="ps-post ps-post--detail">
+                    <div class="ps-post__header">
+                      {% if page.handle == "quienes-somos" %}
+                        <h1 style="font-size: 2.2em; font-weight: 700; color: #0b2b5e; text-transform: uppercase; text-align: center; letter-spacing: 1px; margin-bottom: 10px;">
+                          {{ page.title | escape }}
+                        </h1>
+                        <div style="width: 60px; height: 4px; background-color: #d4af37; margin: 0 auto 30px;"></div>
+                      {% else %}
+                        <h1 class="ps-post__title">{{ page.title | escape }}</h1>
+                      {% endif %}
+                    </div>
+                    <div class="ps-post__content ps-document">{{ page.content }}</div>
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "@id": "{{ shop.url }}/pages/quienes-somos#about",
+  "url": "{{ shop.url }}/pages/quienes-somos",
+  "name": "Quiénes Somos - {{ shop.name }}",
+  "headline": "Quiénes Somos",
+  "description": "Inversión Inmobiliaria es una empresa colombiana especializada en conectar inversionistas con proyectos inmobiliarios rentables. Brindamos asesoría personalizada en preventa, cesión de derechos y oportunidades de inversión en el sector inmobiliario.",
+  "inLanguage": "es",
+  
+  "publisher": {
+    "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% if settings.organization_logo != blank %}{{ settings.organization_logo | image_url: width: 500 }}{% else %}{{ settings.logo | image_url: width: 500 }}{% endif %}"
+    },
+    "sameAs": [
+      "{{ settings.social_linkedin_link | escape }}",
+      "{{ settings.social_instagram_link | escape }}",
+      "{{ settings.social_facebook_link | escape }}",
+      "{{ settings.social_twitter_link | escape }}",
+      "{{ settings.social_tiktok_link | escape }}",
+      "{{ settings.social_youtube_link | escape }}"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "{{ settings.phone | escape }}",
+      "email": "{{ settings.email | escape }}",
+      "contactType": "Customer Service",
+      "areaServed": "CO",
+      "availableLanguage": ["es"]
+    }
+  },
+
+  "mainEntity": {
+    "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "foundingDate": "2018",
+    "founder": {
+      "@type": "Person",
+      "name": "Equipo {{ shop.name | escape }}"
+    },
+    "description": "Somos una empresa líder en inversión inmobiliaria, con presencia en las principales ciudades de Colombia. Acompañamos a inversionistas en la toma de decisiones seguras y rentables en el mercado de finca raíz.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "CO",
+      "addressRegion": "Antioquia",
+      "addressLocality": "Medellín"
+    },
+    "email": "{{ settings.email | escape }}",
+    "telephone": "{{ settings.phone | escape }}",
+    "sameAs": [
+      "{{ settings.social_linkedin_link | escape }}",
+      "{{ settings.social_instagram_link | escape }}",
+      "{{ settings.social_facebook_link | escape }}"
+    ]
+  }
+}
+</script>
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+
+{% schema %}
+{
+  "name": "Page Content",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

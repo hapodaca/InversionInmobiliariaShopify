@@ -1,0 +1,125 @@
+<div class="ps-section ps-our-services" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="container">
+        <div class="ps-section__header">
+            <h3 class="ps-section__heading">{{ section.settings.heading }}</h3>
+        </div>
+        <div class="ps-section__content">
+            <div class="ps-section__columns">
+                {%- for block in section.blocks -%}
+                <div class="ps-section__column">
+                    <div class="ps-block--service">
+                        <div class="ps-block__top">
+                            <div class="ps-block__image">
+                                {%- if block.settings.image != blank -%}
+                                    <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.heading }}" />
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag }}
+                                {%- endif -%}
+                            </div>
+                        </div>
+                        <div class="ps-block__content">
+                            <h4>{{ block.settings.heading }}</h4>
+                            <p>{{ block.settings.desc }}</p>
+                        </div>
+                    </div>
+                </div>
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "t:sections.our-leaderships.name",
+    "tag": "section",
+    "class": "about-us",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings": [
+        {
+            "type": "text",
+            "id": "heading",
+            "default": "Our Leaderships",
+            "label": "t:sections.our-leaderships.settings.heading.label"
+        },
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "child-destination",
+            "name": "t:sections.our-leaderships.blocks.type.name",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "t:sections.our-leaderships.blocks.type.image"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "t:sections.our-leaderships.blocks.type.name"
+                },
+                {
+                    "type": "textarea",
+                    "id": "desc",
+                    "label": "t:sections.our-leaderships.blocks.type.desc"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Our Services",
+            "category": "Blog",
+            "settings": {
+                "heading": "Our Services"
+            }
+        }
+    ]
+}
+{% endschema %}

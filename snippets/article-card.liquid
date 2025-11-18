@@ -1,0 +1,84 @@
+{%- if layout == 'list' -%}
+    <div class="ps-post ps-post--horizontal">
+        {%- if article.image != blank and show_image -%}
+            <div class="ps-post__thumbnail">
+                <div class="ps-post__image">
+                    <img src="{{ article.image | image_url: width: '353x230' }}" alt="{{ article.title | escape }}" />
+                </div>
+                <a class="ps-post__overlay" aria-lable="blog article"  href="{{ article.url }}" title="{{ article.title | escape }}"></a>
+            </div>
+        {%- endif -%}
+
+        <div class="ps-post__wrapper">
+            <div class="ps-post__header">
+                <div class="ps-post__meta">
+                    {%- if show_date -%}
+                        <span class="ps-post__created-at">{{ article.published_at | time_tag: format: 'date' }}</span>
+                    {%- endif -%}
+                </div>
+                <h4 class="ps-post__title">
+                    <a href="{{ article.url }}">{{ article.title | escape }}</a>
+                </h4>
+                <div class="ps-post__desc">
+                    <p>
+                        {%- if article.excerpt.size > 0 -%}
+                            {{ article.excerpt | strip_html | truncatewords: 30 }}
+                        {%- else -%}
+                            {{ article.content | strip_html | truncatewords: 30 }}
+                        {%- endif -%}
+                    </p>
+                </div>
+            </div>
+            <div class="ps-post__footer">
+                <div class="ps-post__bottom">
+                    {%- if show_author -%}
+                        <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ article.author }}</span></span>
+                    {%- endif -%}
+
+                    {%- if show_comments -%}
+                        <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                    {%-  endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+{%- else -%}
+    <div class="col-xl-6 col-lg-6 col-md-6">
+        <div class="ps-post ps-post--grid">
+            {%- if article.image != blank and show_image -%}
+                <div class="ps-post__thumbnail">
+                    <div class="ps-post__image">
+                        <img src="{{ article.image | image_url: width: '353x230' }}" alt="{{ article.title | escape }}" />
+                    </div>
+                    <a class="ps-post__overlay" aria-lable="blog article" href="{{ article.url }}" title="{{ article.title | escape }}"></a>
+                </div>
+            {%- endif -%}
+            <div class="ps-post__content">
+                <div class="ps-post__meta">
+                    {%- if show_date -%}
+                        <span class="ps-post__created-at">{{ article.published_at | time_tag: format: 'date' }}</span>
+                    {%- endif -%}
+                </div>
+                <h4 class="ps-post__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h4>
+                <div class="ps-post__desc">
+                    <p>
+                        {%- if article.excerpt.size > 0 -%}
+                            {{ article.excerpt | strip_html | truncatewords: 30 }}
+                        {%- else -%}
+                            {{ article.content | strip_html | truncatewords: 30 }}
+                        {%- endif -%}
+                    </p>
+                </div>
+                <div class="ps-post__bottom">
+                    {%- if show_author -%}
+                        <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ article.author }}</span></span>
+                    {%- endif -%}
+
+                    {%- if show_comments -%}
+                        <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                    {%-  endif -%}
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endif -%}

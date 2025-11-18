@@ -1,0 +1,40 @@
+<div class="ps-project ps-project--grid">
+    <div class="ps-project__thumbnail">
+        <a href="{{ product.url }}" class="ps-project__image">
+            {%- if product.featured_image -%}
+                {{ product.featured_image | image_url: width: 450 | image_tag: alt: product.featured_image.alt, loading: 'lazy' }}
+            {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+        </a>
+    </div>
+    <div class="ps-project__content">
+        <h4 class="ps-project__name">
+            <a href="{{ product.url }}">{{ product.title | escape }}</a>
+        </h4>
+        <div class="inv-price-main">
+            <div class="inv-price-item">
+                <span>PRECIO:</span>
+                <span>{{ product.price | money_with_currency | remove: ',00' }}</span>
+            </div>
+            <div class="inv-price-item {% unless product.compare_at_price > product.price %}is-empty{% endunless %}">
+                <span>PRECIO ACTUAL:</span>
+                <span class="inv-price-compare">{{ product.compare_at_price | money_with_currency | remove: ',00' }}</span>
+            </div>
+        </div>
+        <div class="inv-product-type {% if product.type == blank %}is-empty{% endif %}">
+            <span>TIPO:</span>
+            <span>{{ product.type }}</span>
+        </div>
+        <div class="ps-project__actions">
+            <a href="{{ product.url }}" class="ps-btn--info">VER PROPIEDAD</a>
+        </div>
+        <div class="ps-project__services">
+            <div class="ps-investment-opportunity {% unless product.compare_at_price > product.price %}is-empty{% endunless %}">
+                OPORTUNIDAD DE INVERSIÓN
+            </div>
+        </div>
+    </div>
+</div>
+
+

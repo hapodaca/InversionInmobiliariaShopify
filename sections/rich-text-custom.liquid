@@ -1,0 +1,81 @@
+{% schema %}
+{
+  "name": "Rich Text Personalizado",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título principal",
+      "default": "¿Tienes un proyecto inmobiliario listo para destacar?"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Texto descriptivo",
+      "default": "Publícalo en nuestra plataforma y accede a una red de inversionistas verificados en toda Colombia."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del botón",
+      "default": "Publicar mi Proyecto"
+    },
+    {
+        "type": "url",
+        "id": "button_link",
+        "label": "Enlace del botón"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Color de fondo",
+      "default": "#f7f9fc"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich Text Personalizado",
+      "category": "Secciones personalizadas"
+    }
+  ]
+}
+{% endschema %}
+
+<section style="background-color: {{ section.settings.background_color }}; padding:60px 20px; text-align:center;">
+  <div class="container">
+    <h2 style="font-size:28px; font-weight:700; color:#1a1a1a; margin-bottom:15px;">
+      {{ section.settings.heading }}
+    </h2>
+    <p style="font-size:18px; color:#333; max-width:700px; margin:0 auto 30px;">
+      {{ section.settings.subtext }}
+    </p>
+    <div class="inv-form-actions">
+      <a href="{{ section.settings.button_link }}">
+        <button type="button">{{ section.settings.button_text }}</button>
+      </a>
+    </div>
+  </div>
+
+  <style>
+    .inv-form-actions button[type="button"] {
+      width: auto;
+      padding: 14px 40px;
+      border: 0;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      background: #002b5b;
+      color: #fff;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .inv-form-actions button[type="button"]:hover {
+      background: #014080;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,43,91,.35);
+    }
+  </style>
+</section>

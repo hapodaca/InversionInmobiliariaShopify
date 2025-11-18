@@ -1,0 +1,8 @@
+{%- if settings.wishlist -%}
+  <wishlist-button data-handle="{{ product.handle }}" data-variant-id="{{ current_variant.id }}" {% unless product.has_only_default_variant %}data-variant-title="{{ current_variant.title }}"{% endunless %} data-toggle-title>
+    <a href="#" class="btn-link btn-link-wishlist btn-link--lg js-link-wishlist {{ class }}" {% unless product.has_only_default_variant %}data-tippy-content="{{ 'general.add_to_wishlist_small' | t | escape }}"{% endunless %} {% if layout == 'product-sticky' %}data-tippy-placement="right"{% endif %}>
+      <span class="hidden"><span class="icon-wrap">{% render 'icon-heart' %}</span><span>{{ 'general.add_to_wishlist' | t }}</span></span>
+      <span class="hidden"><span class="icon-wrap">{% render 'icon-heart2' %}</span><span>{{ 'general.remove_from_wishlist' | t }}</span></span>
+    </a>
+  </wishlist-button>
+{%- endif -%}

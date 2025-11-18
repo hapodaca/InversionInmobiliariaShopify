@@ -1,0 +1,401 @@
+{%- liquid
+  assign current_variant   = product.selected_or_first_available_variant | default: product.variants.first
+  assign compare_at_price  = current_variant.compare_at_price
+  assign price             = current_variant.price
+
+  assign on_sale = false
+  if compare_at_price and compare_at_price > price
+    assign on_sale = true
+  endif
+
+  assign data = product.metafields.project.ficha.value
+  assign fx   = data
+
+  assign _id_proyecto_val = fx.id_proyecto | default: product.metafields.project.id_proyecto
+  assign _gimnasio        = data.gimnasio | default: product.metafields.campos_inmobiliaria.gimnasio
+  assign _cuarto_util     = data.cuarto_util | default: product.metafields.campos_inmobiliaria.cuarto_util
+  assign _piscina         = data.piscina | default: product.metafields.campos_inmobiliaria.piscina
+  assign _parqueaderos    = data.parqueaderos | default: product.metafields.campos_inmobiliaria.parqueaderos | default: 0
+  assign _habitaciones    = data.habitaciones | default: product.metafields.campos_inmobiliaria.habitaciones
+  assign _banos           = data.banos | default: product.metafields.campos_inmobiliaria.banos
+  assign _area_total      = data.area_total | default: product.metafields.campos_inmobiliaria.area_total
+  assign descripcion_corta = data.descripcion_corta
+
+  assign img_main = data.imagen_producto_principal | default: product.featured_image
+-%}
+
+<!-- ===== LIST CARD ===== -->
+<div class="ps-project__top triple-column-layout">
+  <div class="column image-column">
+    {% if img_main %}
+      <a href="{{ product.url }}">
+        <img
+          src="{{ img_main | image_url: width: 600, height: 450, crop: 'center' }}"
+          alt="{{ product.title | escape }}" width="600" height="450" loading="lazy">
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="column info-column">
+    <h4 class="ps-project__name"><a href="{{ product.url }}">{{ product.title | escape }}</a></h4>
+
+    {% assign direccion_completa = '' %}
+    {% if data.direccion != blank %}{% assign direccion_completa = direccion_completa | append: data.direccion %}{% endif %}
+    {% if data.municipio != blank %}{% assign direccion_completa = direccion_completa | append: ', ' | append: data.municipio %}{% endif %}
+    {% if data.departamento != blank %}{% assign direccion_completa = direccion_completa | append: ', ' | append: data.departamento %}{% endif %}
+    {% if direccion_completa != '' %}<div class="project-address">{{ direccion_completa }}</div>{% endif %}
+
+    {% if descripcion_corta != blank %}
+      <div class="ps-project__short-description">{{ descripcion_corta }}</div>
+    {% endif %}
+
+    <div class="ps-project__services">
+      {% if _area_total != blank %}<p><i class="lnil lnil-size"></i> {{ _area_total }} m²</p>{% endif %}
+      {% if _habitaciones != blank %}<p><i class="lnil lnil-hospital-bed"></i>{{ _habitaciones }} {% if _habitaciones == '1' %}habitación{% else %}habitaciones{% endif %}</p>{% endif %}
+      {% if _banos != blank %}<p><i class="icon icon-bathtub"></i>{{ _banos }} {% if _banos == '1' %}baño{% else %}baños{% endif %}</p>{% endif %}
+      {% if _parqueaderos and _parqueaderos != '0' and _parqueaderos != 0 %}<p><i class="lnil lnil-car"></i>{{ _parqueaderos }} {% if _parqueaderos == '1' %}parqueadero{% else %}parqueaderos{% endif %}</p>{% endif %}
+      {% if _gimnasio == 'true' or _gimnasio == '1' or _gimnasio == true %}<p><i class="lnil lnil-dumbbell"></i> Gimnasio</p>{% endif %}
+      {% if _cuarto_util == 'true' or _cuarto_util == '1' or _cuarto_util == true %}<p><i class="lnil lnil-home"></i> Cuarto útil</p>{% endif %}
+      {% if _piscina == 'true' or _piscina == '1' or _piscina == true %}<p><i class="icon icon-swim"></i> Piscina</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="column details-column">
+    {% if _id_proyecto_val != blank %}
+      <div class="highlight-description"><span class="label">PROYECTO:</span> {{ _id_proyecto_val }}</div>
+    {% endif %}
+
+    <div class="ps-project__meta-row">
+      <div class="product-type-badge">
+        <span class="label">TIPO:</span><span class="value">{{ product.type }}</span>
+      </div>
+      {% if on_sale %}<span class="badge-opportunity">Oportunidad de inversión</span>{% endif %}
+    </div>
+
+    <div class="ps-project__price">
+      <div class="price-label">PRECIO:</div>
+      <div class="price-current">${{ price | money_without_currency | replace: ',', '.' }} COP</div>
+      {% if on_sale %}
+        <div class="price-label">PRECIO ACTUAL:</div>
+        <div class="price-compare">${{ compare_at_price | money_without_currency | replace: ',', '.' }} COP</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+<style>
+/* ======== LAYOUT GENERAL ======== */
+.triple-column-layout {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.image-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.info-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.column img {
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.details-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 8px 0;
+  text-align: left;
+}
+
+.project-address {
+  font-size: 15px;
+  font-weight: 500;
+  color: #666;
+  margin-top: -6px;
+  margin-bottom: 8px;
+}
+
+.ps-project__services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.ps-project__services p {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4;
+  height: 100%;
+}
+
+.ps-project__services i {
+  font-size: 26px;
+  margin-bottom: 4px;
+  color: #002b5b;
+}
+
+/* ======== METADATOS Y PRECIOS ======== */
+.details-column .highlight-description {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.details-column .highlight-description .label {
+  font-weight: bold;
+  color: #002b5b;
+  display: inline;
+  margin-bottom: 4px;
+}
+
+.ps-project__meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.product-type-badge {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  border-left: 4px solid #2e7d32;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.product-type-badge .label {
+  color: #666;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.product-type-badge .value {
+  color: #111;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge-opportunity {
+  background: #ff7a00;
+  color: #fff;
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.ps-project__price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 18px;
+  text-align: left;
+}
+
+.ps-project__price .price-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.ps-project__price .price-current {
+  color: #198754;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.ps-project__price .price-compare {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* ======== TARJETA ESTILO GENERAL ======== */
+.ps-project__top.triple-column-layout {
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.06);
+  background: #fff;
+  transition: box-shadow .3s ease;
+}
+
+.ps-project__top.triple-column-layout:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+
+/* ======== ORDENAMIENTO (SELECT) ======== */
+.ps-projects__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ps-projects__top-right {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.ps-projects__top-right select.form-control {
+  width: auto;
+  min-width: 140px;
+  max-width: 100%;
+  font-size: 14px;
+  padding: 8px 12px;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  text-align: left;
+}
+
+/* ======== RESPONSIVE (MOBILE) ======== */
+@media (max-width: 768px) {
+  .triple-column-layout {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto;
+  }
+
+  .image-column,
+  .info-column,
+  .details-column {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .image-column {
+    order: 1;
+    margin-bottom: 16px;
+  }
+
+  .info-column {
+    order: 2;
+    margin-bottom: 16px;
+  }
+
+  .details-column {
+    order: 3;
+    padding: 0;
+  }
+
+  .triple-column-layout {
+    padding: 16px;
+  }
+
+  .ps-project__price {
+    font-size: 16px;
+  }
+
+  .ps-project__price .price-current {
+    font-size: 18px;
+  }
+
+  .ps-projects__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ps-projects__top-right select.form-control {
+    min-width: 140px;
+    font-size: 14px;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+}
+
+/* === CONTENEDOR general del top bar === */
+.ps-projects__top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* === Mueve el sort <select> a la derecha === */
+.ps-projects__top-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+/* === Estilo directo al select dentro de facet-sort-by === */
+.ps-projects__top-right facet-sort-by select.form-control {
+  width: 180px;
+  max-width: 100%;
+  font-size: 14px;
+  padding: 6px 12px;
+  margin-left: auto;
+  margin-right: 0;
+  text-align: left;
+  background-position: right 10px center;
+}
+
+/* === Responsive (mobile) === */
+@media (max-width: 768px) {
+  .ps-projects__top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ps-projects__top-right {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .ps-projects__top-right facet-sort-by select.form-control {
+    width: 100%;
+    min-width: 160px;
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+</style>

@@ -1,0 +1,426 @@
+<div class="ps-page ps-page--post-single" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="ps-page__content">
+        <div class="container">
+            <div class="ps-layout--with-sidebar">
+                <div class="ps-layout__left">
+                    <article class="ps-post ps-post--detail">
+                        <div class="ps-post__header">
+                            <h1 class="ps-post__title" style="text-align: center;">{{ article.title | escape }}</h1>
+							<div class="container">
+							{% render 'breadcrumb' %}
+							{%- if article.image != blank -%}
+                                <div class="ps-page__hero" style="text-align: center;">
+                                    <img src="{{ article.image | image_url: width: '800x400' }}" alt="{{ article.title | escape }}" width="800" height="400" loading="lazy"/>
+                                </div>
+                            {%- endif -%}
+						</div>
+                            <div class="ps-post__bottom">
+                                <span class="ps-post__author"><i class="lnil lnil-calendar"></i><span>{{ article.published_at | time_tag: format: 'date' }}</span></span>
+                                <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ article.author }}</span></span>
+                                <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                            </div>
+                        </div>
+                        <div class="ps-post__content ps-document">{{ article.content }}</div>
+
+                        {%- if blog.all_tags.size > 0 -%}
+                            <div class="ps-post__bottom">
+                                <div class="ps-post__tags">
+                                    {% for tag in blog.all_tags %}
+                                        {{ tag | link_to_tag: tag }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {%- endif -%}
+                        
+                        {%- if section.blocks.size > 0 -%}
+                            {%- for block in section.blocks -%}
+                                {%- case block.type -%}
+                                    {%- when '@app' -%}
+                                        {%- liquid
+                                            render block
+                                        -%}
+                                {%- endcase -%}
+                            {%- endfor -%}
+                        {%- endif -%}
+
+                    </article>
+
+                    {%- if blog.comments_enabled? -%}
+                        <div class="ps-blog--single-post">
+                            {%- if article.comments_count > 0 -%}
+                                {%- assign anchorId = '#Comments-' | append: article.id -%}
+                                <div id="{{ anchorId }}" class="ps-block--post-comments mb-5">
+                                    {% paginate article.comments by 6 %}
+                                        {%- for comment in article.comments -%}
+                                            <div id="{{ comment.id }}" class="ps-block-post-comment">
+                                                <div class="ps-block__right">
+                                                    <div class="ps-block__top">
+                                                        <h4>{{ comment.author }}</h4><span class="ps-block__created">{{ comment.created_at | time_tag: format: 'date' }}</span>
+                                                    </div>
+                                                    <div class="ps-block__bottom">
+                                                        <div class="ps-block__content">
+                                                            {{ comment.content }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {%- endfor -%}
+                                        {% render 'pagination', paginate: paginate, anchor: anchorId %}
+                                    {% endpaginate %}
+                                </div>
+                            {%- endif -%}
+                            {% form 'new_comment', article, class: 'ps-form--post-comment' %}
+                                {%- liquid
+                                    assign post_message = 'blogs.article.success'
+                                    if blog.moderated? and comment.status == 'unapproved'
+                                    assign post_message = 'blogs.article.success_moderated'
+                                    endif
+                                -%}
+                                <div class="ps-form__top">
+                                    <h3>{{ 'blogs.article.comment_form_title' | t }}</h3>
+                                </div>
+
+                                {%- if form.posted_successfully? -%}
+                                    <div tabindex="-1" autofocus>
+                                    {%- liquid
+                                        assign message = post_message | t
+                                        render 'success', message: message
+                                    -%}
+                                    </div>
+                                {%- endif -%}
+                    
+                                {% render 'errors', form: form %}
+
+                                <div class="ps-form__content">
+                                    <div class="form-group">
+                                        <div class="ps-form underline text-area">
+                                            <textarea 
+                                                class="form-control" 
+                                                rows="4" 
+                                                placeholder=" " 
+                                                name="comment[body]"
+                                                id="CommentForm-body"
+                                                aria-required="true"
+                                                {% if form.errors contains 'body' %}
+                                                    aria-invalid="true"
+                                                    aria-describedby="CommentForm-body-error"
+                                                {% endif %}
+                                                required
+                                            >{{ form.body }}</textarea>
+                                            <label>{{ 'blogs.article.message' | t }} <span class="required">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="row {% if customer %}hidden {%- endif -%}">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <div class="ps-form underline">
+                                                    <input 
+                                                        class="form-control" 
+                                                        name="comment[author]" 
+                                                        autocomplete="name"
+                                                        value="{% if customer %}{{ customer.first_name }}{%- else -%}{{ form.author }}{% endif %}"
+                                                        aria-required="true"
+                                                        {% if form.errors contains 'author' %}
+                                                        aria-invalid="true"
+                                                        aria-describedby="CommentForm-author-error"
+                                                        {% endif %}
+                                                        type="text" 
+                                                        placeholder=" " 
+                                                        required/>
+                                                    <label>{{ 'blogs.article.name' | t }} <span class="required">*</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <div class="ps-form underline">
+                                                    <input 
+                                                        class="form-control" 
+                                                        type="text" 
+                                                        placeholder=" " 
+                                                        name="comment[email]"
+                                                        id="CommentForm-email"
+                                                        autocomplete="email"
+                                                        value="{% if customer %}{{ customer.email }}{%- else -%}{{ form.email }}{% endif %}"
+                                                        autocorrect="off"
+                                                        autocapitalize="off"
+                                                        aria-required="true"
+                                                        {% if form.errors contains 'email' %}
+                                                        aria-invalid="true"
+                                                        aria-describedby="CommentForm-email-error"
+                                                        {% endif %}
+                                                        required
+                                                    />
+                                                    <label>{{ 'blogs.article.email' | t }} <span class="required">*</span></label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ps-form__bottom">
+                                    {%- if blog.moderated? -%}
+                                        <p class="article-template__comment-warning caption"><span class="required">*</span> {{ 'blogs.article.moderated' | t }}</p>
+                                    {%- endif -%}
+
+                                    <button class="ps-btn" type="submit">{{ 'blogs.article.post' | t }}</button>
+                                </div>
+                            {% endform %}
+                        </div>
+                    {%- endif -%}
+                </div>
+
+                {%- if section.blocks.size > 0 -%}
+                    {%- render 'blog-sidebar', blocks: section.blocks -%}
+                {%- endif -%}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": "{{ shop.url }}{{ article.url }}#article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ shop.url }}{{ article.url }}"
+  },
+  "headline": "{{ article.title | escape }}",
+  "description": "{{ article.excerpt_or_content | strip_html | truncate: 160 | escape }}",
+  "articleBody": {{ article.content | strip_html | json }},
+  "inLanguage": "es",
+  {% if article.image %}
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ article.image | image_url: width: 1200 }}",
+    "width": 1200,
+    "height": 630
+  },
+  {% endif %}
+  "datePublished": "{{ article.published_at | date: '%Y-%m-%d' }}",
+  "dateModified": "{{ article.updated_at | date: '%Y-%m-%d' }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ article.author | escape }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% if settings.organization_logo != blank %}{{ settings.organization_logo | image_url: width: 500 }}{% else %}{{ settings.logo | image_url: width: 500 }}{% endif %}"
+    },
+    "sameAs": [
+      "{{ settings.social_linkedin_link | escape }}",
+      "{{ settings.social_instagram_link | escape }}",
+      "{{ settings.social_facebook_link | escape }}",
+      "{{ settings.social_twitter_link | escape }}",
+      "{{ settings.social_tiktok_link | escape }}",
+      "{{ settings.social_youtube_link | escape }}"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "{{ settings.phone | escape }}",
+      "email": "{{ settings.email | escape }}",
+      "contactType": "Customer Service",
+      "areaServed": "CO",
+      "availableLanguage": ["es"]
+    }
+  }
+}
+</script>
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+{% schema %}
+    {
+        "name": "Main article",
+        "tag": "section",
+        "class": "article-section",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Spacing Options"
+            },
+            {
+                "type": "range",
+                "id": "margin_top",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Margin Top",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Margin Bottom",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Padding Top",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Padding Bottom",
+                "default": 0
+            }
+        ],
+        "blocks": [
+            {
+                "type": "@app"
+            },
+            {
+                "type": "social",
+                "name": "Widget Social",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id": "social",
+                        "label": "Show social links",
+                        "default": true
+                    },
+                    {
+                        "type": "text",
+                        "id": "sidebar_social_title",
+                        "label": "Follow Us",
+                        "default": "Follow Us"
+                    }
+                ]
+            },
+            {
+                "type": "products",
+                "name": "Widget Products",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "sidebar_collection_title",
+                        "label": "Products featured Title",
+                        "default": "Featured Products"
+                    },
+                    {
+                        "type": "collection",
+                        "id": "sidebar_collection",
+                        "label": "Products featured collection"
+                    },
+                    {
+                        "type": "range",
+                        "id": "sidebar_products_limit",
+                        "min": 1,
+                        "max": 8,
+                        "step": 1,
+                        "unit": "prd",
+                        "label": "Products featured Limit",
+                        "default": 4
+                    }
+                ]
+            },
+            {
+                "type": "tags",
+                "name": "Widget Tags",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id": "tags",
+                        "label": "Show tags",
+                        "default": true
+                    }
+                ]
+            },
+            {
+                "type": "newsletter",
+                "name": "Widget newsletter",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "checkbox",
+                        "id": "newsletter_yes",
+                        "label": "t:settings_schema.sections.footer.settings.newsletter_enable.label",
+                        "default": true
+                    },
+                    {
+                      "type": "text",
+                      "id": "newsletter_heading",
+                      "default": "Newsletter",
+                      "label": "t:settings_schema.sections.footer.settings.newsletter_heading.label"
+                    },
+                    {
+                      "type": "inline_richtext",
+                      "id": "newsletter_subtext",
+                      "default": "Subscribe our newsletter to be the first to hear about exclusive deals",
+                      "label": "t:settings_schema.sections.footer.settings.newsletter_subtext.label"
+                    },
+                    {
+                      "type": "text",
+                      "id": "newsletter_input",
+                      "default": "Your email",
+                      "label": "t:settings_schema.sections.footer.settings.newsletter_input.label"
+                    },
+                    {
+                      "type": "text",
+                      "id": "newsletter_button",
+                      "default": "Subscribe",
+                      "label": "t:settings_schema.sections.footer.settings.newsletter_button.label"
+                    }
+                ]
+            },
+            {
+              "type": "featured_posts",
+              "name": "Featured posts",
+              "settings": [
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title",
+                        "default": "Featured Posts"
+                    },
+                    {
+                        "type": "article",
+                        "id": "article_1",
+                        "label": "Post"
+                    },
+                    {
+                        "type": "article",
+                        "id": "article_2",
+                        "label": "Post"
+                    },
+                    {
+                        "type": "article",
+                        "id": "article_3",
+                        "label": "Post"
+                    },
+                    {
+                        "type": "article",
+                        "id": "article_4",
+                        "label": "Post"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

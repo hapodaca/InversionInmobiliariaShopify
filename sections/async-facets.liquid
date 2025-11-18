@@ -1,0 +1,15 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+    if request.page_type == 'search'
+      assign results = search
+    else
+      assign results = collection
+    endif
+  -%}
+  {% render 'facets',
+    results: results,
+    enable_filtering: true,
+    section: section,
+    id: 'FacetFiltersForm'
+%}
+

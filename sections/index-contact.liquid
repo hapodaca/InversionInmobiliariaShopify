@@ -1,0 +1,703 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  if "ar he hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  if store_width > 1178
+    assign image_k = store_width | divided_by: 1178.00 | round: 2
+  endif
+-%}
+
+{%- liquid
+  assign form_block = section.blocks | where: 'type', 'form' | size
+  assign map_block = section.blocks | where: 'type', 'map' | size
+-%}
+<div class="ps-page--inner" id="contact-us" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <section class="contact-section">
+  <div class="container contact-grid">
+    <!-- Columna izquierda: texto + CTA -->
+    <div class="contact-info">
+      <h2>¿Tienes alguna duda?</h2>
+      <p>
+        Estamos aquí para ayudarte a invertir con confianza.<br>
+        Déjanos tus datos y uno de nuestros asesores se pondrá en contacto contigo.
+      </p>
+      <div class="contact-cta">
+        <a href="https://wa.me/573332843565?text=Hola%2C%20tengo%20una%20consulta%20sobre%20Inversión%20Inmobiliaria"
+           target="_blank"
+           class="cta-whatsapp">
+           Escríbenos por WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- Columna derecha: formulario -->
+    <div class="contact-form-wrapper">
+      {%- form 'contact', class: 'ps-form--contact-us' -%}
+        {% if form.posted_successfully? %}
+          <div class="form-success-message">
+            <p>✅ ¡Gracias por contactarnos! Te responderemos lo antes posible.</p>
+          </div>
+        {% endif %}
+
+        {% if form.errors %}
+          <div class="form-error-message">
+            <p>❌ Hubo un problema al enviar el mensaje. Revisa los campos e inténtalo de nuevo.</p>
+          </div>
+        {% endif %}
+        <div class="ps-form__content">
+          <div class="form-group">
+            <div class="ps-form underline">
+              <label for="contact-name">Nombre</label>
+              <input id="contact-name" autocomplete="name" type="text" name="contact[name]" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="ps-form underline">
+              <label for="contact-email">Correo electrónico *</label>
+              <input id="contact-email" autocomplete="email" type="email" name="contact[email]" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="ps-form underline">
+              <label for="whatsapp">WhatsApp</label>
+              <input id="whatsapp" type="tel" name="contact[WhatsApp]" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="ps-form underline">
+              <label for="contact-body">Mensaje *</label>
+              <textarea id="contact-body" name="contact[body]" class="form-control" required></textarea>
+            </div>
+          </div>
+          <div class="ps-form__bottom"> <button type="submit" class="ps-btn">Enviar tu mensaje</button> </div>
+        </div>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+</div>
+
+<style>
+/* ==========================================================
+   FORMULARIO DE CONTACTO - VERSIÓN FINAL ESTABLE
+   ========================================================== */
+
+/* === Sección general === */
+.contact-section {
+  background-color: #f8f9fa;
+  padding: 80px 20px;
+  margin-top: 40px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* === Columna izquierda === */
+.contact-info {
+  text-align: left;
+  padding-top: 20px;
+}
+
+.contact-info h2 {
+  font-size: 2.2em;
+  color: #0b2b5e;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.contact-info p {
+  font-size: 1.1em;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.contact-cta .cta-whatsapp {
+  display: inline-block;
+  background-color: #25d366;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.contact-cta .cta-whatsapp:hover {
+  background-color: #1da851;
+}
+
+/* === Formulario === */
+.contact-form-wrapper {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border: 1px solid #eaeef5;
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 20 !important;
+}
+
+.ps-form__content .form-group {
+  margin-bottom: 20px;
+}
+
+.ps-form__content label {
+  font-weight: 600;
+  color: #0b2b5e;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+}
+
+.ps-form__content input.form-control,
+.ps-form__content textarea.form-control {
+  width: 100%;
+  border: 1px solid #dfe6ef;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  background: #fafbff;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ps-form__content input.form-control:focus,
+.ps-form__content textarea.form-control:focus {
+  border-color: #3a6fb5;
+  box-shadow: 0 0 0 2px rgba(58, 111, 181, 0.15);
+  outline: none;
+  background: #fff;
+}
+
+/* === Botón === */
+.ps-form__bottom .ps-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #002b5b, #1e4d8a, #3a6fb5);
+  background-size: 200% 200%;
+  box-shadow: 0 8px 22px rgba(0, 43, 91, 0.28);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.ps-form__bottom .ps-btn:hover {
+  transform: translateY(-2px) scale(1.01);
+  animation: gradientShift 2s ease infinite;
+  box-shadow: 0 14px 32px rgba(0, 43, 91, .35);
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ==== intl-tel-input: base segura ==== */
+.contact-form-wrapper,
+.ps-form--contact-us {
+  position: relative;
+  overflow: visible;
+}
+
+.iti {
+  width: 100% !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* Espacio para bandera/código */
+#whatsapp.form-control {
+  padding-left: 58px !important;
+}
+
+.iti__selected-flag {
+  background: transparent;
+  border-right: 1px solid #ddd;
+  padding: 0 8px;
+}
+
+/* Dropdown insertado al body */
+.iti--container {
+  position: absolute;
+  z-index: 2147483647 !important;
+}
+
+.iti--container .iti__country-list {
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+}
+
+/* Labels encima del input */
+.ps-form.underline label {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  display: inline-block;
+  padding: 0 2px;
+}
+
+.ps-form.underline input,
+.ps-form.underline textarea {
+  position: relative;
+  z-index: 1;
+}
+
+/* Evita clipping global */
+.ps-page--inner,
+main,
+section,
+.container {
+  overflow: visible !important;
+}
+
+/* === Mensajes Shopify === */
+.form-success-message,
+.form-error-message {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.form-success-message {
+  background: #e6f8ed;
+  color: #1b7d3a;
+  border: 1px solid #a8e6b1;
+}
+
+.form-error-message {
+  background: #fbeaea;
+  color: #a33a3a;
+  border: 1px solid #e0a8a8;
+}
+
+/* === FIX FINAL: Dropdown visible en móvil === */
+@media (max-width: 768px) {
+  /* Layout apilado */
+  .contact-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 40px !important;
+  }
+
+  .contact-form-wrapper {
+    width: 100% !important;
+    max-width: 90% !important;
+  }
+
+  .contact-info {
+    text-align: center !important;
+  }
+
+  /* Input con espacio para bandera */
+  .iti input#whatsapp.form-control {
+    padding-left: 70px !important;
+  }
+}
+
+/* CRÍTICO: Dropdown en móvil - debe estar en el body */
+@media (max-width: 767px) {
+  /* Contenedor principal del dropdown */
+  body > .iti--container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 999999 !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+  }
+
+  /* Lista de países centrada como modal */
+  body > .iti--container .iti__country-list {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 380px !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    border-radius: 16px !important;
+    background: #fff !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+    margin: auto !important;
+  }
+
+  /* Items del dropdown */
+  .iti__country-list .iti__country {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+  }
+}
+
+
+</style>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js" defer></script>
+
+<script defer>
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("whatsapp");
+  if (!input || !window.intlTelInput) return;
+
+  const iti = window.intlTelInput(input, {
+    initialCountry: "co",
+    preferredCountries: ["co", "mx", "us", "es"],
+    separateDialCode: false,
+    autoPlaceholder: "off",
+    dropdownContainer: document.body,
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"
+  });
+
+  // === CAPTURA Y ENVÍO DE DATOS COMPLETOS ===
+  const form = input.closest("form");
+  if (form) {
+    form.addEventListener("submit", function(e) {
+      // Obtener datos del teléfono
+      const inputValue = input.value.replace(/\D/g, ''); // Solo dígitos
+      const countryData = iti.getSelectedCountryData();
+      const dialCode = countryData.dialCode;
+      
+      // Construir número completo
+      const fullNumber = inputValue.startsWith(dialCode) 
+        ? '+' + inputValue 
+        : '+' + dialCode + inputValue;
+      
+      const national = inputValue.replace(dialCode, '');
+      
+      // Crear/actualizar campos ocultos
+      function setHiddenField(id, name, value) {
+        let field = document.getElementById(id);
+        if (!field) {
+          field = document.createElement('input');
+          field.type = 'hidden';
+          field.id = id;
+          field.name = name;
+          form.appendChild(field);
+        }
+        field.value = value;
+      }
+      
+      // ✅ Agregar TODOS los campos para N8N (nombres exactos)
+      setHiddenField('contact-phone-full', 'contact[phone_full]', fullNumber);
+      setHiddenField('contact-phone-code', 'contact[phone_country_code]', '+' + dialCode);
+      setHiddenField('contact-phone-country', 'contact[phone_country_name]', countryData.name);
+      setHiddenField('contact-phone-national', 'contact[phone_national]', national);
+      setHiddenField('contact-recurso', 'contact[recurso]', 'Contacto'); // ✅ Recurso fijo
+      
+      // También actualizar el campo visible
+      input.value = fullNumber;
+      
+    }, true);
+  }
+
+  // === POSICIONAMIENTO DEL DROPDOWN ===
+  function positionDropdown() {
+    const container = document.querySelector(".iti--container");
+    if (!container) return;
+
+    const rect = input.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const dropdownTop = rect.bottom + scrollTop + 6;
+
+    if (window.innerWidth <= 768) {
+      container.style.position = "fixed";
+      container.style.top = `${rect.bottom + 6}px`;
+      container.style.left = "50%";
+      container.style.transform = "translateX(-50%)";
+      container.style.width = "calc(100% - 32px)";
+      container.style.maxWidth = "420px";
+      container.style.zIndex = "2147483647";
+    } else {
+      container.style.position = "absolute";
+      container.style.top = `${dropdownTop}px`;
+      container.style.left = `${rect.left + window.scrollX}px`;
+      container.style.width = `${rect.width}px`;
+      container.style.transform = "none";
+      container.style.zIndex = "2147483647";
+    }
+  }
+
+  input.addEventListener("open:countrydropdown", () => {
+    setTimeout(() => {
+      positionDropdown();
+      window.addEventListener("scroll", positionDropdown, { passive: true });
+      window.addEventListener("resize", positionDropdown);
+    }, 100);
+  });
+
+  input.addEventListener("close:countrydropdown", () => {
+    window.removeEventListener("scroll", positionDropdown);
+    window.removeEventListener("resize", positionDropdown);
+  });
+
+  // Cerrar dropdown al hacer clic en el fondo (solo móvil)
+  if (window.innerWidth <= 767) {
+    document.body.addEventListener("click", function(e) {
+      const container = document.querySelector("body > .iti--container");
+      if (container && e.target === container) {
+        iti.close();
+      }
+    });
+  }
+});
+</script>
+
+<script defer>
+// Script ESPECÍFICO para formulario de contacto - envío directo a N8N
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('.ps-form--contact-us');
+  if (!form) return;
+  
+  form.addEventListener('submit', function(e) {
+    const phoneInput = document.getElementById('whatsapp');
+    if (!phoneInput || !window.intlTelInput) return;
+    
+    // Buscar la instancia de intlTelInput
+    const iti = window.intlTelInputGlobals.getInstance(phoneInput);
+    if (!iti) return;
+    
+    const inputValue = phoneInput.value.replace(/\D/g, '');
+    if (!inputValue) return;
+    
+    const countryData = iti.getSelectedCountryData();
+    const dialCode = countryData.dialCode;
+    const national = inputValue.replace(dialCode, '');
+    
+    const payload = {
+      ts: new Date().toISOString(),
+      url: window.location.href,
+      form_id: 'contact_form',
+      form_type: 'lead',
+      recurso: 'Contacto',
+      fields: {
+        'form_type': 'contact',
+        'contact[name]': document.getElementById('contact-name')?.value || '',
+        'contact[email]': document.getElementById('contact-email')?.value || '',
+        'contact[phone_full]': phoneInput.value,
+        'contact[phone_country_code]': '+' + dialCode,
+        'contact[phone_country_name]': countryData.name,
+        'contact[phone_national]': national,
+        'contact[recurso]': 'Contacto',
+        'contact[body]': document.getElementById('contact-body')?.value || ''
+      }
+    };
+    
+    // Envío con delay de 200ms
+    setTimeout(() => {
+      fetch('https://automation.inversioninmobiliaria.com.co/webhook/prospecto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': '9f2e4b1a7d3c4e5091a6c2d8b7e4f0a19c4e2a7b5d3f1e0c9b8a7d6c5e4f3a2b'
+        },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(() => {});
+    }, 200);
+    
+  }, false); // false = NO capture, se ejecuta después del script global
+});
+</script>
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "inLanguage": "es",
+  "@id": "{{ shop.url }}/pages/contact#contact",
+  "url": "{{ shop.url }}/pages/contact",
+  "name": "Contáctanos - {{ shop.name | escape }}",
+  "headline": "Página de contacto",
+  "description": "Página de contacto oficial de {{ shop.name | escape }}. Comunícate con nuestro equipo para recibir asesoría personalizada sobre inversiones inmobiliarias.",
+  "mainEntity": {
+    "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "email": "{{ settings.email | escape }}",
+    "telephone": "{{ settings.phone | escape }}",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "{{ settings.phone | escape }}",
+      "email": "{{ settings.email | escape }}",
+      "contactType": "Customer Service",
+      "areaServed": "CO",
+      "availableLanguage": ["es"]
+    },
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% if settings.organization_logo != blank %}{{ settings.organization_logo | image_url: width: 500 }}{% else %}{{ settings.logo | image_url: width: 500 }}{% endif %}"
+    },
+    "sameAs": [
+      "{{ settings.social_linkedin_link | escape }}",
+      "{{ settings.social_instagram_link | escape }}",
+      "{{ settings.social_facebook_link | escape }}",
+      "{{ settings.social_twitter_link | escape }}",
+      "{{ settings.social_tiktok_link | escape }}",
+      "{{ settings.social_youtube_link | escape }}"
+    ]
+  }
+}
+</script>
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+
+
+{% schema %}
+{
+  "name": "t:sections.index-contact.name",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "form",
+      "name": "t:sections.index-contact.blocks.form.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Title",
+          "default": "GET IN TOUCH"
+        }
+      ]
+    },
+    {
+      "type": "map",
+      "name": "t:sections.index-contact.blocks.map.name",
+      "settings": [
+        {
+          "type": "header",
+          "content": "t:sections.index-contact.blocks.map.settings.content.map"
+        },
+        {
+          "type": "textarea",
+          "id": "google_map",
+          "label": "Google maps Embed code",
+          "default": "<iframe title=\"Google Map\" src='https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2201.3258493677126!2d-74.01291322172017!3d40.70657451080482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1492962272380'></iframe>",
+          "info": "Go to [maps.google.com](https://maps.google.com) > Find location > Menu > Share or Embed > Copy Embed code"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "info",
+      "name": "t:sections.index-contact.blocks.info.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Our Offices"
+        },
+        {
+          "type": "textarea",
+          "id": "address1",
+          "label": "Address #1"
+        },
+        {
+          "type": "textarea",
+          "id": "address2",
+          "label": "Address #2"
+        },
+        {
+          "type": "textarea",
+          "id": "address3",
+          "label": "Address #3"
+        },
+        {
+          "type": "textarea",
+          "id": "address4",
+          "label": "Address #4"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

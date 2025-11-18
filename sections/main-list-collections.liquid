@@ -1,0 +1,147 @@
+{% comment %}theme-check-disable NestedSnippet, ContentForHeaderModification, UnusedAssign{% endcomment %}
+<div class="ps-page--inner ps-page--projects" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="ps-page__header">
+        <div class="container">
+            <h1 class="ps-page__heading">{{ section.settings.heading }}</h1>
+            {% render 'breadcrumb' %}
+        </div>
+    </div>
+    <div class="ps-page__content">
+        <div class="ps-section ps-services-items ps-our-services">
+            <div class="container">
+                {%- liquid assign catalog = section.settings.catalog -%}
+                {%- if catalog != blank and catalog.links.size > 0 -%}
+                    <div class="ps-section__content mb-5">
+                        <div class="ps-section__columns">
+                            {%- for link in catalog.links -%}
+                                <div class="categories-list text-start">
+                                    {%- liquid
+                                    assign collectionHandle = link.object.handle
+                                    assign collectionImage = link.object.image
+                
+                                    assign lazyload = false
+                                    assign class_img_only = 'fade-up-none'
+                                    assign lazyload_pass = 1
+                
+                                    if forloop.index > lazyload_pass
+                                        assign lazyload = true
+                                        assign class_img_only = 'lazyload fade-up'
+                                    endif
+                                    -%}
+                                    {%- if collectionImage != blank -%}
+                                        <a href="{{ link.url | default: '#' }}" class="image-container-aspect-ratio">
+                                            <img src="{{ collectionImage | image_url }}" alt="" />
+                                        </a>
+                                        <div class="mt-1">&nbsp;</div>
+                                    {%- endif -%}
+                                    <h4 class="categories-list-name">
+                                        <a href="{{ link.url | default: '#' }}">{{- link.title | escape -}}</a>
+                                    </h4>
+                                    <ul>
+                                    {%- for childlink in link.links limit: section.settings.limit -%}
+                                        <li>
+                                        {%- liquid
+                                            assign collectionHandle = childlink.title | escape | split: '|' | first | handle
+                                            assign collectionImage = collections[collectionHandle]
+                                        -%}
+                                        <a href="{{ childlink.url | default: '#' }}">{{- childlink.title | escape -}}</a>
+                                        </li>
+                                    {%- endfor -%}
+                                    </ul>
+                                </div>
+                            {%- endfor -%}
+                        </div>
+                    </div>
+
+                    {%- liquid
+                        assign button_url = section.settings.button_url | default: routes.all_products_collection_url
+                    -%}
+                    <div class="btn-showmore-wrap text-center mt-5">
+                        <a href="{{ button_url }}" class="btn btn--showmore">{{ section.settings.button_text }}</a>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "t:sections.main-collection.name",
+    "class": "main-collection-section",
+    "settings": [
+        {
+            "type": "header",
+            "content": "t:sections.main-collection.settings.general"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "Catalog subcategories"
+        },
+        {
+            "type": "link_list",
+            "id": "catalog",
+            "label": "Select navigation of collections"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Go to catalog"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button url"
+        },
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+        
+    ]
+}
+{% endschema %}

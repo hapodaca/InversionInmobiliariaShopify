@@ -1,0 +1,219 @@
+<div class="ps-site-stats" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="container">
+        <div class="ps-section__intro">
+            <div class="ps-section__content">
+                <div class="ps-section__mission">
+                    <h3>{{ section.settings.heading }}</h3>
+                </div>
+                <div class="ps-section__desc">{{ section.settings.desc }}</div>
+            </div>
+            <div class="ps-section__brands">
+                <p>{{ section.settings.brands }}</p>
+                {%- if section.settings.brand_logo1 != blank -%}
+                    <img src="{{ section.settings.brand_logo1 | image_url }}" alt="{{ section.settings.heading }}" />
+                {%- endif -%}
+
+                {%- if section.settings.brand_logo2 != blank -%}
+                    <img src="{{ section.settings.brand_logo2 | image_url }}" alt="{{ section.settings.heading }}" />
+                {%- endif -%}
+
+                {%- if section.settings.brand_logo3 != blank -%}
+                    <img src="{{ section.settings.brand_logo3 | image_url }}" alt="{{ section.settings.heading }}" />
+                {%- endif -%}
+
+                {%- if section.settings.brand_logo4 != blank -%}
+                    <img src="{{ section.settings.brand_logo4 | image_url }}" alt="{{ section.settings.heading }}" />
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="ps-section__wrapper">
+
+            {%- if section.settings.stats_1 -%}
+                <div class="ps-block--stat">
+                    <div class="ps-block__left">
+                        <h3>{{ section.settings.stats_1 }}</h3>
+                    </div>
+                    <div class="ps-block__right">
+                        <p>{{ section.settings.stats_text_1 }}</p>
+                    </div>
+                </div>
+            {%- endif -%}
+
+            {%- if section.settings.stats_2 -%}
+                <div class="ps-block--stat">
+                    <div class="ps-block__left">
+                        <h3>{{ section.settings.stats_2 }}</h3>
+                    </div>
+                    <div class="ps-block__right">
+                        <p>{{ section.settings.stats_text_2 }}</p>
+                    </div>
+                </div>
+            {%- endif -%}
+
+            {%- if section.settings.stats_3 -%}
+                <div class="ps-block--stat">
+                    <div class="ps-block__left">
+                        <h3>{{ section.settings.stats_3 }}</h3>
+                    </div>
+                    <div class="ps-block__right">
+                        <p>{{ section.settings.stats_text_3 }}</p>
+                    </div>
+                </div>
+            {%- endif -%}
+
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "t:sections.our-mission.name",
+  "tag": "section",
+  "class": "homepage-one",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+        "type": "textarea",
+        "id": "heading",
+        "default": "Our mission is to <br/>redefine real estate in the <br/>customer's favor.",
+        "label": "t:sections.our-mission.settings.heading.label"
+    },
+    {
+        "type": "richtext",
+        "id": "desc",
+        "default": "<p>Finderland is one of the world's leading property agents. Our experience spans the globe.</p><p>We have been advising on buying, selling and renting property for over 160 years, from country cottages to city centre offices, agricultural land to new-build developments.</p>",
+        "label": "t:sections.our-mission.settings.desc.label"
+    },
+    {
+        "type": "text",
+        "id": "brands",
+        "default": "Featured by",
+        "label": "t:sections.our-mission.settings.brands.label"
+    },
+    {
+        "type": "image_picker",
+        "id": "brand_logo1",
+        "label": "t:sections.our-mission.settings.brand_logo1"
+    },
+    {
+        "type": "image_picker",
+        "id": "brand_logo2",
+        "label": "t:sections.our-mission.settings.brand_logo2"
+    },
+    {
+        "type": "image_picker",
+        "id": "brand_logo3",
+        "label": "t:sections.our-mission.settings.brand_logo3"
+    },
+    {
+        "type": "image_picker",
+        "id": "brand_logo4",
+        "label": "t:sections.our-mission.settings.brand_logo4"
+    },
+    {
+        "type": "text",
+        "id": "stats_1",
+        "default": "$15.4M",
+        "label": "t:sections.our-mission.settings.stats_1.label"
+    },
+    {
+        "type": "textarea",
+        "id": "stats_text_1",
+        "default": "owned from <br/> properties transactions",
+        "label": "t:sections.our-mission.settings.stats_1.desc"
+    },
+    {
+        "type": "text",
+        "id": "stats_2",
+        "default": "25K+",
+        "label": "t:sections.our-mission.settings.stats_2.label"
+    },
+    {
+        "type": "textarea",
+        "id": "stats_text_2",
+        "default": "Properties for <br/> buy & sell",
+        "label": "t:sections.our-mission.settings.stats_2.desc"
+    },
+    {
+        "type": "text",
+        "id": "stats_3",
+        "default": "500",
+        "label": "t:sections.our-mission.settings.stats_2.label"
+    },
+    {
+        "type": "textarea",
+        "id": "stats_text_3",
+        "default": "Daily completed transactions",
+        "label": "t:sections.our-mission.settings.stats_2.desc"
+    },
+    {
+        "type": "header",
+        "content": "Spacing Options"
+    },
+    {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+    },
+    {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+    }
+  ],
+    "presets": [
+        {
+            "name": "Our mission",
+            "category": "Blog",
+            "settings": {
+                "heading": "Our mission is to <br>redefine real estate in the <br>customer's favor.",
+                "desc": "<p>Finderland is one of the world's leading property agents. Our experience spans the globe.</p><p>We have been advising on buying, selling and renting property for over 160 years, from country cottages to city centre offices, agricultural land to new-build developments.</p>",
+                "brands": "Featured by",
+                "brand_logo1": "shopify:\/\/shop_images\/partner-1.png",
+                "brand_logo2": "shopify:\/\/shop_images\/partner-2.png",
+                "brand_logo3": "shopify:\/\/shop_images\/partner-3.png",
+                "brand_logo4": "shopify:\/\/shop_images\/partner-4.png",
+                "stats_1": "$15.4M",
+                "stats_text_1": "owned from <br> properties transactions",
+                "stats_2": "25K+",
+                "stats_text_2": "Properties for <br> buy & sell",
+                "stats_3": "500",
+                "stats_text_3": "Daily completed transactions"
+            }
+        }
+    ]
+}
+{% endschema %}

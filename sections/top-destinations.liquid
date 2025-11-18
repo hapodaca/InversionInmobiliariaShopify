@@ -1,0 +1,141 @@
+{%- if section.settings.image != blank -%}
+    <div class="ps-section ps-top-destinations with-bg bg--cover" data-background="{{ section.settings.image | image_url }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+{%- else -%}
+    <div class="ps-section ps-top-destinations with-bg bg--cover" data-background="{{ 'destination-bg.jpg' | asset_url }}" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+{%- endif -%}
+    <div class="container">
+        <div class="ps-section__header">
+            <h3 class="ps-section__heading">{{ section.settings.heading }}</h3>
+        </div>
+        <div class="ps-section__content">
+            <div class="ps-section__columns">
+                
+                {%- for block in section.blocks -%}
+                    <div class="ps-section__column">
+                        <div class="ps-block--destination">
+                            <div class="ps-block__image">
+                                {%- if block.settings.image != blank -%}
+                                    <img src="{{ block.settings.image | image_url }}" alt="{{ block.settings.heading }}" />
+                                {%- else -%}
+                                    {{ 'image' | placeholder_svg_tag }}
+                                {%- endif -%}
+                                <a class="ps-block__overlay" aria-label="{{ block.settings.heading }}" href="{{ block.settings.url }}"></a>
+                            </div>
+                            <div class="ps-block__content">
+                                <h4><a href="{{ block.settings.url }}" aria-label="{{ block.settings.heading }}">{{ block.settings.heading }}</a></h4>
+                                <p>{{ block.settings.desc }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {%- endfor -%}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "t:sections.destinations.name",
+    "tag": "section",
+    "class": "homepage-one",
+    "disabled_on": {
+        "groups": ["header", "footer"]
+    },
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "t:sections.destinations.settings.image.label"
+        },
+        {
+            "type": "text",
+            "id": "heading",
+            "default": "Discover Top Destinations",
+            "label": "t:sections.destinations.settings.heading.label"
+        },
+        {
+            "type": "header",
+            "content": "Spacing Options"
+        },
+        {
+            "type": "range",
+            "id": "margin_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "margin_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Margin Bottom",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Top",
+            "default": 0
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "px",
+            "label": "Padding Bottom",
+            "default": 0
+        }
+    ],
+    "blocks": [
+        {
+            "type": "child-destination",
+            "name": "t:sections.destinations.blocks.type.name",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "t:sections.destinations.blocks.type.image"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "t:sections.destinations.settings.heading.label"
+                },
+                {
+                    "type": "textarea",
+                    "id": "desc",
+                    "label": "t:sections.destinations.blocks.type.desc"
+                },
+                {
+                    "type": "url",
+                    "id": "url",
+                    "label": "t:sections.destinations.blocks.type.url"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Discover Top Destinations",
+            "category": "Blog",
+            "settings": {
+                "heading": "Discover Top Destinations"
+            }
+        }
+    ]
+}
+{% endschema %}

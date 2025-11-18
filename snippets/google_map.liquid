@@ -1,0 +1,29 @@
+{%- comment -%}Elegir el HTML del mapa (una sola fuente){%- endcomment -%}
+{%- assign embed_html = '' -%}
+{%- if product.metafields.custom.google_map != blank -%}
+  {%- assign embed_html = product.metafields.custom.google_map -%}
+{%- elsif map_html and map_html != blank -%}
+  {%- assign embed_html = map_html -%}
+{%- elsif product.metafields.project.map_embed != blank -%}
+  {%- assign embed_html = product.metafields.project.map_embed -%}
+{%- endif -%}
+
+{%- comment -%}Título del bloque (viene del block pasado como "section"){%- endcomment -%}
+{%- assign heading = section.settings.title
+  | default: section.settings.heading
+  | default: section.settings.map_title
+  | default: 'Mapa de ubicación' -%}
+
+{%- if embed_html != '' -%}
+<section class="ProjectMap">
+  <div class="pm-header">
+    <div class="pm-title-wrap">
+      <h3 class="pm-title">{{ heading }}</h3>
+      <span class="pm-title-bar"></span>
+    </div>
+  </div>
+  <div class="pm-map">
+    {{ embed_html }}
+  </div>
+</section>
+{%- endif -%}

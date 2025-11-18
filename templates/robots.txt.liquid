@@ -1,0 +1,22 @@
+# we use Shopify as our ecommerce platform
+
+User-agent: *
+Disallow: /admin
+Disallow: /cart
+Disallow: /orders
+Disallow: /checkouts/
+Disallow: /checkout
+Disallow: /carts
+Disallow: /account
+Disallow: /collections/*sort_by*
+Disallow: /search
+Sitemap: https://inversioninmobiliaria.com.co/sitemap.xml
+
+# --- Custom rules for AI and SEO ---
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# --- End custom rules ---

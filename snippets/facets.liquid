@@ -1,0 +1,372 @@
+{% comment %}theme-check-disable ImgLazyLoading, RemoteAsset, NestedSnippet{% endcomment %}
+{%- if enable_filtering -%}
+  {%- liquid
+      assign sort_by = results.sort_by | default: results.default_sort_by
+      assign total_active_values = 0
+    
+      if results.url
+        assign results_url = results.url
+      else
+        assign terms = results.terms | escape
+        assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+      endif
+    
+      assign color_options_name = settings.product_card_color_options_name | split: ","
+
+    
+      assign filter_label = 'filter-group-' | append: 'categories' | handle
+
+  -%}
+
+  {%- if request.page_type == 'collection' or  request.page_type == 'search' -%}
+    <div class="filter-col-content secondary-color filter-mobile-content dropdn-content-block" data-filter>
+      <facet-filters-form class="facets">
+          <save-attr>
+              {%- liquid
+                  assign current_active_values_count = false
+                  for filter in results.filters
+                      if filter.active_values.size > 0
+                          assign current_active_values_count =  true
+                          break
+                      endif
+                      if filter.type == "price_range"
+                          if filter.min_value.value > 0 or filter.max_value.value < filter.range_max
+                              assign current_active_values_count =  true
+                          endif
+                      endif
+              endfor -%}
+              <form id="{{ id }}" class="facets__form">
+                  {%- if collection.current_vendor -%}
+                      <input type="hidden" name="q" value="{{ collection.current_vendor | escape }}" />
+                  {%- endif -%}
+                  {%- if collection.current_type -%}
+                      <input type="hidden" name="q" value="{{ collection.current_type | escape }}" />
+                  {%- endif -%}
+                  {%- if results.terms -%}
+                      <input type="hidden" name="q" value="{{ results.terms | escape }}">
+                      <input name="options[prefix]" type="hidden" value="last">
+                  {%- endif -%}
+
+                  {%- for filter in results.filters -%}
+                      {%- liquid
+                        assign total_active_values = total_active_values | plus: filter.active_values.size
+                      -%}
+                      {%- case filter.type -%}
+                          {%- when 'boolean' or 'list' -%}
+                              {%- liquid
+                                  assign filter_values_count = 0
+
+                                  for value in filter.values
+                                  assign filter_values_count = filter_values_count | plus: value.count
+                                  endfor
+
+                                  if filter.active_values.size == 0 and filter_values_count == 0
+                                  continue
+                                  endif
+
+                                  assign has_scroll_and_search = false
+
+                                  if filter.values.size > 5
+                                  assign has_scroll_and_search = true
+                                  endif
+
+                                  assign sizes = false
+
+                                  if show_sizes and size_options_name == filter.label
+                                  assign sizes = true
+                                  assign has_scroll_and_search = false
+
+                                  if filter.values.size > 16
+                                      assign sizes = false
+                                      assign has_scroll_and_search = true
+                                  endif
+                                  endif
+
+                                  assign filter_label = 'filter-group-' | append: filter.label | handle
+                                  
+                              -%}
+                              <filter-block class="ps-widget ps-widget--project sidebar-block filter-group-block js-filter" id="Details-{{ forloop.index }}-{{ section.id }}" data-index="{{ forloop.index }}">
+                                  <async-reload data-url-update>
+                                      <h4 class="ps-widget__heading">{{ filter.label | escape | upcase }}</h4>
+                                      <div class="ps-widget__content">
+                                          <div class="ps-widget__attributes">
+                                              {%- liquid
+                                                  assign filter_values_limit = 6
+              
+                                                  if sizes == true
+                                                      assign filter_values_limit = 16
+                                                  endif
+              
+                                                  if filter.values.size <= filter_values_limit
+                                                      for value in filter.values
+                                                      render 'facets-list', colorpics: false, filter: filter, value: value, forloop: forloop, sizes: sizes, show: 'all'
+                                                      endfor
+                                                  else
+                                                      for value in filter.values
+                                                      render 'facets-list', colorpics: false, filter: filter, value: value, forloop: forloop, sizes: sizes, show: 'enabled'
+                                                      endfor
+                                                      for value in filter.values
+                                                      render 'facets-list', colorpics: false, filter: filter, value: value, forloop: forloop, sizes: sizes, show: 'disabled'
+                                                      endfor
+                                                  endif
+                                              -%}
+                                          </div>
+                                      </div>
+                                  </async-reload>
+                              </filter-block>
+                              
+                           {%- when 'price_range' -%}
+                             {% liquid
+                                assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,UYU,VES,VND' | split: ','
+                                assign uses_comma_decimals = false
+                                if currencies_using_comma_decimals contains cart.currency.iso_code
+                                  assign uses_comma_decimals = true
+                                endif
+                              %}
+                              <filter-block class="ps-widget ps-widget--project sidebar-block filter-group-block js-filter" id="Details-{{ forloop.index }}-{{ section.id }}" data-index="{{ forloop.index }}">
+                                 <h4 class="ps-widget__heading">{{ filter.label | escape | upcase }}</h4>
+                                <div
+                                  id="Facet-{{ forloop.index }}-{{ section.id }}"
+                                  class="{% if filter_type == 'horizontal' %}facets__display{% else %}facets__display-vertical{% endif %}"
+                                >
+                                  <price-range class="facets__price">
+                                    <div class="field">
+                                      <label class="field__label" for="Filter-{{ filter.label | escape }}-GTE">
+                                        {{ 'general.from' | t }}, {{ cart.currency.symbol }}
+                                      </label>
+                                      <input
+                                        class="field__input"
+                                        name="{{ filter.min_value.param_name }}"
+                                        id="Filter-{{ filter.label | escape }}-GTE"
+                                        {%- if filter.min_value.value -%}
+                                          {%- if uses_comma_decimals -%}
+                                            value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                          {%- else -%}
+                                            value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                                          {%- endif %}
+                                        {%- endif -%}
+                                        type="number"
+                                        placeholder="0"
+                                        min="0"
+                                        {%- if uses_comma_decimals -%}
+                                          max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                        {%- else -%}
+                                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                        {% endif %}
+                                      >
+                                    </div>
+                                    <div class="field">
+                                      
+                                      <label class="field__label" for="Filter-{{ filter.label | escape }}-LTE">
+                                        {{ 'general.to' | t }}, {{ cart.currency.symbol }}
+                                      </label>
+                                      <input
+                                        class="field__input"
+                                        name="{{ filter.max_value.param_name }}"
+                                        id="Filter-{{ filter.label | escape }}-LTE"
+                                        {%- if filter.max_value.value -%}
+                                          {%- if uses_comma_decimals -%}
+                                            value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                          {%- else -%}
+                                            value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                                          {%- endif %}
+                                        {%- endif -%}
+                                        type="number"
+                                        min="0"
+                                        {%- if uses_comma_decimals -%}
+                                          placeholder="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                          max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                        {%- else -%}
+                                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                        {% endif %}
+                                      >
+                                      
+                                    </div>
+                                  </price-range>
+                                  <div class="update__price">
+                                    <input type="checkbox" value="Update" class="field__input" id="update__price" />
+                                    <label class="ps-btn text-capitalize" for="update__price">{{ 'products.facets.apply' | t }}</label>
+                                  </div>
+                                </div>
+                              </filter-block >
+                          {%- endcase -%}
+                  {%- endfor -%}
+              </form>
+          </save-attr>
+      </facet-filters-form>
+    </div>
+  {%- endif -%}
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+    {%- when 'column' -%}
+      {{ 'section-multicolumn.css' | asset_url | stylesheet_tag }}
+      <style>
+        .section-{{ section.id }}-padding .multicolumn-card__info .grouped__button {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 10px;
+        }
+        .section-{{ section.id }}-padding .banner__content--top-center .multicolumn-card__info .grouped__button {
+          justify-content: center;
+        }
+        .section-{{ section.id }}-padding .multicolumn-card__info .grouped__button .link {
+          margin: 0 !important;
+        }
+        @media screen and (min-width: 750px) {
+          .section-{{ section.id }}-padding .collection-tabs__content {
+            display: flex;
+            align-items: flex-start;
+            {%  if block.settings.position == 'left' %}
+              flex-direction: row-reverse;
+            {% endif %}
+          }
+        }
+        @media screen and (max-width: 749px) {
+          .section-{{ section.id }}-padding .collection__banner {
+            width:100%;
+            max-width: 100%;
+            margin-top: 30px;
+          }
+        }
+      </style>
+      {%- assign empty_column = '' -%}
+      {%- if block.settings.image == blank
+        and block.settings.title == blank
+        and block.settings.text == blank
+        and block.settings.link_label == blank
+      -%}
+        {%- assign empty_column = ' multicolumn-list__item--empty' -%}
+      {%- endif -%}
+      <style>
+        @media screen and (min-width: 750px) {
+          .multicolumn--{{ block.id }} .multicolumn-card__image-wrapper .media {
+            padding-bottom: {{ block.settings.height_custom }}px !important;
+          }
+        }
+        @media screen and (max-width: 749px) {
+          .multicolumn--{{ block.id }} .multicolumn-card__image-wrapper .media {
+            padding-bottom: {{ block.settings.height_image_mb }}% !important;
+          }
+        }
+      </style>
+      <div
+        class="multicolumn--{{ block.id }} collection__banner multicolumn-list__item {% if section.settings.swipe_on_mobile %} slider__slide{% endif %}{{ empty_column }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}{% unless section.settings.show_text_box %} content_absolute{% if section.settings.show_text_box_mb %} not_absolute--mb{% endif %}{% endunless %}"
+        {{ block.shopify_attributes }}
+        {% if settings.animations_reveal_on_scroll %}
+          data-cascade
+          style="--animation-order: {{ forloop.index }};"
+        {% endif %}
+      >
+        <div class="multicolumn-card content-container">
+          <div class="multicolumn-card__image-wrapper">
+            <div
+              class="media media--transparent media--{{ section.settings.image_ratio }}{% if block.settings.enable_resize %} media--size{% endif %}"
+              style="
+                {% if block.settings.image != blank %}
+                  {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'custom' %}
+                    padding-bottom: {{ 1 | divided_by: highest_ratio | times: 100 }}%;
+                  {% endif %}
+                {% else %}
+                  padding-bottom: 100%;
+                {% endif %}
+                {% if block.settings.enable_resize %}
+                  --width-block: {{ block.settings.resize }}px;
+                  --width-block-mb: {{ block.settings.resize_mb }}px;
+                  --position-ver: {{ block.settings.position_ver }}%;
+                  --position-hoz: {{ block.settings.position_hoz }}%;
+                  --position-ver-mb: {{ block.settings.position_ver_mb }}%;
+                  --position-hoz-mb: {{ block.settings.position_hoz_mb }}%
+                {% endif %}
+              "
+            >
+              {%- if block.settings.image != blank -%}
+                {% if section.settings.image_ratio == 'adapt' or section.settings.image_ratio == 'circle' %}
+                  {% assign spaced_image = true %}
+                {% endif %}
+                {%- liquid
+                  assign number_of_columns = section.settings.columns_desktop
+                  assign number_of_columns_mobile = section.settings.columns_mobile
+                  assign grid_space_desktop = number_of_columns | minus: 1 | times: settings.spacing_grid_horizontal | plus: 100 | append: 'px'
+                  assign grid_space_tablet = number_of_columns_mobile | minus: 1 | times: settings.spacing_grid_horizontal | plus: 100 | append: 'px'
+                  assign grid_space_mobile = number_of_columns_mobile | minus: 1 | times: settings.spacing_grid_horizontal | divided_by: 2 | plus: 30 | append: 'px'
+                  if section.settings.image_width == 'half'
+                    assign image_width = 0.5
+                  elsif section.settings.image_width == 'third'
+                    assign image_width = 0.33
+                  else
+                    assign image_width = 1
+                  endif
+                -%}
+                {% capture sizes %}
+                  (min-width: {{ settings.page_width }}px) calc(({{ settings.page_width }}px - {{ grid_space_desktop }}) * {{ image_width }} /  {{ number_of_columns }}),
+                  (min-width: 990px) calc((100vw - {{ grid_space_desktop }}) * {{ image_width }} / {{ number_of_columns }}),
+                  (min-width: 750px) calc((100vw - {{ grid_space_tablet }}) * {{ image_width }} / {{ number_of_columns_mobile }}),
+                  calc((100vw - {{ grid_space_mobile }}) * {{ image_width }} / {{ number_of_columns_mobile }})
+                {% endcapture %}
+                {{
+                  block.settings.image
+                  | image_url: width: 3200
+                  | image_tag:
+                    widths: '50, 75, 100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3200',
+                    sizes: sizes,
+                    class: 'multicolumn-card__image'
+                }}
+              {%- else -%}
+                {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="multicolumn-card__info banner__content banner__position"
+            style="
+              --position-hoz: {{ block.settings.content_position_hoz }}%;
+              --position-ver: {{ block.settings.content_position_ver }}%;
+            "
+          >
+            <div class="multicolumn__box ">
+              {%- if block.settings.sub_title != blank -%}
+                <span
+                  class="inline-richtext sub_heading"
+                  style="font-size: {{ block.settings.subheading_size }}px; margin-bottom: {{ block.settings.sub_margin }}px; color: {{ block.settings.color_sub_heading }}"
+                >
+                  {{ block.settings.sub_title }}
+                </span>
+              {%- endif -%}
+              {%- if block.settings.title != blank -%}
+                <h3
+                  class="inline-richtext heading"
+                  style="font-size: {{ block.settings.heading_size }}px; margin-bottom: {{ block.settings.heading_margin }}px; color: {{ block.settings.color_heading }}"
+                >
+                  {{ block.settings.title }}
+                </h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="rte" style="font-size: {{ block.settings.text_size }}px; margin-bottom: {{ block.settings.content_margin }}px; color: {{ block.settings.color_text }} ">
+                  {{ block.settings.text }}
+                </div>
+              {%- endif -%}
+              <div class="grouped__button">
+                {%- if block.settings.link_label != blank and block.settings.link != blank -%}
+                  <a
+                    class="ps-btn"
+                    {% if block.settings.link == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ block.settings.link }}"
+                    {% endif %}
+                    style="height: {{ block.settings.button_height }}px; width: {{ block.settings.button_width }}px"
+                  >
+                    {{- block.settings.link_label | escape -}}
+                  </a>
+                {%- endif -%}
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endcase -%}
+  {%- endfor -%}
+{%- endif -%}

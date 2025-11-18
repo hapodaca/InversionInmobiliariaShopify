@@ -1,0 +1,407 @@
+{%- assign layout_mode = 'list' -%}
+
+
+<div class="ps-page--inner ps-page--projects"
+     style="margin-top: {{ section.settings.margin_top }}px;
+            margin-bottom: {{ section.settings.margin_bottom }}px;
+            padding-top: {{ section.settings.padding_top }}px;
+            padding-bottom: {{ section.settings.padding_bottom }}px;">
+
+  {%- paginate collection.products by section.settings.products_per_page -%}
+
+    <div class="ps-page__header">
+      <div class="container">
+        <h1 class="ps-page__heading">{{- collection.title | escape -}}</h1>
+        {% render 'breadcrumb' %}
+      </div>
+    </div>
+
+    <div class="ps-page__content">
+      <div class="container">
+
+        {%- if section.settings.enable_filtering -%}
+          <div id="ProductGridContainer" class="ps-projects ps-projects--with-sidebar">
+        {%- else -%}
+          <div id="ProductGridContainer" class="ps-projects">
+        {%- endif -%}
+
+          {%- if section.settings.enable_filtering -%}
+            <div id="filterColumn" class="facets-container ps-projects__left" data-facets-sorting>
+              {% render 'facets',
+                 results: collection,
+                 enable_filtering: section.settings.enable_filtering,
+                 section: section,
+                 id: 'FacetFiltersForm' %}
+            </div>
+          {%- endif -%}
+
+          <div class="collection position-relative ps-projects__right">
+            <div class="collection-loading-overlay"></div>
+
+            <div class="ps-projects__top">
+              <div class="ps-projects__top-left">
+                <p class="ProductCountDesktop">
+                  {%- if collection.results_count -%}
+                    {{ 'products.facets.product_count' | t: product_count: collection.products_count, count: collection.all_products_count }}
+                  {%- else -%}
+                    {{ 'products.facets.product_count_simple_html' | t: count: collection.products_count }}
+                  {%- endif -%}
+                </p>
+              </div>
+
+              <div class="ps-projects__top-right">
+                {% render 'facets-sorting', results: collection, enable_sorting: section.settings.enable_sorting, section: section %}
+              </div>
+            </div>
+
+            {% render 'facets-active',
+               results: collection,
+               section: section,
+               show_sizes: true,
+               size_options_name: "Size",
+               show_colorpics: false %}
+
+            <div id="product-grid"
+                 class="ps-projects__items ps-list"
+                 data-id="{{ section.id }}"
+                 data-columns="{{ settings.collection_items_col }}"
+                 data-product-grid>
+
+              {%- for product in collection.products -%}
+                {% render 'product-item',
+                  product: product,
+                  layout_mode: layout_mode %}
+              {%- endfor -%}
+            </div>
+
+            {%- if paginate.pages > 1 -%}
+              {% render 'pagination', paginate: paginate %}
+            {%- endif -%}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endpaginate -%}
+</div>
+
+<div id="infoPopup" class="inv-popup-overlay" onclick="closeInfoPopup()">
+  <div class="inv-popup-content" onclick="event.stopPropagation()">
+    <div class="inv-popup-header">
+      <h3>Envíame - {{ titulo_popup | default: 'Guía' }}</h3>
+      <button type="button" class="inv-popup-close" onclick="closeInfoPopup()">&times;</button>
+    </div>
+    <div class="inv-popup-body">
+      {% form 'contact', class: 'inv-popup-form' %}
+        
+        {% if form.posted_successfully? %}
+          <div class="ps-notify success show">
+            <span>¡Solicitud enviada correctamente! Te contactaremos pronto.</span>
+          </div>
+        {% endif %}
+        
+        {% if form.errors %}
+          <div class="inv-form-errors">{{ form.errors | default_errors }}</div>
+        {% endif %}
+
+        <div class="inv-form-group">
+          <label for="PopupName">Nombre *</label>
+          <input id="PopupName" type="text" name="contact[name]" required>
+        </div>
+
+        <div class="inv-form-group">
+          <label for="PopupEmail">Tu correo electrónico *</label>
+          <input id="PopupEmail" type="email" name="contact[email]" required>
+        </div>
+
+        <div class="inv-form-group">
+          <label for="PopupPhone">WhatsApp (Opcional)</label>
+          <input type="hidden" id="phoneCountryCode" name="contact[phone_country_code]" value="">
+          <input type="hidden" id="phoneCountryName" name="contact[phone_country_name]" value="">
+          <input type="hidden" id="phoneNational" name="contact[phone_national]" value="">
+          <input type="hidden" name="contact[phone]" id="hiddenPhone" value="">
+          <input id="PopupPhone" type="tel">
+        </div>
+
+        <input type="hidden" id="popupBody" name="contact[body]" value="">
+        <input type="hidden" id="popupSubject" name="contact[subject]" value="">
+
+        <div class="inv-form-actions">
+          <button type="submit">ENVIAR SOLICITUD</button>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "{{ shop.url }}{{ collection.url }}#collection",
+  "url": "{{ shop.url }}{{ collection.url }}",
+  "name": "{{ collection.title | escape }} - {{ shop.name | escape }}",
+  "headline": "{{ collection.title | escape }}",
+  "description": "{{ collection.description | strip_html | truncate: 180 | escape }}",
+  "inLanguage": "es",
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "{{ collection.title | escape }}",
+    "numberOfItems": {{ collection.products_count }},
+    "itemListElement": [
+      {% for product in collection.products limit: 10 %}
+      {
+        "@type": "Product",
+        "@id": "{{ shop.url }}{{ product.url }}#product",
+        "name": "{{ product.title | escape }}",
+        "url": "{{ shop.url }}{{ product.url }}",
+        {% if product.featured_image %}
+        "image": "{{ product.featured_image | image_url: width: 800 }}",
+        {% endif %}
+        "description": "{{ product.description | strip_html | truncate: 160 | escape }}",
+        "offers": {
+          "@type": "Offer",
+          "price": "{{ product.price | divided_by: 100.00 }}",
+          "priceCurrency": "{{ shop.currency }}",
+          "availability": "{% if product.available %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+        }
+      }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "{{ shop.url }}/#organization",
+    "name": "{{ shop.name | escape }}",
+    "url": "{{ shop.url }}",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{% if settings.organization_logo != blank %}{{ settings.organization_logo | image_url: width: 500 }}{% else %}{{ settings.logo | image_url: width: 500 }}{% endif %}"
+    },
+    "sameAs": [
+      "{{ settings.social_linkedin_link | escape }}",
+      "{{ settings.social_instagram_link | escape }}",
+      "{{ settings.social_facebook_link | escape }}",
+      "{{ settings.social_twitter_link | escape }}",
+      "{{ settings.social_tiktok_link | escape }}",
+      "{{ settings.social_youtube_link | escape }}"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "{{ settings.phone | escape }}",
+      "email": "{{ settings.email | escape }}",
+      "contactType": "Customer Service",
+      "areaServed": "CO",
+      "availableLanguage": ["es"]
+    }
+  }
+}
+</script>
+<!-- Bloque JSON-LD motores de IA (AEO) -->
+
+
+{% style %}
+  .ps-projects__layout-switchers,
+  .view-mode--xl,
+  view-mode,
+  [data-view][class*="lnil"] { display: none !important; }
+
+  .ps-projects__items.ps-list{display:flex;flex-direction:column;gap:0}
+
+  /* Forzar que el select de ordenamiento tenga suficiente ancho */
+.ps-projects__top-right select,
+.ps-projects__top-right .facets__sort select {
+  min-width: 200px;
+  max-width: 100%;
+  width: auto;
+  padding-right: 2rem; /* espacio para el ícono ▼ */
+  text-overflow: initial;
+  white-space: normal;
+}
+
+/* Overlay */
+#infoPopup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,.6);
+  z-index: 1000 !important;
+}
+#infoPopup.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Caja del popup */
+#infoPopup .inv-popup-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,.4);
+  animation: popupFadeIn .3s ease;
+  z-index: 1001 !important;
+}
+
+/* Header del popup */
+#infoPopup .inv-popup-header {
+  position: relative;
+  padding: 16px 40px 12px 40px; /* deja aire en los lados */
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+#infoPopup .inv-popup-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #002b5b;
+  line-height: 1.4;       /* mejora legibilidad */
+  word-break: break-word; /* si es muy largo, hace salto */
+}
+
+/* Botón cerrar */
+#infoPopup .inv-popup-close {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  background: none;
+  border: 0;
+  font-size: 22px;
+  color: #999;
+  cursor: pointer;
+  transition: color .2s;
+}
+#infoPopup .inv-popup-close:hover {
+  color: #333;
+}
+
+/* Body */
+#infoPopup .inv-popup-body {
+  padding: 20px 24px 24px;
+}
+
+/* Inputs */
+#infoPopup .inv-form-group {
+  margin-bottom: 16px;
+}
+#infoPopup .inv-form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+#infoPopup .inv-form-group input {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  transition: border .2s, box-shadow .2s;
+}
+#infoPopup .inv-form-group input:focus {
+  border-color: #002b5b;
+  box-shadow: 0 0 0 2px rgba(0,43,91,.15);
+  outline: none;
+}
+
+/* Botón */
+#infoPopup .inv-form-actions button[type="submit"] {
+  width: 100%;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  background: #002b5b;
+  color: #fff;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+#infoPopup .inv-form-actions button[type="submit"]:hover {
+  background: #014080;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,43,91,.35);
+}
+
+.ps-notify.success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  animation: fadeInOut 4s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+
+
+
+.iti__country-list {
+  background: #fff !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+#infoPopup .iti {
+  width: 100% !important;
+  display: block !important;
+  position: relative;
+}
+
+#infoPopup .iti__tel-input {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 52px !important;
+  border: 1px solid #ddd !important;
+  border-radius: 6px !important;
+  padding: 10px 12px 10px 52px !important;
+  font-size: 14px !important;
+}
+
+/* Asegurar que todos los inputs tengan el mismo ancho */
+#infoPopup .inv-form-group input,
+#infoPopup .inv-form-group .iti {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+{% endstyle %}
+
+
+
+{% schema %}
+{
+  "name": "t:sections.main-collection.name",
+  "class": "main-collection-section",
+  "settings": [
+    { "type": "header", "content": "t:sections.main-collection.settings.general" },
+    { "type": "checkbox", "id": "enable_sorting", "default": true, "label": "Enable sorting" },
+    { "type": "checkbox", "id": "enable_filtering", "default": true, "label": "Enable filtering" },
+    { "type": "range", "id": "products_per_page", "label": "t:sections.products.settings.post_limit.label", "min": 8, "max": 30, "step": 1, "default": 25 },
+    { "type": "header", "content": "Spacing Options" },
+    { "type": "range", "id": "margin_top", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Margin Top", "default": 0 },
+    { "type": "range", "id": "margin_bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Margin Bottom", "default": 0 },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Padding Top", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 5, "unit": "px", "label": "Padding Bottom", "default": 0 }
+  ]
+}
+{% endschema %}

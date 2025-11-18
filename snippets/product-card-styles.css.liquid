@@ -1,0 +1,138 @@
+<style>
+  /* --- Estilos Centralizados y Definitivos --- */
+
+  /* REGLAS PARA FORZAR LA ALINEACIÓN DEL CARRUSEL */
+  .product-carousel-section .owl-stage { display: flex !important; align-items: stretch !important; }
+  .product-carousel-section .owl-item { height: auto !important; display: flex !important; }
+
+  /* ESTRUCTURA DE LA TARJETA */
+  .product-carousel-section .ps-project--grid {
+    height: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border: 1px solid #eee !important;
+    border-radius: 8px !important;
+    background: white !important;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .product-carousel-section .ps-project--grid:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .product-carousel-section .ps-project__content {
+    flex-grow: 1 !important;
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* CONTENIDO INTERNO (CON ALTURAS MÍNIMAS PARA ALINEAR) */
+  .product-carousel-section .ps-project__image { aspect-ratio: 16 / 9; }
+  .product-carousel-section .ps-project__image img { width: 100%; height: 100%; object-fit: cover; }
+  .product-carousel-section .ps-project__name { min-height: 48px; margin: 10px 0 15px 0; }
+  .product-carousel-section .ps-project__name a { color: #333; text-decoration: none; font-weight: 600; font-size: 16px; line-height: 1.5; }
+  
+  /* --- ESTILOS DE PRECIOS (CORREGIDO) --- */
+  .product-carousel-section .inv-price-main {
+    min-height: 50px;
+    margin-bottom: 15px;
+  }
+  .product-carousel-section .inv-price-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #666; /* Color para etiquetas 'PRECIO:' */
+  }
+  .product-carousel-section .inv-price-item span:last-child {
+    font-weight: 700;
+    color: #2d6e3e; /* Color verde para el precio principal */
+  }
+  .product-carousel-section .inv-price-compare {
+    text-decoration: line-through; /* Precio tachado */
+    color: #999 !important; /* Color gris para el precio anterior */
+    font-weight: normal !important;
+  }
+
+  .product-carousel-section .inv-product-type {
+    min-height: 45px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 8px 12px;
+    border-left: 3px solid #2d6e3e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+  
+  /* --- BOTÓN (CON ANIMACIÓN RESTAURADA) --- */
+  .product-carousel-section .ps-project__actions {
+    margin-top: auto;
+    margin-bottom: 15px;
+    display: flex; /* Añadido para poder centrar */
+    justify-content: center; /* Añadido para centrar el botón */
+    }
+    .product-carousel-section .ps-btn--info {
+    display: block;
+    width: 100%;
+    max-width: 280px; /* Ancho máximo para que coincida con el badge de abajo */
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    background: linear-gradient(135deg, #002b5b, #1e4d8a, #3a6fb5);
+    background-size: 200% 200%;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all .3s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 4px 12px rgba(0,43,91,.25);
+    min-height: 40px;
+    line-height: 1.2;
+    }
+    .product-carousel-section .ps-btn--info:hover {
+    transform: translateY(-2px) scale(1.01);
+    animation: gradientShift 2s ease infinite;
+    }
+
+    /* --- ANIMACIÓN (necesaria para el hover del botón) --- */
+    @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+    }
+
+  /* --- BADGE DE OPORTUNIDAD (MÁS ANGOSTO) --- */
+  .product-carousel-section .ps-project__services {
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-carousel-section .ps-investment-opportunity {
+    display: inline-block; /* Permite que el ancho se ajuste al texto */
+    width: auto; /* Ancho automático */
+    padding: 12px 25px; /* Ajusta el padding horizontal */
+    border-radius: 25px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: white;
+    background: linear-gradient(45deg, #ff6b35, #f7931e);
+  }
+
+  /* --- CLASE PARA OCULTAR ELEMENTOS VACÍOS --- */
+  .product-carousel-section .is-empty {
+    visibility: hidden;
+  }
+</style>

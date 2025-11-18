@@ -1,0 +1,83 @@
+<div class="ps-page--404" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="container">
+        <div class="ps-block--404">
+            <div class="ps-block__image">
+                {%- if settings.notfound_page_banner != blank -%}
+                    <img src="{{ settings.notfound_page_banner | image_url }}" alt="">
+                {%- else -%}
+                    <img src="{{ '404.png' | asset_url }}" alt="">
+                {%- endif -%}
+            </div>
+            <div class="ps-block__content">
+                <h3>
+                    {%- if settings.notfound_page_oops_text != blank -%}
+                        {{ settings.notfound_page_oops_text }}
+                    {%- else -%}
+                        {{ 'general.404_oops' | t }}
+                    {%- endif -%}
+                </h3>
+                <p>
+                    {%- if settings.notfound_page_desc != blank -%}
+                        {{ settings.notfound_page_desc }}
+                    {%- else -%}
+                        {{ 'general.404_desc' | t }}
+                    {%- endif -%}
+                </p>
+                <a class="ps-btn" href="{{ routes.all_products_collection_url }}">{{ 'general.continue_shopping' | t }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+  "name": "404 Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

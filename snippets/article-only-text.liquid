@@ -1,0 +1,21 @@
+<div class="ps-post ps-post--only-text">
+    <div class="ps-post__left">
+        {%- if show_date -%}
+            <div class="ps-post__created"><span class="ps-post__date">{{ article.published_at | date: '%d' }}</span><span class="ps-post__month-and-year">{{ article.published_at | date: '%B' }} <br/> {{ article.published_at | date: '%Y' }}</span></div>
+        {%- endif -%}
+    </div>
+    <div class="ps-post__right">
+        <h4 class="ps-post__title"><a href="{{ article.url }}">{{ article.title | escape }}</a></h4>
+        <div class="ps-post__header">
+            <div class="ps-post__meta">
+                {%- if show_author -%}
+                    <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ article.author }}</span></span>
+                {%- endif -%}
+
+                {%- if show_comments -%}
+                    <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                {%-  endif -%}
+            </div>
+        </div>
+    </div>
+</div>

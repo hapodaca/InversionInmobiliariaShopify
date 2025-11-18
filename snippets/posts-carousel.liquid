@@ -1,0 +1,76 @@
+<div class="ps-section ps-highlight-posts with-carousel">
+    <div class="container">
+        <div class="ps-section__header">
+            <h3 class="ps-section__heading">{{ section.settings.title }} 
+                {%- if section.settings.show_view_all -%}
+                    <a class="ps-section__morelink" href="{{ blog.url }}">{{ section.settings.view_all_text }}<i class="lnil lnil-arrow-top-right"></i></a>
+                {%- endif -%}
+            </h3>
+            <div class="ps-section__carousel-navigation"><a class="ps-btn--carouse-arrow prev" href="#carousel-highlight-posts"  aria-label="Button prev"><i class="lnil lnil-chevron-left"></i></a><a class="ps-btn--carouse-arrow next" href="#carousel-highlight-posts"  aria-label="Button next"><i class="lnil lnil-chevron-right"></i></a></div>
+        </div>
+        <div class="ps-section__content">
+            <div class="owl-slider ps-carousel" 
+                data-owl-nav="true" 
+                data-owl-auto="{{ section.settings.slider_autoplay | default: false }}" 
+                data-owl-loop="{{ section.settings.slider_loop | default: false }}" 
+                data-owl-speed="{{ section.settings.slider_speed | default: 5000 }}" 
+                data-owl-gap="{{ section.settings.slider_gap | default: 16 }}"
+                data-owl-item="4"
+                data-owl-item-xs="2"
+                data-owl-item-sm="2"
+                data-owl-item-md="3"
+                data-owl-item-lg="4"
+                data-owl-duration="{{ section.settings.slider_duration | default: 1000 }}" 
+                data-owl-mousedrag="{{ section.settings.slider_mousedrag | default: true }}" 
+                id="carousel-highlight-posts">
+
+                {%- for article in blog.articles limit: section.settings.post_limit -%}
+                    <div class="ps-post ps-post--grid">
+
+                        {%- if article.image -%}
+                            <div class="ps-post__thumbnail">
+                                <img src="{{ article.image | image_url: width: 353, height: 230 }}" alt="{{ article.title | escape }}" />
+                                <a class="ps-post__overlay" aria-label="{{ article.title | escape }}" href="{{ article.url }}" style="font-size:0">{{ article.title | escape }}</a>
+                            </div>
+                        {%- endif -%}
+
+                        <div class="ps-post__content">
+                            <div class="ps-post__meta">
+
+                                <div class="ps-post__categories">
+                                    <a href="{{ blog.url }}">{{ blog.title }}</a>
+                                </div>
+
+                                {%- if section.settings.blog_show_date -%}
+                                    <span class="ps-post__created-at">{{ article.published_at | time_tag: format: 'date' }}</span>
+                                {%- endif -%}
+                            </div>
+                            <h4 class="ps-post__title">
+                                <a href="{{ article.url }}" aria-label="{{ article.title | escape }}">{{ article.title | escape }}</a>
+                            </h4>
+                            <div class="ps-post__desc">
+                                <p>
+                                    {%- if article.excerpt.size > 0 -%}
+                                        {{ article.excerpt | strip_html | truncatewords: 30 }}
+                                    {%- else -%}
+                                        {{ article.content | strip_html | truncatewords: 30 }}
+                                    {%- endif -%}
+                                </p>
+                            </div>
+                            <div class="ps-post__bottom">
+                                {%- if section.settings.blog_show_author -%}
+                                    <span class="ps-post__author"><i class="lnil lnil-user"></i><span>{{ article.author }}</span></span>
+                                {%- endif -%}
+
+                                {%- if section.settings.blog_show_comments -%}
+                                    <span class="ps-post__counter"><i class="lnil lnil-comments"></i>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                                {%-  endif -%}
+                            </div>
+                        </div>
+                    </div>
+                {%- endfor -%}
+
+            </div>
+        </div>
+    </div>
+</div>

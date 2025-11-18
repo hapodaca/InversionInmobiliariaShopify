@@ -1,0 +1,289 @@
+<div class="ps-page ps-page--inner ps-page--auth" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="ps-page__header">
+      {% render 'breadcrumb' %}
+    </div>
+  </div>
+  <div class="ps-page__content">
+    <div class="container">
+      <div id="recover">
+        {%- form 'recover_customer_password', class: 'ps-form--auth' -%}
+          {% assign recover_success = form.posted_successfully? %}
+          <div class="ps-form__top">
+            <h3>{{ section.settings.title_recover }}</h3>
+            <p>{{ section.settings.subtext_recover }}</p>
+            {%- if form.errors -%}
+              <div class="alert alert-danger" role="alert">
+                <p id="RecoverEmail-email-error" class="form__message">
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 13 13">
+                    <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                    <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                    <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                  </svg>
+                  {{ form.errors.messages.form }}
+                </p>
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="ps-form__fields">
+            <div class="form-group">
+              <div class="ps-form underline">
+                <input
+                  class="form-control" 
+                  type="email"
+                  value=""
+                  name="email"
+                  id="RecoverEmail"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  autocomplete="email"
+                  {% if form.errors %}
+                    aria-invalid="true"
+                    aria-describedby="RecoverEmail-email-error"
+                    autofocus
+                  {% endif %}
+                  placeholder=" "
+                  required
+                >
+                <label for="RecoverEmail">{{ section.settings.recover_field_email_label }}</label>
+              </div>
+            </div>
+          </div>
+          <div class="ps-form__submit">
+            <button class="ps-btn" type="submit">{{ section.settings.recover_field_submit_label }}</button>
+          </div>
+          <div class="ps-form__links">
+            <p>
+              <a href="#login">
+                {{ 'customer.login_page.cancel' | t }}
+              </a>
+            </p>
+          </div>
+        {%- endform -%}
+      </div>
+      <div id="login">
+        {%- form 'customer_login', class: 'ps-form--auth ps-form--login', novalidate: 'novalidate' -%}
+          <div class="ps-form__top">
+            <h3>{{ section.settings.title_login }}</h3>
+            <p>{{ section.settings.subtext_login }}</p>
+
+            {%- if recover_success == true -%}
+              <p class="form__message" tabindex="-1" autofocus>
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 13 13">
+                  <path d="M6.5 12.35C9.73087 12.35 12.35 9.73086 12.35 6.5C12.35 3.26913 9.73087 0.65 6.5 0.65C3.26913 0.65 0.65 3.26913 0.65 6.5C0.65 9.73086 3.26913 12.35 6.5 12.35Z" fill="#428445" stroke="white" stroke-width="0.7"/>
+                  <path d="M5.53271 8.66357L9.25213 4.68197" stroke="white"/>
+                  <path d="M4.10645 6.7688L6.13766 8.62553" stroke="white">
+                </svg>
+                {{ 'customer.recover_password.success' | t }}
+              </p>
+            {%- endif -%}
+
+            {%- if form.errors -%}
+              <div class="alert alert-danger" role="alert">
+                <p class="form__message" tabindex="-1" autofocus>
+                  <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 13 13">
+                    <circle cx="6.5" cy="6.50049" r="5.5" stroke="white" stroke-width="2"/>
+                    <circle cx="6.5" cy="6.5" r="5.5" fill="#EB001B" stroke="#EB001B" stroke-width="0.7"/>
+                    <path d="M5.87413 3.52832L5.97439 7.57216H7.02713L7.12739 3.52832H5.87413ZM6.50076 9.66091C6.88091 9.66091 7.18169 9.37267 7.18169 9.00504C7.18169 8.63742 6.88091 8.34917 6.50076 8.34917C6.12061 8.34917 5.81982 8.63742 5.81982 9.00504C5.81982 9.37267 6.12061 9.66091 6.50076 9.66091Z" fill="white"/>
+                    <path d="M5.87413 3.17832H5.51535L5.52424 3.537L5.6245 7.58083L5.63296 7.92216H5.97439H7.02713H7.36856L7.37702 7.58083L7.47728 3.537L7.48617 3.17832H7.12739H5.87413ZM6.50076 10.0109C7.06121 10.0109 7.5317 9.57872 7.5317 9.00504C7.5317 8.43137 7.06121 7.99918 6.50076 7.99918C5.94031 7.99918 5.46982 8.43137 5.46982 9.00504C5.46982 9.57872 5.94031 10.0109 6.50076 10.0109Z" fill="white" stroke="#EB001B" stroke-width="0.7">
+                  </svg>
+                  {{ 'contact.form.error_heading' | t }}
+                </p>
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="ps-form__fields">
+            <div class="form-group">
+              <div class="ps-form underline">
+                <input
+                  class="form-control" 
+                  type="email"
+                  name="customer[email]"
+                  id="CustomerEmail"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  {% if form.errors contains 'form' %}
+                    aria-invalid="true"
+                  {% endif %}
+                  placeholder=" "
+                  required
+                >
+                <label for="CustomerEmail">{{ section.settings.field_email_label }}</label>
+              </div>
+            </div>
+      
+            {%- if form.password_needed -%}
+              <div class="form-group">
+                <div class="ps-form underline">
+                  <input
+                    class="form-control" 
+                    type="password"
+                    value=""
+                    name="customer[password]"
+                    id="CustomerPassword"
+                    autocomplete="current-password"
+                    {% if form.errors contains 'form' %}
+                      aria-invalid="true"
+                    {% endif %}
+                    placeholder=" "
+                  >
+                  <label for="CustomerPassword">{{ section.settings.field_password_label }}</label>
+                </div>
+              </div>
+              <div class="ps-form__actions">
+                <div class="form-group"></div>
+                <a href="#recover">
+                  {{ 'customer.login_page.forgot_password' | t }}
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+    
+          <div class="ps-form__submit">
+            <button class="ps-btn" type="submit">{{ section.settings.field_submit_label }}</button>
+          </div>
+          <div class="ps-form__links">
+            <p>
+              {{ 'general.dont_have_an_account' | t }}
+              <a href="{{ routes.account_register_url }}">{{ 'general.register_here' | t }}</a>
+            </p>
+          </div>
+        {%- endform -%}
+      </div>
+      <div class="customer login section-{{ section.id }}-padding">
+      
+        {%- if shop.checkout.guest_login -%}
+          <div>
+            <hr>
+            <h3>{{ 'customer.login_page.guest_title' | t }}</h3>
+      
+            {%- form 'guest_login' -%}
+              <button class="ps-btn">
+                {{ 'customer.login_page.guest_continue' | t }}
+              </button>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-login.name",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.main-login.settings.login.name"
+    },
+    {
+      "type": "text",
+      "id": "title_login",
+      "default": "Login Your Account",
+      "label": "t:sections.main-login.settings.login.title"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext_login",
+      "default": "Thank you for get back to Finderland System, let access our the best recommendation for you.",
+      "label": "t:sections.main-login.settings.login.subtext"
+    },
+    {
+      "type": "text",
+      "id": "field_email_label",
+      "default": "Enter Your Email Here",
+      "label": "t:sections.main-login.settings.login.email"
+    },
+    {
+      "type": "text",
+      "id": "field_password_label",
+      "default": "Enter Your Password Here",
+      "label": "t:sections.main-login.settings.login.password"
+    },
+    {
+      "type": "text",
+      "id": "field_submit_label",
+      "default": "Sign in",
+      "label": "t:sections.main-login.settings.login.submit"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.main-login.settings.recover.name"
+    },
+    {
+      "type": "text",
+      "id": "title_recover",
+      "default": "Reset Your Password",
+      "label": "t:sections.main-login.settings.recover.title"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext_recover",
+      "default": "We will send you an email to reset your password",
+      "label": "t:sections.main-login.settings.recover.subtext"
+    },
+    {
+      "type": "text",
+      "id": "recover_field_email_label",
+      "default": "Enter Your Email Here",
+      "label": "t:sections.main-login.settings.login.email"
+    },
+    {
+      "type": "text",
+      "id": "recover_field_submit_label",
+      "default": "Send Link",
+      "label": "t:sections.main-login.settings.login.submit"
+    },
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

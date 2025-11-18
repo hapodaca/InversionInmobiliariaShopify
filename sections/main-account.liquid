@@ -1,0 +1,182 @@
+<div class="ps-page ps-page--inner ps-page--auth" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="ps-page__header">
+        <h1 class="ps-page__heading">{{ 'customer.account.title' | t }}</h1>
+      {% render 'breadcrumb' %}
+    </div>
+  </div>
+  <div class="ps-page__content">
+    <div class="container">
+      <div class="ps-dashboard mt-60">
+        <div class="ps-dashboard__left">
+          <div class="ps-dashboard__sidebar">
+            <ul class="menu menu--single">
+                <li class="active">
+                  <a href="{{ routes.account_url }}"><i class="lnil lnil-user"></i><span> {{ 'customer.account.details' | t }}</span></a>
+                </li>
+                <li>
+                  <a href="{{ routes.account_addresses_url }}"><i class="lnil lnil-map-marker"></i><span> {{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</span></a>
+                </li>
+                <li>
+                  <a href="{{ routes.account_logout_url }}"><i class="lnil lnil-power-switch"></i><span> {{ 'customer.log_out' | t }}</span></a>
+                </li>
+            </ul>
+          </div>
+        </div>
+        <div class="ps-dashboard__right">
+          <div class="row">
+            <div class="col-12">
+              <div class="customer account section-{{ section.id }}-padding">
+
+                <h2>{{ 'customer.orders.title' | t }}</h2>
+    
+                {% paginate customer.orders by section.settings.orders_per_page %}
+                  {%- if customer.orders.size > 0 -%}
+                    <table role="table" class="order-history ps-table table">
+                      <thead role="rowgroup">
+                        <tr role="row">
+                          <th class="w-6" id="ColumnOrder" scope="col" role="columnheader">{{ 'customer.orders.order_number' | t }}</th>
+                          <th class="w-6" id="ColumnDate" scope="col" role="columnheader">{{ 'customer.orders.date' | t }}</th>
+                          <th class="w-6" id="ColumnPayment" scope="col" role="columnheader">{{ 'customer.orders.payment_status' | t }}</th>
+                          <th class="w-6" id="ColumnFulfillment" scope="col" role="columnheader">
+                            {{ 'customer.orders.fulfillment_status' | t }}
+                          </th>
+                          <th class="w-4" id="ColumnTotal" scope="col" role="columnheader">{{ 'customer.orders.total' | t }}</th>
+                          <th class="w-4" id="ColumnActions" scope="col" role="columnheader">{{ 'customer.orders.action' | t }}</th>
+                        </tr>
+                      </thead>
+                      <tbody role="rowgroup">
+                        {%- for order in customer.orders -%}
+                          <tr role="row">
+                            <td
+                              id="RowOrder"
+                              role="cell"
+                              headers="ColumnOrder"
+                              data-label="{{ 'customer.orders.order_number' | t }}"
+                            >
+                              <a
+                                href="{{ order.customer_url }}"
+                                aria-label="{{ 'customer.orders.order_number_link' | t: number: order.name }}"
+                              >
+                                {{ order.name }}
+                              </a>
+                            </td>
+                            <td headers="RowOrder ColumnDate" role="cell" data-label="{{ 'customer.orders.date' | t }}">
+                              {{ order.created_at | time_tag: format: 'date' }}
+                            </td>
+                            <td
+                              headers="RowOrder ColumnPayment"
+                              role="cell"
+                              data-label="{{ 'customer.orders.payment_status' | t }}"
+                            >
+                              {%- if order.financial_status == 'paid' or order.financial_status == 'partially_paid' -%}
+                                <span class="ps-badge ps-badge--success">{{ order.financial_status_label }}</span>
+                              {%- else -%}                                
+                                <span class="ps-badge ps-badge--danger">{{ order.financial_status_label }}</span>
+                              {%- endif -%}
+                            </td>
+                            <td
+                              headers="RowOrder ColumnFulfillment"
+                              role="cell"
+                              data-label="{{ 'customer.orders.fulfillment_status' | t }}"
+                            >
+                              {%- if order.fulfillment_status == 'fulfilled' -%}
+                                <span class="ps-badge ps-badge--success">{{ order.fulfillment_status_label }}</span>
+                              {%- elsif order.fulfillment_status == 'unfulfilled' -%}
+                                <span class="ps-badge ps-badge--danger">{{ order.fulfillment_status_label }}</span>
+                              {%- else  -%}
+                                {{ order.fulfillment_status_label }}
+                              {%- endif -%}
+
+                            </td>
+                            <td headers="RowOrder ColumnTotal" role="cell" data-label="{{ 'customer.orders.total' | t }}">
+                              {{ order.total_net_amount | money_with_currency }}
+                            </td>
+                            <td headers="RowOrder ColumnAction" role="cell" data-label="{{ 'customer.orders.action' | t }}">
+                              <div class="ps-table__actions">
+                                <a href="{{ order.customer_url }}"><i class="lnir lnir-pencil"></i></a>
+                              </div>
+                            </td>
+                          </tr>
+                        {%- endfor -%}
+                      </tbody>
+                    </table>
+                  {%- else -%}
+                    <p>{{ 'customer.orders.none' | t }}</p>
+                  {%- endif -%}
+                  
+                  {%- if paginate.pages > 1 -%}
+                    {% render 'pagination', paginate: paginate %}
+                  {%- endif -%}
+                  
+                {% endpaginate %}
+                  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.main-account.name",
+  "settings": [
+    {
+      "type": "range",
+      "id": "orders_per_page",
+      "label": "t:sections.main-account.settings.orders_limit.label",
+      "min": 3,
+      "max": 20,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Spacing Options"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,384 @@
+<header class="header header--desktop header--one {% if request.page_type == 'index' %} header--fixed header--transparent {% endif %}" {% if section.settings.sticky_header %} data-sticky="true"{% endif %} style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="container">
+        <div class="header__wrapper">
+            <div class="header__left">
+                <div class="header__logo">
+                    <a class="ps-logo light" aria-label="logo light" href="{{ routes.root_url }}">
+                        {% render 'logo' %}
+                    </a>
+                    <a class="ps-logo" aria-label="logo" href="{{ routes.root_url }}">
+                        {% render 'logo' %}
+                    </a>
+                    <a class="ps-logo sticky" aria-label="logo sticky" href="{{ routes.root_url }}">
+                        {% render 'logo-sticky' %}
+                    </a>
+                </div>
+                <ul class="menu menu--desktop">
+                    {% render 'mega-main-menu' %}
+                </ul>
+            </div>
+            <div class="header__right">
+                <div class="header__actions">
+
+                    {%- if settings.phone != blank and settings.show_phone -%}
+                        <div class="header__phone">
+                            <a href="tel:{{ settings.phone }}">
+                                <i class="lnil lnil-headphone"></i>
+                                <span class="header__phone-text">{{ settings.phone }}</span>
+                            </a>
+                        </div>
+                    {%- endif -%}
+
+                    {%- if settings.header_show_icon_account and shop.customer_accounts_enabled -%}
+                        {%- if customer -%}
+                            <div class="header__account logged-in">
+                                <a href="{{ routes.account_url }}">
+                                    <i class="lnil lnil-user"></i>
+                                    {%- liquid
+                                        if customer
+                                        echo 'customer.account_fallback' | t
+                                        else
+                                        echo 'customer.log_in' | t
+                                        endif
+                                    -%}
+                                </a>
+                                <div class="header__account-dropdown">
+                                    <ul class="menu--single">
+                                        <li><a href="{{ routes.account_url }}"><i class="lnil lnil-user"></i><span>{{ 'customer.account.details' | t }}</span></a></li>
+                                        <li><a href="{{ routes.account_addresses_url }}"><i class="lnil lnil-map-marker"></i><span>{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</span></a></li>
+                                        <li><a href="{{ routes.account_logout_url }}"><i class="lnil lnil-power-switch"></i><span>{{ 'customer.log_out' | t }}</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        {%- else -%}
+                            <div class="header__account">
+                                <a href="{{ routes.account_login_url }}">
+                                    <i class="lnil lnil-user"></i>
+                                    {%- liquid
+                                        if customer
+                                        echo 'customer.account_fallback' | t
+                                        else
+                                        echo 'customer.log_in' | t
+                                        endif
+                                    -%}
+                                </a>
+                            </div>
+                        {%- endif -%}
+                    {%- endif -%}
+
+                    {%- if settings.mini_cart_yes -%}
+                        <div class="header__submit-listing">
+                            <a class="ps-btn ps-btn--with-opacity ps-toggle-drawer" href="#" data-target="drawer-cart">
+                                {%- liquid
+                                    echo 'cart.header.title' | t
+                                -%}
+                                <span class="header-cart-count">
+                                    {%- if cart != empty -%}
+                                        <i class="lnil lnil-cart-full"></i>
+                                    {%- else -%}
+                                        <i class="lnil lnil-cart-empty"></i>
+                                    {%- endif -%}
+                                    <span class="minicart-qty">{{ cart.item_count }}</span>
+                                </span>
+                            </a>
+                        </div>
+                    {%- endif -%}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<header class="header header--mobile" {% if section.settings.sticky_header %} data-sticky="true"{% endif %} style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="header__left">
+        <div class="header__logo">
+            <a class="ps-logo"  aria-label="logo mobile" href="{{ routes.root_url }}">
+                {% render 'logo-mobile' %}
+            </a>
+        </div>
+    </div>
+    <div class="header__right">
+        <a class="header__menu-toggle ps-toggle-drawer" href="#" data-target="drawer-menu"><i class="lnil lnil-menu"></i></a>
+    </div>
+</header>
+
+<div class="ps-drawer" id="drawer-menu">
+    <div class="ps-drawer__top">
+        <div class="ps-drawer__heading">
+            {%- liquid
+                echo 'sections.header.menu' | t
+            -%}
+        </div><a class="ps-drawer__close"  aria-label="Close" href="#"><i class="icon-cross"></i></a>
+    </div>
+    <div class="ps-drawer__bottom">
+        <ul class="menu--mobile">
+            {% render 'main-menu' %}
+        </ul>
+    </div>
+</div>
+
+{%- if section.settings.enable_navigation_bottom -%}
+<nav class="navigation--bottom" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="navigation__wrapper">
+
+        {%- if settings.footer_show_icon_home -%}
+            <div class="navigation__item">
+                <a href="{{ routes.root_url }}"><i class="lnil lnil-home"></i></a>
+            </div>
+        {%- endif -%}
+
+        {%- if settings.footer_show_icon_search -%}
+            <div class="navigation__item">
+                <a class="ps-search-open" href="#"><i class="lnil lnil-search-alt"></i></a>
+            </div>
+        {%- endif -%}
+
+        {%- if settings.footer_show_icon_account and shop.customer_accounts_enabled -%}
+            <div class="navigation__item">
+                <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}">
+                    <i class="lnil lnil-user-alt"></i>
+                </a>
+            </div>
+        {%- endif -%}
+
+        {%- if settings.footer_show_icon_cart and settings.mini_cart_yes -%}
+            <div class="navigation__item">
+                <a  class="ps-toggle-drawer" href="#" data-target="drawer-cart">
+                    <span class="header-cart-count">
+                        {%- if cart != empty -%}
+                            <i class="lnil lnil-cart-full"></i>
+                        {%- else -%}
+                            <i class="lnil lnil-cart-empty"></i>
+                        {%- endif -%}
+                        <span class="minicart-qty">{{ cart.item_count }}</span>
+                    </span>
+                </a>
+            </div>
+        {%- endif -%}
+
+        {%- if settings.footer_show_icon_filter -%}
+            <div class="navigation__item">
+                <a class="ps-toggle-drawer" href="#" data-target="drawer-menu-filter">
+                    <i class="lnil lnil-sort"></i>
+                </a>
+            </div>
+        {%- endif -%}
+        
+    </div>
+</nav>
+{%- endif -%}
+
+{%- if settings.footer_show_icon_search -%}
+    <div class="ps-dialog ps-dialog--search" id="search-extra-dialog">
+        <div class="ps-dialog__wrapper">
+            <form class="ps-form--projects-search ps-form--projects-search-extra" action="{{ routes.search_url }}" method="get">
+                <div class="ps-form__extra">
+                    <div class="ps-form__fields">
+                        <div class="ps-form__block">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <div class="ps-form underline with-icon"><i class="lnil lnil-map-marker ps-form__icon"></i>
+                                            <input class="form-control" type="search"
+                                                name="q"
+                                                value="{{ search.terms | escape }}"
+                                                placeholder="{{ 'sections.image-banner-with-search.search.placeholder' | t }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ps-form__actions">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6">
+                                <button class="ps-btn ps-btn--fullwidth ps-btn--gray" id="close-search-extra">{{ 'sections.image-banner-with-search.search.cancel' | t }}</button>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <button class="ps-btn ps-btn--fullwidth" type="submit">{{ 'sections.image-banner-with-search.search.button' | t }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{%- endif -%}
+
+{%- if settings.footer_show_icon_filter -%}
+    <div class="ps-drawer" id="drawer-menu-filter">
+        <div class="ps-drawer__top">
+            <div class="ps-drawer__heading">{{ settings.collection_categories_title }}</div>
+            <a class="ps-drawer__close"  aria-label="Close" href="#"><i class="icon-cross"></i></a>
+        </div>
+        <div class="ps-drawer__bottom">
+            <ul class="menu--mobile">
+                {% render 'collection-menu' %}
+            </ul>
+        </div>
+    </div>
+{%- endif -%}
+
+{% schema %}
+    {
+        "name": "t:sections.header.name",
+        "class": "section-header",
+        "settings": [
+            {
+                "type": "link_list",
+                "id": "menu",
+                "default": "main-menu",
+                "label": "t:sections.header.settings.menu.label"
+            },
+            {
+                "type": "checkbox",
+                "id": "sticky_header",
+                "default": true,
+                "label": "t:sections.header.settings.sticky_header.label"
+            },
+            {
+                "type": "checkbox",
+                "id": "enable_navigation_bottom",
+                "default": true,
+                "label": "Enable mobile bottom nav?"
+            },
+            {
+                "type": "header",
+                "content": "Spacing Options"
+            },
+            {
+                "type": "range",
+                "id": "margin_top",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Margin Top",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "margin_bottom",
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "unit": "px",
+                "label": "Margin Bottom",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "min": 0,
+                "max": 50,
+                "step": 5,
+                "unit": "px",
+                "label": "Padding Top",
+                "default": 0
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "min": 0,
+                "max": 50,
+                "step": 5,
+                "unit": "px",
+                "label": "Padding Bottom",
+                "default": 0
+            }
+        ],
+        "blocks": [
+            {
+              "type": "mega_menu",
+              "name": "Mega menu",
+              "settings": [
+                {
+                  "type": "text",
+                  "id": "menu_item",
+                  "label": "Menu item",
+                  "info": "Enter menu item to apply a mega menu dropdown."
+                },
+                {
+                  "type": "header",
+                  "content": "Image 1"
+                },
+                {
+                  "type": "image_picker",
+                  "id": "image_1",
+                  "label": "Image",
+                  "info": "1200 x 1200px .jpg recommended"
+                },
+                {
+                  "type": "text",
+                  "id": "image_heading_1",
+                  "label": "Heading"
+                },
+                {
+                  "type": "url",
+                  "id": "image_link_1",
+                  "label": "Link"
+                },
+                {
+                  "type": "color",
+                  "id": "image_text_color_1",
+                  "label": "Heading",
+                  "default": "#000000"
+                },
+                {
+                  "type": "header",
+                  "content": "Image 2"
+                },
+                {
+                  "type": "image_picker",
+                  "id": "image_2",
+                  "label": "Image",
+                  "info": "1200 x 1200px .jpg recommended"
+                },
+                {
+                  "type": "text",
+                  "id": "image_heading_2",
+                  "label": "Heading"
+                },
+                {
+                  "type": "url",
+                  "id": "image_link_2",
+                  "label": "Link"
+                },
+                {
+                  "type": "color",
+                  "id": "image_text_color_2",
+                  "label": "Heading",
+                  "default": "#000000"
+                },
+                {
+                  "type": "header",
+                  "content": "Image 3"
+                },
+                {
+                  "type": "image_picker",
+                  "id": "image_3",
+                  "label": "Image",
+                  "info": "1200 x 1200px .jpg recommended"
+                },
+                {
+                  "type": "text",
+                  "id": "image_heading_3",
+                  "label": "Heading"
+                },
+                {
+                  "type": "url",
+                  "id": "image_link_3",
+                  "label": "Link"
+                },
+                {
+                  "type": "color",
+                  "id": "image_text_color_3",
+                  "label": "Heading",
+                  "default": "#000000"
+                }
+              ]
+            }
+        ]
+    }
+{% endschema %}

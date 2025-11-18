@@ -1,0 +1,45 @@
+{% comment %}theme-check-disable ImgLazyLoading, RemoteAsset, NestedSnippet{% endcomment %}
+{%- liquid
+    assign navigation = settings.collection_categories
+%}
+{%- for link in navigation.links -%}
+    <li class="menu-item {% if link.links != blank %} menu-item-has-children{% endif %} {% if link.child_active %} menu-item-active{% endif %}">
+        {%- if link.links != blank -%}
+            <a id="FilterMenu-{{ link.handle }}" href="{{ link.url }}">{{- link.title | escape -}}</a>
+            <span class="sub-toggle"></span>
+            <ul class="sub-menu">
+                {%- for childlink in link.links -%}
+                    <li  class=" {% if childlink.links != blank %} menu-item-has-children{% endif %}">
+                        <a 
+                            id="FilterMenu-{{ link.handle }}-{{ childlink.handle }}"
+                            href="{{ childlink.url }}"
+                        >
+                            {{ childlink.title | escape }}
+                        </a>
+                        {%- if childlink.links != blank -%}
+                            <span class="sub-toggle"></span>
+                            <ul class="sub-menu">
+                                {%- for grandchildlink in childlink.links -%}
+                                    <li>
+                                        <a
+                                            id="FilterMenu-{{ link.handle }}-{{ childlink.handle }}-{{ grandchildlink.handle }}"
+                                            href="{{ grandchildlink.url }}">
+                                            {{ grandchildlink.title | escape }}
+                                        </a>
+                                    </li>
+                                {%- endfor -%}
+                            </ul>
+                        {%- endif -%}
+                    </li>
+                {%- endfor -%}
+            </ul>
+        {%- else -%}
+        <a
+            id="FilterMenu-{{ link.handle }}"
+            href="{{ link.url }}"
+            class="{% if link.current %} menu-item-active{% endif %}">
+            {{- link.title | escape -}}
+        </a>
+        {%- endif -%}
+    </li>
+{%- endfor -%}
