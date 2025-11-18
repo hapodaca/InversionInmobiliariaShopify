@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  {{ content_for_header }}
+
+  <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+</head>
+<body class="template-{{ template.name }}">
+
+  <header>
+    <h1>{{ shop.name }}</h1>
+    <nav>
+      {% for link in linklists.main-menu.links %}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {% endfor %}
+    </nav>
+  </header>
+
+  <main role="main">
+    {{ content_for_layout }}
+  </main>
+
+  <footer>
+    <p>&copy; {{ 'now' | date: "%Y" }} {{ shop.name }}</p>
+  </footer>
+
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+</body>
+</html>

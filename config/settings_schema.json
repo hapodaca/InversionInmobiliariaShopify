@@ -1,0 +1,27 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Inversión Inmobiliaria",
+    "theme_version": "1.0.0",
+    "theme_author": "hapodaca",
+    "theme_documentation_url": "https://github.com/hapodaca/InversionInmobiliariaShopify",
+    "theme_support_url": "https://github.com/hapodaca/InversionInmobiliariaShopify/issues"
+  },
+  {
+    "name": "Colores",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Color primario",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Color secundario",
+        "default": "#ffffff"
+      }
+    ]
+  }
+]

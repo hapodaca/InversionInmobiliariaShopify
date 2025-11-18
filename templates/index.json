@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero-section",
+      "settings": {
+        "title": "Inversión Inmobiliaria",
+        "subtitle": "Tu mejor opción para invertir"
+      }
+    },
+    "featured-products": {
+      "type": "featured-collection",
+      "settings": {
+        "collection": "all"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "featured-products"
+  ]
+}
