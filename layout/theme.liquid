@@ -347,63 +347,26 @@ function initPhoneInputs() {
       attributeFilter: ['class']
     });
     
-    // NUEVO: Captura manual con debug
+    // Guardar los datos del teléfono en el form antes del submit
     const form = popupInput.closest("form");
     if (form) {
+      // Guardar los datos del teléfono en el formulario
       form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        console.log("Submit interceptado");
-        
-        // Obtener el número directamente del input
-        const inputValue = popupInput.value.replace(/\D/g, ''); // Solo dígitos
-        const countryData = popupIti.getSelectedCountryData();
-        const dialCode = countryData.dialCode;
-        
-        // Construir número completo manualmente
-        const fullNumber = inputValue.startsWith(dialCode) 
-          ? '+' + inputValue 
-          : '+' + dialCode + inputValue;
-        
-        const national = inputValue.replace(dialCode, '');
-        
-        console.log("Valores capturados:", {
-          inputRaw: popupInput.value,
-          inputDigits: inputValue,
-          full: fullNumber,
-          code: '+' + dialCode,
-          name: countryData.name,
-          national: national
-        });
-        
-        // Debug: verificar si existen
-        console.log("Verificando campos en HTML:");
-        console.log("hiddenPhone existe:", !!document.getElementById('hiddenPhone'));
-        console.log("phoneCountryCode existe:", !!document.getElementById('phoneCountryCode'));
-        console.log("phoneCountryName existe:", !!document.getElementById('phoneCountryName'));
-        console.log("phoneNational existe:", !!document.getElementById('phoneNational'));
-        // Crear campos ocultos
-        function setHiddenField(id, name, value) {
-          let field = document.getElementById(id);
-          if (!field) {
-            field = document.createElement('input');
-            field.type = 'hidden';
-            field.id = id;
-            field.name = name;
-            form.appendChild(field);
-          }
-          field.value = value;
-          console.log(`Campo ${id} = ${value}`);
+        const inputValue = popupInput.value.replace(/\D/g, '');
+        if (inputValue) {
+          const countryData = popupIti.getSelectedCountryData();
+          const dialCode = countryData.dialCode;
+          const fullNumber = '+' + dialCode + inputValue;
+          const national = inputValue.replace(dialCode, '');
+
+          // Guardar datos en el form para que N8N los capture
+          form.dataset.phoneData = JSON.stringify({
+            full: fullNumber,
+            code: '+' + dialCode,
+            country: countryData.name,
+            national: national
+          });
         }
-        
-        setHiddenField('hiddenPhone', 'contact[phone]', fullNumber);
-        setHiddenField('phoneCountryCode', 'contact[phone_country_code]', '+' + dialCode);
-        setHiddenField('phoneCountryName', 'contact[phone_country_name]', countryData.name);
-        setHiddenField('phoneNational', 'contact[phone_national]', national);
-        
-        console.log("Enviando formulario...");
-        setTimeout(() => {
-          form.submit();
-        }, 2);
       }, true);
     }
   }
@@ -535,29 +498,40 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault(); // evita reload
 
     const phoneInput = document.querySelector('#PopupPhone');
-    if (!phoneInput || !phoneInput._iti) return;
+    if (!phoneInput || !phoneInput._iti) {
+      console.error('phoneInput o _iti no disponible');
+      return;
+    }
 
     const inputValue = phoneInput.value.replace(/\D/g, '');
-    if (!inputValue) return;
+    if (!inputValue) {
+      console.error('inputValue vacío');
+      return;
+    }
 
     const countryData = phoneInput._iti.getSelectedCountryData();
     const dialCode = countryData.dialCode;
     const fullNumber = '+' + dialCode + inputValue;
+    const national = inputValue.replace(dialCode, '');
+
+    console.log('📞 Preparando envío con teléfono:', fullNumber);
 
     const payload = {
       ts: new Date().toISOString(),
       url: window.location.href,
       form_type: 'lead',
-      recurso: document.querySelector('#infoPopup h3')?.textContent.replace('Envíame - ', '') || '',
+      recurso: document.querySelector('#infoPopup h3')?.textContent.replace('Envíame - ', '') || 'Publica tu Proyecto Inmobiliario',
       fields: {
         'contact[name]': document.getElementById('PopupName')?.value || '',
         'contact[email]': document.getElementById('PopupEmail')?.value || '',
         'contact[phone]': fullNumber,
         'contact[phone_country_code]': '+' + dialCode,
         'contact[phone_country_name]': countryData.name,
-        'contact[phone_national]': inputValue
+        'contact[phone_national]': national
       }
     };
+
+    console.log('📤 Payload a enviar:', payload);
 
 function showToast(msg, color = "#4caf50") {
   const t = document.createElement("div");
@@ -602,6 +576,8 @@ function showToast(msg, color = "#4caf50") {
 
     let toastShown = false; // Evita doble mensaje
 
+    console.log('🚀 Enviando a webhook...');
+
     fetch('https://automation.inversioninmobiliaria.com.co/webhook/prospecto', {
       method: 'POST',
       headers: {
@@ -612,17 +588,21 @@ function showToast(msg, color = "#4caf50") {
       keepalive: true
     })
     .then(res => {
+      console.log('✅ Respuesta del webhook:', res.status, res.statusText);
       if (toastShown) return;
       toastShown = true;
       if (res.ok) {
+        console.log('✅ Webhook respondió OK');
         showToast('¡Solicitud enviada correctamente! Te contactaremos pronto.');
         form.reset();
         if (typeof closeInfoPopup === 'function') closeInfoPopup();
       } else {
+        console.warn('⚠️ Webhook respondió con error:', res.status);
         showToast('⚠️ Envío recibido, pero el servidor no respondió correctamente.', "#ff9800");
       }
     })
-    .catch(() => {
+    .catch((err) => {
+      console.error('❌ Error en fetch:', err);
       if (toastShown) return;
       toastShown = true;
       showToast('⚠️ Error de conexión. Intenta nuevamente.', "#f44336");
