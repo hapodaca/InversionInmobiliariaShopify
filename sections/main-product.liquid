@@ -207,11 +207,11 @@
                   </button>
                 </div>
               </div>
-              <div id="infoPopup" class="inv-popup-overlay" onclick="closeInfoPopup()">
+              <div id="productInfoPopup" class="inv-popup-overlay" onclick="closeProductInfoPopup()">
                 <div class="inv-popup-content" onclick="event.stopPropagation()">
                   <div class="inv-popup-header">
                     <h3>Solicitar Información</h3>
-                    <button type="button" class="inv-popup-close" onclick="closeInfoPopup()">&times;</button>
+                    <button type="button" class="inv-popup-close" onclick="closeProductInfoPopup()">&times;</button>
                   </div>
                   {%- assign prop_id_print = fx.id_proyecto 
                         | default: product.metafields.project.id_proyecto 
@@ -538,7 +538,7 @@ ${phone ? 'Mi WhatsApp: +' + phone + '\n' : ''}${mail ? 'Mi correo: ' + mail + '
 <!-- SCRIPT 3: Popup & Toast (ÚNICO) -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const popup = document.getElementById('infoPopup');
+  const popup = document.getElementById('productInfoPopup');
   if (!popup) return;
 
   // Evita stacking contexts (sticky/transform padres)
@@ -548,29 +548,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = popup.querySelector('.inv-popup-close');
   const form = popup.querySelector('form');
 
-  function openInfoPopup() {
+  function openProductInfoPopup() {
     popup.classList.add('show');
     document.body.style.overflow = 'hidden';
   }
-  function closeInfoPopup() {
+  function closeProductInfoPopup() {
     popup.classList.remove('show');
     document.body.style.overflow = '';
   }
 
   // Disponible para onclick inline si lo usas
-  window.openInfoPopup = openInfoPopup;
-  window.closeInfoPopup = closeInfoPopup;
+  window.openProductInfoPopup = openProductInfoPopup;
+  window.closeProductInfoPopup = closeProductInfoPopup;
 
   // Abrir
   triggers.forEach(btn => btn.addEventListener('click', e => {
     e.preventDefault();
-    openInfoPopup();
+    openProductInfoPopup();
   }));
 
   // Cerrar
-  if (closeBtn) closeBtn.addEventListener('click', closeInfoPopup);
-  popup.addEventListener('click', e => { if (e.target === popup) closeInfoPopup(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeInfoPopup(); });
+  if (closeBtn) closeBtn.addEventListener('click', closeProductInfoPopup);
+  popup.addEventListener('click', e => { if (e.target === popup) closeProductInfoPopup(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProductInfoPopup(); });
 
   // Toast util
   function showToast(message) {
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (form) {
     form.addEventListener('submit', () => {
       showToast('¡Solicitud enviada correctamente! Te contactaremos pronto.');
-      setTimeout(closeInfoPopup, 800);
+      setTimeout(closeProductInfoPopup, 800);
     });
   }
 });
@@ -1198,7 +1198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ===== POPUP FIX -  ===== */
 /* Popup base */
-#infoPopup{
+#productInfoPopup{
   position: fixed !important;
   inset: 0 !important;
   display: none !important;
@@ -1212,14 +1212,14 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 /* Estado abierto */
-#infoPopup.show{
+#productInfoPopup.show{
   display: flex !important;
   opacity: 1 !important;
   visibility: visible !important;
 }
 
 /* Contenido del popup */
-#infoPopup .inv-popup-content{
+#productInfoPopup .inv-popup-content{
   background: #fff !important;
   border-radius: 12px !important;
   width: 90% !important;
@@ -1230,7 +1230,7 @@ document.addEventListener("DOMContentLoaded", () => {
 }
 
 /* Botón cerrar */
-#infoPopup .inv-popup-close{
+#productInfoPopup .inv-popup-close{
   position: absolute !important;
   top: 10px !important; right: 10px !important;
   background: none !important; border: 0 !important;
@@ -1761,10 +1761,10 @@ document.addEventListener("DOMContentLoaded", () => {
   100%{background-position:0% 50%}
 }
 /* === POPUP: botón Enviar solicitud === */
-#infoPopup .inv-popup-form button[type="submit"],
-#infoPopup .inv-popup-body button[type="submit"],
-#infoPopup form button[type="submit"],
-#infoPopup button[type="submit"]{
+#productInfoPopup .inv-popup-form button[type="submit"],
+#productInfoPopup .inv-popup-body button[type="submit"],
+#productInfoPopup form button[type="submit"],
+#productInfoPopup button[type="submit"]{
   display:block !important;
   width:100% !important;
   padding:16px 22px !important;
@@ -1783,10 +1783,10 @@ document.addEventListener("DOMContentLoaded", () => {
   cursor:pointer !important;
   transition:transform .25s ease, box-shadow .25s ease !important;
 }
-#infoPopup .inv-popup-form button[type="submit"]:hover,
-#infoPopup .inv-popup-body button[type="submit"]:hover,
-#infoPopup form button[type="submit"]:hover,
-#infoPopup button[type="submit"]:hover{
+#productInfoPopup .inv-popup-form button[type="submit"]:hover,
+#productInfoPopup .inv-popup-body button[type="submit"]:hover,
+#productInfoPopup form button[type="submit"]:hover,
+#productInfoPopup button[type="submit"]:hover{
   transform:translateY(-2px) scale(1.01) !important;
   animation:gradientShift 2s ease infinite !important;
   box-shadow:0 14px 32px rgba(0,43,91,.35), 0 8px 18px rgba(0,0,0,.12) !important;
