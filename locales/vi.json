@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin language editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "general": {
     "filter": "Lọc",
@@ -23,7 +14,7 @@
       "login_form_password_placeholder": "Mật khẩu của bạn",
       "login_form_error": "Sai mật khẩu!",
       "login_form_submit": "Đăng nhập",
-      "admin_link_html": "Bạn là chủ cửa hàng? <a href=\"/admin\" class=\"link underlined-link\">Đăng nhập tại đây</a>",
+      "admin_link_html": "Bạn là chủ cửa hàng? <a href=\"\/admin\" class=\"link underlined-link\">Đăng nhập tại đây<\/a>",
       "powered_by_shopify_html": "Cửa hàng này được vận hành bởi {{ shopify }}"
     },
     "social": {
@@ -101,8 +92,8 @@
     "has_subscription": "Có đăng ký",
     "save_up_to": "Tiết kiệm đến",
     "product_count_simple": {
-    "one": "sản phẩm",
-    "other": "sản phẩm"
+      "one": "sản phẩm",
+      "other": "sản phẩm"
     },
     "add_to_wishlist": "THÊM VÀO DANH SÁCH YÊU THÍCH",
     "add_to_wishlist_small": "Thêm vào danh sách yêu thích",
@@ -121,14 +112,14 @@
     "share_success": " đã được sao chép vào clipboard",
     "new": "Mới",
     "save": "Lưu",
-    "from_price_html": "<span class=\"prd-price-from\">từ</span> {{ price }}",
+    "from_price_html": "<span class=\"prd-price-from\">từ<\/span> {{ price }}",
     "price_for_one_time_purchase": "Giá mua một lần",
     "status": "Trạng thái",
     "zoom": "Phóng to",
     "deferred_media": "Phương tiện hoãn lại",
-    "free_delivery_init_html": "Nhận <b>MIỄN PHÍ GIAO HÀNG</b> nếu số tiền thanh toán là hơn <b>{{ add }}</b>",
-    "free_delivery_false_html": "Gần đó, thêm <b>{{ add }}</b> nữa để nhận <b>MIỄN PHÍ GIAO HÀNG</b>",
-    "free_delivery_true_html": "Chúc mừng! Bạn đủ điều kiện nhận <b>MIỄN PHÍ GIAO HÀNG</b>",
+    "free_delivery_init_html": "Nhận <b>MIỄN PHÍ GIAO HÀNG<\/b> nếu số tiền thanh toán là hơn <b>{{ add }}<\/b>",
+    "free_delivery_false_html": "Gần đó, thêm <b>{{ add }}<\/b> nữa để nhận <b>MIỄN PHÍ GIAO HÀNG<\/b>",
+    "free_delivery_true_html": "Chúc mừng! Bạn đủ điều kiện nhận <b>MIỄN PHÍ GIAO HÀNG<\/b>",
     "estimate_shipping_static": "Thông tin giao hàng",
     "static_shipping_tooltip": "Chỉ định phương thức giao hàng này trong ghi chú đơn hàng và quản lý của chúng tôi sẽ liên hệ với bạn để xác nhận",
     "estimate_shipping": "Máy tính phí giao hàng",
@@ -152,7 +143,7 @@
     "agree_to_the_terms_subheading": "Một hộp kiểm “đồng ý với các chính sách cửa hàng” là một phương pháp bảo vệ doanh nghiệp của bạn.",
     "search_products": "Tìm kiếm trong cửa hàng",
     "total_cart_weight_is": "Tổng trọng lượng giỏ hàng là",
-    "policies_placeholder_html": "<p>Bạn có thể thêm hoặc tạo các chính sách cho cửa hàng của mình. Bạn có thể sử dụng HTML trong nội dung các chính sách cửa hàng của mình.</p>\n      <p>Mặc dù Shopify có thể tạo các mẫu, bạn phải chịu trách nhiệm tuân theo các chính sách đã công bố của mình. Kiểm tra kỹ các chính sách của bạn trước khi thêm chúng.</p>\n      <p><b>Các bước</b>:</p>\n      <ol>\n        <li>Từ trang quản trị Shopify của bạn, đi tới Cài đặt > Chính sách.</li>\n        <li>Nhập các chính sách cửa hàng của bạn, hoặc nhấp vào Tạo từ mẫu để nhập mẫu mặc định. Sử dụng trình chỉnh sửa văn bản giàu để thêm kiểu và định dạng cho các chính sách của bạn, và để thêm liên kết và hình ảnh.</li>\n        <li>Kiểm tra các chính sách của bạn và thực hiện bất kỳ thay đổi nào.</li>\n        <li>Nhấp vào Lưu để thêm các chính sách của bạn.</li>\n      </ol>",
+    "policies_placeholder_html": "<p>Bạn có thể thêm hoặc tạo các chính sách cho cửa hàng của mình. Bạn có thể sử dụng HTML trong nội dung các chính sách cửa hàng của mình.<\/p>\n      <p>Mặc dù Shopify có thể tạo các mẫu, bạn phải chịu trách nhiệm tuân theo các chính sách đã công bố của mình. Kiểm tra kỹ các chính sách của bạn trước khi thêm chúng.<\/p>\n      <p><b>Các bước<\/b>:<\/p>\n      <ol>\n        <li>Từ trang quản trị Shopify của bạn, đi tới Cài đặt > Chính sách.<\/li>\n        <li>Nhập các chính sách cửa hàng của bạn, hoặc nhấp vào Tạo từ mẫu để nhập mẫu mặc định. Sử dụng trình chỉnh sửa văn bản giàu để thêm kiểu và định dạng cho các chính sách của bạn, và để thêm liên kết và hình ảnh.<\/li>\n        <li>Kiểm tra các chính sách của bạn và thực hiện bất kỳ thay đổi nào.<\/li>\n        <li>Nhấp vào Lưu để thêm các chính sách của bạn.<\/li>\n      <\/ol>",
     "one_time_purchase": "Mua một lần",
     "super_sale": "Siêu giảm giá",
     "day": "Ngày",
@@ -213,7 +204,7 @@
       "vendor": "Nhà cung cấp",
       "quantity_minimum_message": "Số lượng phải là 1 hoặc nhiều hơn",
       "include_taxes": "Đã bao gồm thuế.",
-      "shipping_policy_html": "<a href=\"{{ link }}\">Vận chuyển</a> được tính tại quầy thanh toán.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Vận chuyển<\/a> được tính tại quầy thanh toán.",
       "unit_price_label": "Đơn giá",
       "view_cart": "Xem giỏ hàng",
       "view_in_space": "Xem trong không gian của bạn",
@@ -283,8 +274,8 @@
         "other": "{{ count }} sản phẩm"
       },
       "product_count_simple_html": {
-        "one": "<strong>{{ count }}</strong> Sản phẩm được tìm thấy",
-        "other": "<strong>{{ count }}</strong> Sản phẩm được tìm thấy"
+        "one": "<strong>{{ count }}<\/strong> Sản phẩm được tìm thấy",
+        "other": "<strong>{{ count }}<\/strong> Sản phẩm được tìm thấy"
       },
       "reset": "Đặt lại",
       "sort_button": "Sắp xếp",
@@ -370,9 +361,9 @@
       "empty": "Giỏ hàng của bạn trống",
       "cart_error": "Có lỗi khi cập nhật giỏ hàng của bạn. Vui lòng thử lại.",
       "cart_quantity_error_html": "Bạn chỉ có thể thêm {{ quantity }} của mặt hàng này vào giỏ hàng.",
-      "taxes_and_shipping_policy_at_checkout_html": "Thuế, giảm giá và <a href=\"{{ link }}\">phí vận chuyển</a> được tính tại quầy thanh toán",
+      "taxes_and_shipping_policy_at_checkout_html": "Thuế, giảm giá và <a href=\"{{ link }}\">phí vận chuyển<\/a> được tính tại quầy thanh toán",
       "taxes_included_but_shipping_at_checkout": "Thuế đã bao gồm và phí vận chuyển và giảm giá được tính tại quầy thanh toán",
-      "taxes_included_and_shipping_policy_html": "Thuế đã bao gồm. <a href=\"{{ link }}\">Phí vận chuyển</a> và giảm giá được tính tại quầy thanh toán.",
+      "taxes_included_and_shipping_policy_html": "Thuế đã bao gồm. <a href=\"{{ link }}\">Phí vận chuyển<\/a> và giảm giá được tính tại quầy thanh toán.",
       "taxes_and_shipping_at_checkout": "Thuế, giảm giá và phí vận chuyển được tính tại quầy thanh toán",
       "headings": {
         "product": "Sản phẩm",
@@ -384,7 +375,7 @@
       "update": "Cập nhật",
       "login": {
         "title": "Bạn có tài khoản?",
-        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Đăng nhập</a> để thanh toán nhanh hơn."
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Đăng nhập<\/a> để thanh toán nhanh hơn."
       },
       "subtotal": "Tổng phụ",
       "new_subtotal": "Tổng phụ mới"
@@ -408,7 +399,7 @@
     "collection_template": {
       "empty": "Không tìm thấy sản phẩm",
       "title": "Bộ sưu tập",
-      "use_fewer_filters_html": "Sử dụng ít bộ lọc hơn hoặc <a class=\"{{ class }}\" href=\"{{ link }}\">xóa tất cả</a>"
+      "use_fewer_filters_html": "Sử dụng ít bộ lọc hơn hoặc <a class=\"{{ class }}\" href=\"{{ link }}\">xóa tất cả<\/a>"
     },
     "video": {
       "load_video": "Tải video: {{ description }}"
@@ -419,7 +410,7 @@
     "quick_order_list": {
       "product_total": "Tổng phụ sản phẩm",
       "view_cart": "Xem giỏ hàng",
-      "each": "{{ money }}/mỗi cái",
+      "each": "{{ money }}\/mỗi cái",
       "product": "Sản phẩm",
       "variant": "Biến thể",
       "variant_total": "Tổng biến thể",
@@ -469,10 +460,10 @@
     }
   },
   "localization": {
-    "country_label": "Quốc gia/khu vực",
+    "country_label": "Quốc gia\/khu vực",
     "language_label": "Ngôn ngữ",
     "update_language": "Cập nhật ngôn ngữ",
-    "update_country": "Cập nhật quốc gia/khu vực"
+    "update_country": "Cập nhật quốc gia\/khu vực"
   },
   "cart": {
     "header": {
@@ -506,9 +497,9 @@
       "address1": "Địa chỉ 1",
       "address2": "Địa chỉ 2",
       "city": "Thành phố",
-      "country": "Quốc gia/khu vực",
+      "country": "Quốc gia\/khu vực",
       "province": "Tỉnh",
-      "zip": "Mã bưu điện/ZIP",
+      "zip": "Mã bưu điện\/ZIP",
       "phone": "Điện thoại",
       "set_default": "Đặt làm địa chỉ mặc định",
       "add": "Thêm địa chỉ",
@@ -655,5 +646,3 @@
     }
   }
 }
-
-

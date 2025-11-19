@@ -189,7 +189,7 @@
   },
   {
     "name": "t:settings_schema.sections.header.name",
-    "settings":[
+    "settings": [
       {
         "type": "header",
         "content": "t:settings_schema.sections.header.settings.mini_cart.name"
@@ -272,11 +272,11 @@
         "type": "richtext",
         "id": "copyright_text",
         "label": "Copyright text",
-        "default": "<p>© 2023, <a href='/'>Finderland</a>. <a target='_blank' rel='nofollow' href='#'>Powered by Nouthemes</a></p>"
+        "default": "<p>© 2023, <a href='\/'>Finderland<\/a>. <a target='_blank' rel='nofollow' href='#'>Powered by Nouthemes<\/a><\/p>"
       },
       {
         "type": "header",
-        "content": "Language/currency"
+        "content": "Language\/currency"
       },
       {
         "type": "checkbox",
@@ -328,7 +328,7 @@
   },
   {
     "name": "t:settings_schema.products.name",
-    "settings":[
+    "settings": [
       {
         "type": "header",
         "content": "t:settings_schema.products.settings.mini_cart"
@@ -367,7 +367,7 @@
   },
   {
     "name": "t:settings_schema.product_detail.name",
-    "settings":[
+    "settings": [
       {
         "type": "checkbox",
         "id": "product_show_add_cart",
@@ -378,7 +378,7 @@
   },
   {
     "name": "t:settings_schema.colors.name",
-    "settings":[
+    "settings": [
       {
         "type": "header",
         "content": "t:settings_schema.colors.settings.text.label"
@@ -457,7 +457,7 @@
   },
   {
     "name": "t:settings_schema.border_radius.name",
-    "settings":[
+    "settings": [
       {
         "type": "range",
         "id": "border_radius_large",
@@ -687,7 +687,7 @@
         "type": "richtext",
         "id": "cookies_banner_desc",
         "label": "t:settings_schema.cookies_banner.settings.desc",
-        "default": "<p>This website uses cookies to ensure you get the best experience on our website. By clicking <i><strong>Accept All</strong></i>, you consent to our use of cookies. <a href='#'>Cookie Policy</a></p>"
+        "default": "<p>This website uses cookies to ensure you get the best experience on our website. By clicking <i><strong>Accept All<\/strong><\/i>, you consent to our use of cookies. <a href='#'>Cookie Policy<\/a><\/p>"
       },
       {
         "type": "text",

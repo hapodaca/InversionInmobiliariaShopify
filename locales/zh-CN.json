@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin language editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "general": {
     "filter": "筛选",
@@ -23,7 +14,7 @@
       "login_form_password_placeholder": "您的密码",
       "login_form_error": "密码错误！",
       "login_form_submit": "进入",
-      "admin_link_html": "您是店主吗？<a href=\"/admin\" class=\"link underlined-link\">在这里登录</a>",
+      "admin_link_html": "您是店主吗？<a href=\"\/admin\" class=\"link underlined-link\">在这里登录<\/a>",
       "powered_by_shopify_html": "本店由{{ shopify }}提供支持"
     },
     "social": {
@@ -121,14 +112,14 @@
     "share_success": " 已复制到剪贴板",
     "new": "新",
     "save": "保存",
-    "from_price_html": "<span class=\"prd-price-from\">从</span> {{ price }}",
+    "from_price_html": "<span class=\"prd-price-from\">从<\/span> {{ price }}",
     "price_for_one_time_purchase": "一次性购买价格",
     "status": "状态",
     "zoom": "缩放",
     "deferred_media": "延迟媒体",
-    "free_delivery_init_html": "如果检查金额超过<b>{{ add }}</b>，获得<b>免费送货</b>",
-    "free_delivery_false_html": "快到了，再添加<b>{{ add }}</b>即可获得<b>免费送货</b>",
-    "free_delivery_true_html": "恭喜！您有资格获得<b>免费送货</b>",
+    "free_delivery_init_html": "如果检查金额超过<b>{{ add }}<\/b>，获得<b>免费送货<\/b>",
+    "free_delivery_false_html": "快到了，再添加<b>{{ add }}<\/b>即可获得<b>免费送货<\/b>",
+    "free_delivery_true_html": "恭喜！您有资格获得<b>免费送货<\/b>",
     "estimate_shipping_static": "运输信息",
     "static_shipping_tooltip": "在订单备注中指定此送货方式，我们的经理将与您联系以确认",
     "estimate_shipping": "运费计算器",
@@ -152,7 +143,7 @@
     "agree_to_the_terms_subheading": "“同意商店政策”的复选框是保护您的业务的一种方法。",
     "search_products": "在商店中搜索",
     "total_cart_weight_is": "购物车总重量是",
-    "policies_placeholder_html": "<p>您可以为您的商店添加或生成政策。您可以在商店政策的内容中使用HTML。</p>\n      <p>尽管Shopify可以生成模板，但您有责任遵守您发布的政策。在添加之前仔细检查您的政策。</p>\n      <p><b>步骤</b>:</p>\n      <ol>\n        <li>从您的Shopify管理员页面，转到设置>政策。</li>\n        <li>输入您的商店政策，或点击从模板创建以输入默认模板。使用富文本编辑器为您的政策添加样式和格式，并添加链接和图片。</li>\n        <li>审查您的政策并进行任何更改。</li>\n        <li>点击保存以添加您的政策。</li>\n      </ol>",
+    "policies_placeholder_html": "<p>您可以为您的商店添加或生成政策。您可以在商店政策的内容中使用HTML。<\/p>\n      <p>尽管Shopify可以生成模板，但您有责任遵守您发布的政策。在添加之前仔细检查您的政策。<\/p>\n      <p><b>步骤<\/b>:<\/p>\n      <ol>\n        <li>从您的Shopify管理员页面，转到设置>政策。<\/li>\n        <li>输入您的商店政策，或点击从模板创建以输入默认模板。使用富文本编辑器为您的政策添加样式和格式，并添加链接和图片。<\/li>\n        <li>审查您的政策并进行任何更改。<\/li>\n        <li>点击保存以添加您的政策。<\/li>\n      <\/ol>",
     "one_time_purchase": "一次性购买",
     "super_sale": "超级销售",
     "day": "天",
@@ -213,7 +204,7 @@
       "vendor": "供应商",
       "quantity_minimum_message": "数量必须是1或更多",
       "include_taxes": "税费已包括。",
-      "shipping_policy_html": "<a href=\"{{ link }}\">运输</a>在结账时计算。",
+      "shipping_policy_html": "<a href=\"{{ link }}\">运输<\/a>在结账时计算。",
       "unit_price_label": "单价",
       "view_cart": "查看购物车",
       "view_in_space": "在您的空间中查看",
@@ -283,8 +274,8 @@
         "other": "{{ count }}个产品"
       },
       "product_count_simple_html": {
-        "one": "<strong>{{ count }}</strong>个产品找到",
-        "other": "<strong>{{ count }}</strong>个产品找到"
+        "one": "<strong>{{ count }}<\/strong>个产品找到",
+        "other": "<strong>{{ count }}<\/strong>个产品找到"
       },
       "reset": "重置",
       "sort_button": "排序",
@@ -370,9 +361,9 @@
       "empty": "您的购物车为空",
       "cart_error": "更新您的购物车时出错。请再试一次。",
       "cart_quantity_error_html": "您只能将{{ quantity }}件此商品添加到购物车。",
-      "taxes_and_shipping_policy_at_checkout_html": "税费、折扣和<a href=\"{{ link }}\">运费</a>将在结账时计算",
+      "taxes_and_shipping_policy_at_checkout_html": "税费、折扣和<a href=\"{{ link }}\">运费<\/a>将在结账时计算",
       "taxes_included_but_shipping_at_checkout": "含税价格，运费和折扣将在结账时计算",
-      "taxes_included_and_shipping_policy_html": "含税价格。<a href=\"{{ link }}\">运费</a>和折扣将在结账时计算。",
+      "taxes_included_and_shipping_policy_html": "含税价格。<a href=\"{{ link }}\">运费<\/a>和折扣将在结账时计算。",
       "taxes_and_shipping_at_checkout": "税费、折扣和运费将在结账时计算",
       "headings": {
         "product": "商品",
@@ -384,7 +375,7 @@
       "update": "更新",
       "login": {
         "title": "已有账户？",
-        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">登录</a>以快速结账。"
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">登录<\/a>以快速结账。"
       },
       "subtotal": "小计",
       "new_subtotal": "新的小计"
@@ -408,7 +399,7 @@
     "collection_template": {
       "empty": "未找到商品",
       "title": "系列",
-      "use_fewer_filters_html": "使用更少的筛选条件或<a class=\"{{ class }}\" href=\"{{ link }}\">清除所有</a>"
+      "use_fewer_filters_html": "使用更少的筛选条件或<a class=\"{{ class }}\" href=\"{{ link }}\">清除所有<\/a>"
     },
     "video": {
       "load_video": "加载视频：{{ description }}"
@@ -419,7 +410,7 @@
     "quick_order_list": {
       "product_total": "商品小计",
       "view_cart": "查看购物车",
-      "each": "{{ money }}/件",
+      "each": "{{ money }}\/件",
       "product": "商品",
       "variant": "款式",
       "variant_total": "款式总计",
@@ -469,10 +460,10 @@
     }
   },
   "localization": {
-    "country_label": "国家/地区",
+    "country_label": "国家\/地区",
     "language_label": "语言",
     "update_language": "更新语言",
-    "update_country": "更新国家/地区"
+    "update_country": "更新国家\/地区"
   },
   "cart": {
     "header": {
@@ -506,8 +497,8 @@
       "address1": "地址1",
       "address2": "地址2",
       "city": "城市",
-      "country": "国家/地区",
-      "province": "省/自治区/直辖市",
+      "country": "国家\/地区",
+      "province": "省\/自治区\/直辖市",
       "zip": "邮政编码",
       "phone": "电话",
       "set_default": "设为默认地址",
