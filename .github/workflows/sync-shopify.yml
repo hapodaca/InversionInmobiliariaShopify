@@ -1,0 +1,55 @@
+name: Sync Shopify Theme to GitHub
+
+on:
+  # Ejecutar automáticamente cada 6 horas
+  schedule:
+    - cron: '0 */6 * * *'  # Cada 6 horas
+
+  # Permitir ejecución manual desde GitHub
+  workflow_dispatch:
+
+jobs:
+  sync-theme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli @shopify/theme
+
+      - name: Pull theme from Shopify
+        env:
+          SHOPIFY_CLI_TOKEN: ${{ secrets.SHOPIFY_CLI_TOKEN }}
+          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+        run: |
+          shopify theme pull --store=$SHOPIFY_STORE --path=. --theme=${{ secrets.SHOPIFY_THEME_ID }} --nodelete
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
+          if [[ -n $(git status -s) ]]; then
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "✅ Cambios detectados desde Shopify"
+          else
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No hay cambios nuevos"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git add .
+          git commit -m "🤖 Auto-sync: Cambios desde Shopify ($(date +'%Y-%m-%d %H:%M:%S'))"
+          git push
