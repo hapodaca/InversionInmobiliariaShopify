@@ -28,10 +28,9 @@ jobs:
 
       - name: Pull theme from Shopify
         env:
-          SHOPIFY_CLI_TOKEN: ${{ secrets.SHOPIFY_CLI_TOKEN }}
-          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+          SHOPIFY_FLAG_STORE: ${{ secrets.SHOPIFY_STORE }}
         run: |
-          shopify theme pull --store=$SHOPIFY_STORE --path=. --theme=${{ secrets.SHOPIFY_THEME_ID }} --nodelete
+          shopify theme pull --store=${{ secrets.SHOPIFY_STORE }} --password=${{ secrets.SHOPIFY_CLI_TOKEN }} --path=. --theme=${{ secrets.SHOPIFY_THEME_ID }} --nodelete
 
       - name: Check for changes
         id: check_changes
