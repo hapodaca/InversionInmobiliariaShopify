@@ -1,1 +1,93 @@
-{"sections":{"main":{"type":"main-blog","blocks":{"77a60966-5f35-4dc9-8363-8a365a74ed7e":{"type":"social","settings":{"social":false,"sidebar_social_title":"Síguenos"}},"665ecd20-de15-4875-a26a-b5af7e70100c":{"type":"products","settings":{"sidebar_collection_title":"Featured Products","sidebar_collection":"homepage-featured","sidebar_products_limit":4}},"e553f104-82a2-4e42-a517-1293f9b962c8":{"type":"featured_posts","settings":{"title":"Featured Posts","article_1":"news\/the-ultimate-cheat-sheet-on-real-estate","article_2":"news\/5-tools-everyone-in-the-real-estate-industry-should-be-using","article_3":"news\/the-market-of-real-estate-uk-in-august","article_4":"news\/skills-that-you-can-learn-in-the-real-estate-market"}},"e1613b1a-6ee9-4a9d-8efe-3fddda2b123c":{"type":"tags","settings":{"tags":true}},"0b8983f9-8690-4c1f-976d-2fcbdc30ce05":{"type":"newsletter","settings":{"newsletter_yes":true,"newsletter_heading":"Informe Inmobiliario","newsletter_subtext":"Suscríbete y sé el primero en conocer las mejores oportunidades de inversión y preventas","newsletter_input":"Email","newsletter_button":"Suscríbete"}}},"block_order":["77a60966-5f35-4dc9-8363-8a365a74ed7e","665ecd20-de15-4875-a26a-b5af7e70100c","e553f104-82a2-4e42-a517-1293f9b962c8","e1613b1a-6ee9-4a9d-8efe-3fddda2b123c","0b8983f9-8690-4c1f-976d-2fcbdc30ce05"],"settings":{"layout":"list","posts_per_page":7,"feature_post1":"news\/5-advices-for-new-apartment","feature_post2":"news\/real-estate-industry-and-competitors","feature_post3":"news\/skills-that-you-can-learn-in-the-real-estate-market","feature_post4":"news\/the-ultimate-cheat-sheet-on-real-estate","feature_post5":"news\/the-market-of-real-estate-uk-in-august","show_image":true,"show_date":false,"show_author":false,"show_comments":true,"margin_top":20,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"products_carouse_Uib4KC":{"type":"products-carouse","name":"Products","settings":{"title":"Algunas de Nuestras Oportunidades de Inversión","collection":"principal","product_limit":5,"show_view_all":true,"view_all_text":"Ver Todas","margin_top":0,"margin_bottom":0,"padding_top":0,"padding_bottom":0}}},"order":["main","products_carouse_Uib4KC"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "blocks": {
+        "77a60966-5f35-4dc9-8363-8a365a74ed7e": {
+          "type": "social",
+          "settings": {
+            "social": false,
+            "sidebar_social_title": "Síguenos"
+          }
+        },
+        "665ecd20-de15-4875-a26a-b5af7e70100c": {
+          "type": "products",
+          "settings": {
+            "sidebar_collection_title": "Featured Products",
+            "sidebar_collection": "homepage-featured",
+            "sidebar_products_limit": 4
+          }
+        },
+        "e553f104-82a2-4e42-a517-1293f9b962c8": {
+          "type": "featured_posts",
+          "settings": {
+            "title": "Featured Posts",
+            "article_1": "news\/the-ultimate-cheat-sheet-on-real-estate",
+            "article_2": "news\/5-tools-everyone-in-the-real-estate-industry-should-be-using",
+            "article_3": "news\/the-market-of-real-estate-uk-in-august",
+            "article_4": "news\/skills-that-you-can-learn-in-the-real-estate-market"
+          }
+        },
+        "e1613b1a-6ee9-4a9d-8efe-3fddda2b123c": {
+          "type": "tags",
+          "settings": {
+            "tags": true
+          }
+        },
+        "0b8983f9-8690-4c1f-976d-2fcbdc30ce05": {
+          "type": "newsletter",
+          "settings": {
+            "newsletter_yes": true,
+            "newsletter_heading": "Informe Inmobiliario",
+            "newsletter_subtext": "Suscríbete y sé el primero en conocer las mejores oportunidades de inversión y preventas",
+            "newsletter_input": "Email",
+            "newsletter_button": "Suscríbete"
+          }
+        }
+      },
+      "block_order": [
+        "77a60966-5f35-4dc9-8363-8a365a74ed7e",
+        "665ecd20-de15-4875-a26a-b5af7e70100c",
+        "e553f104-82a2-4e42-a517-1293f9b962c8",
+        "e1613b1a-6ee9-4a9d-8efe-3fddda2b123c",
+        "0b8983f9-8690-4c1f-976d-2fcbdc30ce05"
+      ],
+      "settings": {
+        "layout": "list",
+        "posts_per_page": 7,
+        "feature_post1": "news\/5-advices-for-new-apartment",
+        "feature_post2": "news\/real-estate-industry-and-competitors",
+        "feature_post3": "news\/skills-that-you-can-learn-in-the-real-estate-market",
+        "feature_post4": "news\/the-ultimate-cheat-sheet-on-real-estate",
+        "feature_post5": "news\/the-market-of-real-estate-uk-in-august",
+        "show_image": true,
+        "show_date": false,
+        "show_author": false,
+        "show_comments": true,
+        "margin_top": 20,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "products_carouse_Uib4KC": {
+      "type": "products-carouse",
+      "name": "Products",
+      "settings": {
+        "title": "Algunas de Nuestras Oportunidades de Inversión",
+        "collection": "principal",
+        "product_limit": 5,
+        "show_view_all": true,
+        "view_all_text": "Ver Todas",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "products_carouse_Uib4KC"
+  ]
+}

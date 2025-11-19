@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin language editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "general": {
     "filter": "Filter",
@@ -23,7 +14,7 @@
       "login_form_password_placeholder": "Ihr Passwort",
       "login_form_error": "Falsches Passwort!",
       "login_form_submit": "Eintreten",
-      "admin_link_html": "Sind Sie der Geschäftsinhaber? <a href=\"/admin\" class=\"link underlined-link\">Hier einloggen</a>",
+      "admin_link_html": "Sind Sie der Geschäftsinhaber? <a href=\"\/admin\" class=\"link underlined-link\">Hier einloggen<\/a>",
       "powered_by_shopify_html": "Dieser Shop wird von {{ shopify }} betrieben"
     },
     "social": {
@@ -121,14 +112,14 @@
     "share_success": " in die Zwischenablage kopiert",
     "new": "Neu",
     "save": "Speichern",
-    "from_price_html": "<span class=\"prd-price-from\">ab</span> {{ price }}",
+    "from_price_html": "<span class=\"prd-price-from\">ab<\/span> {{ price }}",
     "price_for_one_time_purchase": "Preis für einen einmaligen Kauf",
     "status": "Status",
     "zoom": "Zoom",
     "deferred_media": "Aufgeschobene Medien",
-    "free_delivery_init_html": "Erhalten Sie <b>KOSTENLOSEN VERSAND</b>, wenn der Rechnungsbetrag mehr als <b>{{ add }}</b> beträgt",
-    "free_delivery_false_html": "Fast da, fügen Sie <b>{{ add }}</b> hinzu, um <b>KOSTENLOSEN VERSAND</b> zu erhalten",
-    "free_delivery_true_html": "Herzlichen Glückwunsch! Sie haben sich für einen <b>KOSTENLOSEN VERSAND</b> qualifiziert",
+    "free_delivery_init_html": "Erhalten Sie <b>KOSTENLOSEN VERSAND<\/b>, wenn der Rechnungsbetrag mehr als <b>{{ add }}<\/b> beträgt",
+    "free_delivery_false_html": "Fast da, fügen Sie <b>{{ add }}<\/b> hinzu, um <b>KOSTENLOSEN VERSAND<\/b> zu erhalten",
+    "free_delivery_true_html": "Herzlichen Glückwunsch! Sie haben sich für einen <b>KOSTENLOSEN VERSAND<\/b> qualifiziert",
     "estimate_shipping_static": "Versandinformationen",
     "static_shipping_tooltip": "Geben Sie diese Liefermethode in der Bestellnotiz an, und unser Manager wird sich mit Ihnen in Verbindung setzen, um dies zu bestätigen",
     "estimate_shipping": "Versandkostenrechner",
@@ -152,7 +143,7 @@
     "agree_to_the_terms_subheading": "Ein „Zustimmung zu den Geschäftsbedingungen“-Kästchen ist eine Methode, um Ihr Geschäft zu schützen.",
     "search_products": "Im Geschäft suchen",
     "total_cart_weight_is": "Das Gesamtgewicht des Warenkorbs beträgt",
-    "policies_placeholder_html": "<p>Sie können Richtlinien für Ihren Shop hinzufügen oder generieren. Sie können HTML im Inhalt Ihrer Shop-Richtlinien verwenden.</p>\n      <p>Obwohl Shopify Vorlagen generieren kann, sind Sie dafür verantwortlich, Ihren veröffentlichten Richtlinien zu folgen. Überprüfen Sie Ihre Richtlinien sorgfältig, bevor Sie sie hinzufügen.</p>\n      <p><b>Schritte</b>:</p>\n      <ol>\n        <li>Gehen Sie in Ihrem Shopify-Adminbereich zu Einstellungen > Richtlinien.</li>\n        <li>Geben Sie Ihre Shop-Richtlinien ein oder klicken Sie auf Vorlage erstellen, um die Standardvorlage einzugeben. Verwenden Sie den Rich-Text-Editor, um Stil und Formatierung zu Ihren Richtlinien hinzuzufügen und um Links und Bilder hinzuzufügen.</li>\n        <li>Überprüfen Sie Ihre Richtlinien und nehmen Sie Änderungen vor.</li>\n        <li>Klicken Sie auf Speichern, um Ihre Richtlinien hinzuzufügen.</li>\n      </ol>",
+    "policies_placeholder_html": "<p>Sie können Richtlinien für Ihren Shop hinzufügen oder generieren. Sie können HTML im Inhalt Ihrer Shop-Richtlinien verwenden.<\/p>\n      <p>Obwohl Shopify Vorlagen generieren kann, sind Sie dafür verantwortlich, Ihren veröffentlichten Richtlinien zu folgen. Überprüfen Sie Ihre Richtlinien sorgfältig, bevor Sie sie hinzufügen.<\/p>\n      <p><b>Schritte<\/b>:<\/p>\n      <ol>\n        <li>Gehen Sie in Ihrem Shopify-Adminbereich zu Einstellungen > Richtlinien.<\/li>\n        <li>Geben Sie Ihre Shop-Richtlinien ein oder klicken Sie auf Vorlage erstellen, um die Standardvorlage einzugeben. Verwenden Sie den Rich-Text-Editor, um Stil und Formatierung zu Ihren Richtlinien hinzuzufügen und um Links und Bilder hinzuzufügen.<\/li>\n        <li>Überprüfen Sie Ihre Richtlinien und nehmen Sie Änderungen vor.<\/li>\n        <li>Klicken Sie auf Speichern, um Ihre Richtlinien hinzuzufügen.<\/li>\n      <\/ol>",
     "one_time_purchase": "Einmaliger Kauf",
     "super_sale": "Super Sale",
     "day": "Tag",
@@ -213,7 +204,7 @@
       "vendor": "Anbieter",
       "quantity_minimum_message": "Menge muss 1 oder mehr sein",
       "include_taxes": "Steuer inbegriffen.",
-      "shipping_policy_html": "<a href=\"{{ link }}\">Versand</a> wird an der Kasse berechnet.",
+      "shipping_policy_html": "<a href=\"{{ link }}\">Versand<\/a> wird an der Kasse berechnet.",
       "unit_price_label": "Stückpreis",
       "view_cart": "Warenkorb anzeigen",
       "view_in_space": "In Ihrem Raum anzeigen",
@@ -283,8 +274,8 @@
         "other": "{{ count }} Produkte"
       },
       "product_count_simple_html": {
-        "one": "<strong>{{ count }}</strong> Produkt gefunden",
-        "other": "<strong>{{ count }}</strong> Produkte gefunden"
+        "one": "<strong>{{ count }}<\/strong> Produkt gefunden",
+        "other": "<strong>{{ count }}<\/strong> Produkte gefunden"
       },
       "reset": "Zurücksetzen",
       "sort_button": "Sortieren",
@@ -370,9 +361,9 @@
       "empty": "Ihr Warenkorb ist leer",
       "cart_error": "Beim Aktualisieren Ihres Warenkorbs ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
       "cart_quantity_error_html": "Sie können nur {{ quantity }} dieses Artikels in Ihren Warenkorb legen.",
-      "taxes_and_shipping_policy_at_checkout_html": "Steuern, Rabatte und <a href=\"{{ link }}\">Versand</a> werden an der Kasse berechnet",
+      "taxes_and_shipping_policy_at_checkout_html": "Steuern, Rabatte und <a href=\"{{ link }}\">Versand<\/a> werden an der Kasse berechnet",
       "taxes_included_but_shipping_at_checkout": "Steuer inbegriffen und Versand und Rabatte werden an der Kasse berechnet",
-      "taxes_included_and_shipping_policy_html": "Steuer inbegriffen. <a href=\"{{ link }}\">Versand</a> und Rabatte werden an der Kasse berechnet.",
+      "taxes_included_and_shipping_policy_html": "Steuer inbegriffen. <a href=\"{{ link }}\">Versand<\/a> und Rabatte werden an der Kasse berechnet.",
       "taxes_and_shipping_at_checkout": "Steuern, Rabatte und Versand werden an der Kasse berechnet",
       "headings": {
         "product": "Produkt",
@@ -384,7 +375,7 @@
       "update": "Aktualisieren",
       "login": {
         "title": "Haben Sie ein Konto?",
-        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Melden Sie sich an</a>, um schneller zur Kasse zu kommen."
+        "paragraph_html": "<a href=\"{{ link }}\" class=\"link underlined-link\">Melden Sie sich an<\/a>, um schneller zur Kasse zu kommen."
       },
       "subtotal": "Zwischensumme",
       "new_subtotal": "Neue Zwischensumme"
@@ -408,7 +399,7 @@
     "collection_template": {
       "empty": "Keine Produkte gefunden",
       "title": "Sammlung",
-      "use_fewer_filters_html": "Verwenden Sie weniger Filter oder <a class=\"{{ class }}\" href=\"{{ link }}\">entfernen Sie alle</a>"
+      "use_fewer_filters_html": "Verwenden Sie weniger Filter oder <a class=\"{{ class }}\" href=\"{{ link }}\">entfernen Sie alle<\/a>"
     },
     "video": {
       "load_video": "Video laden: {{ description }}"
@@ -419,7 +410,7 @@
     "quick_order_list": {
       "product_total": "Produkt-Zwischensumme",
       "view_cart": "Warenkorb anzeigen",
-      "each": "{{ money }}/Stück",
+      "each": "{{ money }}\/Stück",
       "product": "Produkt",
       "variant": "Variante",
       "variant_total": "Variantengesamt",
@@ -469,10 +460,10 @@
     }
   },
   "localization": {
-    "country_label": "Land/Region",
+    "country_label": "Land\/Region",
     "language_label": "Sprache",
     "update_language": "Sprache aktualisieren",
-    "update_country": "Land/Region aktualisieren"
+    "update_country": "Land\/Region aktualisieren"
   },
   "cart": {
     "header": {
@@ -506,7 +497,7 @@
       "address1": "Adresse 1",
       "address2": "Adresse 2",
       "city": "Stadt",
-      "country": "Land/Region",
+      "country": "Land\/Region",
       "province": "Provinz",
       "zip": "Postleitzahl",
       "phone": "Telefon",
