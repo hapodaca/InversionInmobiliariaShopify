@@ -18,19 +18,85 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          ruby-version: '3.2'
-          bundler-cache: false
+          python-version: '3.11'
 
-      - name: Install Theme Kit
+      - name: Download theme from Shopify
+        env:
+          SHOPIFY_ACCESS_TOKEN: ${{ secrets.SHOPIFY_CLI_TOKEN }}
+          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+          THEME_ID: ${{ secrets.SHOPIFY_THEME_ID }}
         run: |
-          curl -s https://shopify.github.io/themekit/scripts/install.py | python3
+          python3 << 'PYTHON_SCRIPT'
+          import os
+          import json
+          import urllib.request
+          import urllib.parse
+          import base64
+          from pathlib import Path
 
-      - name: Pull theme from Shopify
-        run: |
-          theme get --password=${{ secrets.SHOPIFY_CLI_TOKEN }} --store=${{ secrets.SHOPIFY_STORE }} --themeid=${{ secrets.SHOPIFY_THEME_ID }} --dir=.
+          store = os.environ['SHOPIFY_STORE'].replace('.myshopify.com', '')
+          token = os.environ['SHOPIFY_ACCESS_TOKEN']
+          theme_id = os.environ['THEME_ID']
+
+          base_url = f"https://{store}.myshopify.com/admin/api/2024-01"
+          headers = {
+              'X-Shopify-Access-Token': token,
+              'Content-Type': 'application/json'
+          }
+
+          print("🔍 Obteniendo lista de archivos del tema...")
+
+          # Get list of assets
+          req = urllib.request.Request(
+              f"{base_url}/themes/{theme_id}/assets.json",
+              headers=headers
+          )
+
+          try:
+              with urllib.request.urlopen(req) as response:
+                  data = json.loads(response.read().decode())
+                  assets = data['assets']
+                  print(f"✅ Encontrados {len(assets)} archivos")
+
+                  for i, asset in enumerate(assets):
+                      key = asset['key']
+                      print(f"📥 [{i+1}/{len(assets)}] {key}")
+
+                      # Get individual asset
+                      asset_url = f"{base_url}/themes/{theme_id}/assets.json?asset[key]={urllib.parse.quote(key)}"
+                      asset_req = urllib.request.Request(asset_url, headers=headers)
+
+                      try:
+                          with urllib.request.urlopen(asset_req) as asset_response:
+                              asset_data = json.loads(asset_response.read().decode())
+                              content = asset_data['asset']
+
+                              # Create directory if needed
+                              file_path = Path(key)
+                              file_path.parent.mkdir(parents=True, exist_ok=True)
+
+                              # Write file
+                              if 'value' in content and content['value']:
+                                  file_path.write_text(content['value'], encoding='utf-8')
+                              elif 'attachment' in content and content['attachment']:
+                                  file_path.write_bytes(base64.b64decode(content['attachment']))
+
+                      except Exception as e:
+                          print(f"⚠️  Error descargando {key}: {e}")
+
+                  print("✅ Descarga completada")
+
+          except urllib.error.HTTPError as e:
+              print(f"❌ Error HTTP {e.code}: {e.read().decode()}")
+              exit(1)
+          except Exception as e:
+              print(f"❌ Error: {e}")
+              exit(1)
+
+          PYTHON_SCRIPT
 
       - name: Check for changes
         id: check_changes
