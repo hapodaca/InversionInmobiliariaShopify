@@ -1,1 +1,82 @@
-{"sections":{"main":{"type":"main-article","blocks":{"b0e76537-698a-4598-8f56-2973ac447683":{"type":"products","settings":{"sidebar_collection_title":"Algunas Propuestas de Inversión","sidebar_collection":"homepage-featured","sidebar_products_limit":4}},"50087b5f-1973-4d18-8821-2e84a3d2b04c":{"type":"social","settings":{"social":false,"sidebar_social_title":"Follow Us"}},"dc1f9e5d-1f75-45f4-bb34-d31daaa6a6e6":{"type":"featured_posts","settings":{"title":"Artículos Destacados","article_1":"news\/10-things-your-competitors-can-teach-you-about-real-estate","article_2":"news\/serie-shophouse-launch-in-july-opportunity-for-investors","article_3":"news\/15-best-blogs-to-follow-about-real-estate","article_4":"news\/skills-that-you-can-learn-in-the-real-estate-market"}},"603cfbe1-8817-41ab-a371-41e5b80ec695":{"type":"tags","settings":{"tags":true}},"7dd01af1-5a4f-4eac-9175-b7ce0b048e81":{"type":"newsletter","settings":{"newsletter_yes":true,"newsletter_heading":"Informe Inmobiliario","newsletter_subtext":"Suscríbete y sé el primero en conocer las mejores oportunidades de inversión y preventas","newsletter_input":"Email","newsletter_button":"Suscríbete"}}},"block_order":["b0e76537-698a-4598-8f56-2973ac447683","50087b5f-1973-4d18-8821-2e84a3d2b04c","dc1f9e5d-1f75-45f4-bb34-d31daaa6a6e6","603cfbe1-8817-41ab-a371-41e5b80ec695","7dd01af1-5a4f-4eac-9175-b7ce0b048e81"],"settings":{"margin_top":25,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"products_carouse_7NwTaN":{"type":"products-carouse","name":"Products","settings":{"title":"Algunas de Nuestras Oportunidades de Inversión","collection":"principal","product_limit":5,"show_view_all":true,"view_all_text":"Ver Todas","margin_top":0,"margin_bottom":0,"padding_top":0,"padding_bottom":0}}},"order":["main","products_carouse_7NwTaN"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "b0e76537-698a-4598-8f56-2973ac447683": {
+          "type": "products",
+          "settings": {
+            "sidebar_collection_title": "Algunas Propuestas de Inversión",
+            "sidebar_collection": "homepage-featured",
+            "sidebar_products_limit": 4
+          }
+        },
+        "50087b5f-1973-4d18-8821-2e84a3d2b04c": {
+          "type": "social",
+          "settings": {
+            "social": false,
+            "sidebar_social_title": "Follow Us"
+          }
+        },
+        "dc1f9e5d-1f75-45f4-bb34-d31daaa6a6e6": {
+          "type": "featured_posts",
+          "settings": {
+            "title": "Artículos Destacados",
+            "article_1": "news\/10-things-your-competitors-can-teach-you-about-real-estate",
+            "article_2": "news\/serie-shophouse-launch-in-july-opportunity-for-investors",
+            "article_3": "news\/15-best-blogs-to-follow-about-real-estate",
+            "article_4": "news\/skills-that-you-can-learn-in-the-real-estate-market"
+          }
+        },
+        "603cfbe1-8817-41ab-a371-41e5b80ec695": {
+          "type": "tags",
+          "settings": {
+            "tags": true
+          }
+        },
+        "7dd01af1-5a4f-4eac-9175-b7ce0b048e81": {
+          "type": "newsletter",
+          "settings": {
+            "newsletter_yes": true,
+            "newsletter_heading": "Informe Inmobiliario",
+            "newsletter_subtext": "Suscríbete y sé el primero en conocer las mejores oportunidades de inversión y preventas",
+            "newsletter_input": "Email",
+            "newsletter_button": "Suscríbete"
+          }
+        }
+      },
+      "block_order": [
+        "b0e76537-698a-4598-8f56-2973ac447683",
+        "50087b5f-1973-4d18-8821-2e84a3d2b04c",
+        "dc1f9e5d-1f75-45f4-bb34-d31daaa6a6e6",
+        "603cfbe1-8817-41ab-a371-41e5b80ec695",
+        "7dd01af1-5a4f-4eac-9175-b7ce0b048e81"
+      ],
+      "settings": {
+        "margin_top": 25,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "products_carouse_7NwTaN": {
+      "type": "products-carouse",
+      "name": "Products",
+      "settings": {
+        "title": "Algunas de Nuestras Oportunidades de Inversión",
+        "collection": "principal",
+        "product_limit": 5,
+        "show_view_all": true,
+        "view_all_text": "Ver Todas",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "products_carouse_7NwTaN"
+  ]
+}

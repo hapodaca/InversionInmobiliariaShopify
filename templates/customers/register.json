@@ -1,1 +1,19 @@
-{"sections":{"main":{"type":"main-register","settings":{"title_login":"Register New Account","subtext_login":"Let's get you all set up so you can verify your personal account and begin setting up your profile.","field_first_name_label":"First Name","field_last_name_label":"Last Name","field_email_label":"Your Email","field_password_label":"Your Password","field_submit_label":"Create Account"}}},"order":["main"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-register",
+      "settings": {
+        "title_login": "Register New Account",
+        "subtext_login": "Let's get you all set up so you can verify your personal account and begin setting up your profile.",
+        "field_first_name_label": "First Name",
+        "field_last_name_label": "Last Name",
+        "field_email_label": "Your Email",
+        "field_password_label": "Your Password",
+        "field_submit_label": "Create Account"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

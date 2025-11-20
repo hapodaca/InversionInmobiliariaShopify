@@ -1,1 +1,185 @@
-{"sections":{"image_banner_with_search":{"type":"image-banner-with-search","custom_css":[],"settings":{"image":"shopify:\/\/shop_images\/Diseno_sin_titulo_2_38cb3eb3-cb72-4767-82fa-2babb6c1ca5e.png","heading":"Invierte Hoy en Proyectos con Alto Potencial de Rentabilidad.","text":"Especialistas en preventa y cesiones fiduciarias con respaldo seguro. Accede a oportunidades únicas de inversión en Colombia con alto potencial de valorización.","sub_text_1":"Propiedades en Preventa (Apartamento sobre Planos)","sub_text_2":"Oportunidades de Inversión","margin_top":0,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"trending-search":{"type":"trending-search","disabled":true,"settings":{"title":"Trending Search","predictive_search_quick_tags":"Property New York, Property California, Shop House, San Jose Real Estate, Villa, Commercial Office, Garden Rose Project, Amia Residence Apartment, Brooklyn Town, Mahattan, To Rent, To Sell, Townhouse Beverly Hill, Indochona Plaza Project","margin_top":0,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"products_carouse_kT8kTK":{"type":"products-carouse","name":"Products","settings":{"title":"Mas Propiedades","collection":"principal","product_limit":10,"enable_autoplay":true,"autoplay_speed":5000,"enable_loop":true,"enable_nav":true,"padding_top":30,"padding_bottom":0}},"property_types_y4GNkk":{"type":"property-types","blocks":{"child_type_WzUz3Y":{"type":"child-type","settings":{"image":"shopify:\/\/shop_images\/TipoCesionDrechos.png","heading":"","desc":"","url":"shopify:\/\/collections\/cesion-de-derechos-fiduciarios"}},"child_type_RebTfm":{"type":"child-type","settings":{"image":"shopify:\/\/shop_images\/TipoOportunidadInversion.png","heading":"","desc":"","url":"shopify:\/\/collections\/oportunidades-de-inversion"}},"child_type_WyDVgL":{"type":"child-type","settings":{"image":"shopify:\/\/shop_images\/TipoPreventa.png","heading":"","desc":"","url":"shopify:\/\/collections\/preventa-apartamentos-sobre-planos"}}},"block_order":["child_type_WzUz3Y","child_type_RebTfm","child_type_WyDVgL"],"name":"Property Types","settings":{"heading":"Tipos de Inversión","slider_items":3,"slider_gap":30,"slider_speed":7500,"slider_duration":1000,"slider_autoplay":false,"slider_loop":false,"slider_mousedrag":false,"margin_top":30,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"rich_text_custom_PwpjzK":{"type":"rich-text-custom","name":"Rich Text Personalizado","settings":{"heading":"¿Tienes un proyecto inmobiliario listo para destacar?","subtext":"Publícalo en nuestra plataforma y accede a una red de inversionistas verificados en toda Colombia.","button_text":"Publicar mi Proyecto","button_link":"https:\/\/inversioninmobiliaria.com.co\/?Publica_tu_Proyecto","background_color":"#f7f9fc"}},"testimonials":{"type":"testimonials","disabled":true,"settings":{"rating_number":"4.8","rating_text":"Trustscore on 215 reviews","rating_text_footer":"See all review on","brand_logo":"shopify:\/\/shop_images\/LOGOS_V2_SIN_FONDO_300_x_100_px.png","content":"“As a buyer in a busy market where everyone is a real estate agent, I seek transparency in true numbers & Finderland is my first and only choice.Searches for multiplexes, property comparisons, and the loan estimator. Works great.”","content_footer":"<p>Thiago Alcatara<\/p><p>Chicago, FL<\/p>","margin_top":0,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"posts":{"type":"posts","settings":{"title":"Explora y Conecta con la Inversión Inmobiliaria - Blog","style":"slider","blog":"inversion-inmobiliaria","post_limit":5,"blog_show_author":false,"blog_show_date":false,"blog_show_comments":true,"show_view_all":true,"view_all_text":"Ver todos los artículos","margin_top":30,"margin_bottom":0,"padding_top":0,"padding_bottom":0}},"175953580602644ae0":{"type":"apps","blocks":{"trustoo_io_reviews_review_widget_pDhaf8":{"type":"shopify:\/\/apps\/trustoo-io-reviews\/blocks\/review-widget\/c8f15077-6475-4e86-ad06-b66038d5ba2c","disabled":true,"settings":{"product":""}}},"block_order":["trustoo_io_reviews_review_widget_pDhaf8"],"settings":{}},"17616223308acbd121":{"type":"apps","blocks":{"trustoo_io_reviews_review_widget_pn4U8P":{"type":"shopify:\/\/apps\/trustoo-io-reviews\/blocks\/review-widget\/c8f15077-6475-4e86-ad06-b66038d5ba2c","settings":{"product":""}}},"block_order":["trustoo_io_reviews_review_widget_pn4U8P"],"settings":{}}},"order":["image_banner_with_search","trending-search","products_carouse_kT8kTK","property_types_y4GNkk","rich_text_custom_PwpjzK","testimonials","posts","175953580602644ae0","17616223308acbd121"]}
+{
+  "sections": {
+    "image_banner_with_search": {
+      "type": "image-banner-with-search",
+      "custom_css": [],
+      "settings": {
+        "image": "shopify:\/\/shop_images\/Diseno_sin_titulo_2_38cb3eb3-cb72-4767-82fa-2babb6c1ca5e.png",
+        "heading": "Invierte Hoy en Proyectos con Alto Potencial de Rentabilidad.",
+        "text": "Especialistas en preventa y cesiones fiduciarias con respaldo seguro. Accede a oportunidades únicas de inversión en Colombia con alto potencial de valorización.",
+        "sub_text_1": "Propiedades en Preventa (Apartamento sobre Planos)",
+        "sub_text_2": "Oportunidades de Inversión",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "trending-search": {
+      "type": "trending-search",
+      "disabled": true,
+      "settings": {
+        "title": "Trending Search",
+        "predictive_search_quick_tags": "Property New York, Property California, Shop House, San Jose Real Estate, Villa, Commercial Office, Garden Rose Project, Amia Residence Apartment, Brooklyn Town, Mahattan, To Rent, To Sell, Townhouse Beverly Hill, Indochona Plaza Project",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "products_carouse_kT8kTK": {
+      "type": "products-carouse",
+      "name": "Products",
+      "settings": {
+        "title": "Mas Propiedades",
+        "collection": "principal",
+        "product_limit": 10,
+        "enable_autoplay": true,
+        "autoplay_speed": 5000,
+        "enable_loop": true,
+        "enable_nav": true,
+        "padding_top": 30,
+        "padding_bottom": 0
+      }
+    },
+    "property_types_y4GNkk": {
+      "type": "property-types",
+      "blocks": {
+        "child_type_WzUz3Y": {
+          "type": "child-type",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/TipoCesionDrechos.png",
+            "heading": "",
+            "desc": "",
+            "url": "shopify:\/\/collections\/cesion-de-derechos-fiduciarios"
+          }
+        },
+        "child_type_RebTfm": {
+          "type": "child-type",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/TipoOportunidadInversion.png",
+            "heading": "",
+            "desc": "",
+            "url": "shopify:\/\/collections\/oportunidades-de-inversion"
+          }
+        },
+        "child_type_WyDVgL": {
+          "type": "child-type",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/TipoPreventa.png",
+            "heading": "",
+            "desc": "",
+            "url": "shopify:\/\/collections\/preventa-apartamentos-sobre-planos"
+          }
+        }
+      },
+      "block_order": [
+        "child_type_WzUz3Y",
+        "child_type_RebTfm",
+        "child_type_WyDVgL"
+      ],
+      "name": "Property Types",
+      "settings": {
+        "heading": "Tipos de Inversión",
+        "slider_items": 3,
+        "slider_gap": 30,
+        "slider_speed": 7500,
+        "slider_duration": 1000,
+        "slider_autoplay": false,
+        "slider_loop": false,
+        "slider_mousedrag": false,
+        "margin_top": 30,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "rich_text_custom_PwpjzK": {
+      "type": "rich-text-custom",
+      "name": "Rich Text Personalizado",
+      "settings": {
+        "heading": "¿Tienes un proyecto inmobiliario listo para destacar?",
+        "subtext": "Publícalo en nuestra plataforma y accede a una red de inversionistas verificados en toda Colombia.",
+        "button_text": "Publicar mi Proyecto",
+        "button_link": "https:\/\/inversioninmobiliaria.com.co\/?Publica_tu_Proyecto",
+        "background_color": "#f7f9fc"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "disabled": true,
+      "settings": {
+        "rating_number": "4.8",
+        "rating_text": "Trustscore on 215 reviews",
+        "rating_text_footer": "See all review on",
+        "brand_logo": "shopify:\/\/shop_images\/LOGOS_V2_SIN_FONDO_300_x_100_px.png",
+        "content": "“As a buyer in a busy market where everyone is a real estate agent, I seek transparency in true numbers & Finderland is my first and only choice.Searches for multiplexes, property comparisons, and the loan estimator. Works great.”",
+        "content_footer": "<p>Thiago Alcatara<\/p><p>Chicago, FL<\/p>",
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "posts": {
+      "type": "posts",
+      "settings": {
+        "title": "Explora y Conecta con la Inversión Inmobiliaria - Blog",
+        "style": "slider",
+        "blog": "inversion-inmobiliaria",
+        "post_limit": 5,
+        "blog_show_author": false,
+        "blog_show_date": false,
+        "blog_show_comments": true,
+        "show_view_all": true,
+        "view_all_text": "Ver todos los artículos",
+        "margin_top": 30,
+        "margin_bottom": 0,
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "175953580602644ae0": {
+      "type": "apps",
+      "blocks": {
+        "trustoo_io_reviews_review_widget_pDhaf8": {
+          "type": "shopify:\/\/apps\/trustoo-io-reviews\/blocks\/review-widget\/c8f15077-6475-4e86-ad06-b66038d5ba2c",
+          "disabled": true,
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "trustoo_io_reviews_review_widget_pDhaf8"
+      ],
+      "settings": {}
+    },
+    "17616223308acbd121": {
+      "type": "apps",
+      "blocks": {
+        "trustoo_io_reviews_review_widget_pn4U8P": {
+          "type": "shopify:\/\/apps\/trustoo-io-reviews\/blocks\/review-widget\/c8f15077-6475-4e86-ad06-b66038d5ba2c",
+          "settings": {
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "trustoo_io_reviews_review_widget_pn4U8P"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "image_banner_with_search",
+    "trending-search",
+    "products_carouse_kT8kTK",
+    "property_types_y4GNkk",
+    "rich_text_custom_PwpjzK",
+    "testimonials",
+    "posts",
+    "175953580602644ae0",
+    "17616223308acbd121"
+  ]
+}
