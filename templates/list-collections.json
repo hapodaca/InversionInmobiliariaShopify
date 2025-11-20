@@ -1,1 +1,14 @@
-{"sections":{"main":{"type":"main-list-collections","settings":{"heading":"Catalog subcategories","catalog":"catalog-subcategories"}}},"order":["main"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-list-collections",
+      "settings": {
+        "heading": "Catalog subcategories",
+        "catalog": "catalog-subcategories"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
