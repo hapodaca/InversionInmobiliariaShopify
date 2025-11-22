@@ -1,1 +1,21 @@
-{"sections":{"main":{"type":"main-login","settings":{"title_login":"Login Your Account.","subtext_login":"Thank you for get back to Finderland System, let access our the best recommendation for you!","field_email_label":"Enter Your Email Here.","field_password_label":"Enter Your Password Here.","field_submit_label":"Sign In","title_recover":"Reset Your Password.","subtext_recover":"We will send you an email to reset your password.","recover_field_email_label":"Enter Your Email Here.","recover_field_submit_label":"Send link"}}},"order":["main"]}
+{
+  "sections": {
+    "main": {
+      "type": "main-login",
+      "settings": {
+        "title_login": "Login Your Account.",
+        "subtext_login": "Thank you for get back to Finderland System, let access our the best recommendation for you!",
+        "field_email_label": "Enter Your Email Here.",
+        "field_password_label": "Enter Your Password Here.",
+        "field_submit_label": "Sign In",
+        "title_recover": "Reset Your Password.",
+        "subtext_recover": "We will send you an email to reset your password.",
+        "recover_field_email_label": "Enter Your Email Here.",
+        "recover_field_submit_label": "Send link"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
