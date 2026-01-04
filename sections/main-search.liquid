@@ -90,16 +90,22 @@
                         %}
 
                         {%- if search.results.size == 0 -%}
-                            <div class="category-empty text-center">
+                            <div id="search-results-top" class="category-empty text-center">
                                 <h2 class="category-empty-title">{{ 'sections.collection_template.empty' | t }}</h2>
                                 <div class="category-empty-text fw-light">{{ 'sections.collection_template.use_fewer_filters_html' | t: link: search_url, class: "underlined-link link" }}</div>
                                 <div class="mt-3 search-continue-wrapper">
                                     {%- liquid
                                         assign search_base_url = '/search?q=' | append: terms | append: '&options%5Bprefix%5D=last'
                                     -%}
-                                    <a href="{{ search_base_url }}" class="ps-btn ps-btn--fullwidth search-continue-btn">{{ 'general.continue_shopping' | t }}</a>
+                                    <a href="{{ search_base_url }}" class="ps-btn ps-btn--fullwidth search-continue-btn" tabindex="-1">{{ 'general.continue_shopping' | t }}</a>
                                 </div>
                             </div>
+                            <script>
+                              // Forzar hash a elemento superior para prevenir scroll al botón
+                              if (window.location.hash !== '#search-results-top') {
+                                history.replaceState(null, '', window.location.pathname + window.location.search + '#search-results-top');
+                              }
+                            </script>
                         {%- else -%}
                             <div id="product-grid" data-id="{{ section.id }}" class="ps-projects__items ps-list" data-columns="{{ settings.collection_items_col }}" data-product-grid>
                                 {%- assign products = search.results | where: 'object_type', 'product' -%}
