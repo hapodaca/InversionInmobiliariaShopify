@@ -65,11 +65,11 @@
                             <div class="category-empty text-center">
                                 <h2 class="category-empty-title">{{ 'sections.collection_template.empty' | t }}</h2>
                                 <div class="category-empty-text fw-light">{{ 'sections.collection_template.use_fewer_filters_html' | t: link: search_url, class: "underlined-link link" }}</div>
-                                <div class="mt-3">
+                                <div class="mt-3 search-continue-wrapper">
                                     {%- liquid
                                         assign search_base_url = '/search?q=' | append: terms | append: '&options%5Bprefix%5D=last'
                                     -%}
-                                    <a href="{{ search_base_url }}" class="ps-btn">{{ 'general.continue_shopping' | t }}</a>
+                                    <a href="{{ search_base_url }}" class="ps-btn ps-btn--fullwidth search-continue-btn">{{ 'general.continue_shopping' | t }}</a>
                                 </div>
                             </div>
                         {%- else -%}
@@ -134,6 +134,40 @@
     outline: none;
     border-color: #002b5b;
     box-shadow: 0 0 0 3px rgba(0,43,91,0.1);
+  }
+
+  /* Estilo del botón Seguir Buscando - mismo que el botón Aplicar */
+  .search-continue-wrapper {
+    max-width: 300px;
+    margin: 20px auto 0;
+  }
+
+  .search-continue-btn.ps-btn,
+  .search-continue-btn.ps-btn.ps-btn--fullwidth {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 0 24px !important;
+    height: 48px !important;
+    font-size: 14px !important;
+    line-height: 20px !important;
+    border: none !important;
+    font-weight: 500 !important;
+    transition: all .4s ease !important;
+    color: #ffffff !important;
+    background-color: #002b5b !important;
+    cursor: pointer !important;
+    border-radius: 6px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    text-decoration: none !important;
+  }
+
+  .search-continue-btn.ps-btn:hover,
+  .search-continue-btn.ps-btn.ps-btn--fullwidth:hover {
+    background-color: #003d7a !important;
+    box-shadow: 0 4px 12px rgba(0,43,91,0.2) !important;
   }
 
   @media (max-width: 767px) {
