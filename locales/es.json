@@ -31,7 +31,7 @@
         "linkedin": "LinkedIn"
       }
     },
-    "continue_shopping": "Seguir comprando",
+    "continue_shopping": "Seguir Buscando",
     "pagination": {
       "label": "Paginación",
       "page": "Página {{ number }}",
@@ -640,6 +640,23 @@
       "send": "Enviar tu mensaje",
       "post_success": "Gracias por contactarnos. Nos pondremos en contacto contigo lo antes posible.",
       "error_heading": "Por favor, ajusta lo siguiente:"
+    }
+  },
+  "shopify": {
+    "checkout": {
+      "thank_you": {
+        "return_to_store_link_label": "Seguir Buscando"
+      }
+    }
+  },
+  "customer_accounts": {
+    "payment_methods": {
+      "update_success": {
+        "done_button": "Seguir Buscando"
+      },
+      "add_success": {
+        "done_button": "Seguir Buscando"
+      }
     }
   }
 }

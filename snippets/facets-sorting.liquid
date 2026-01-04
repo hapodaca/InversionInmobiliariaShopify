@@ -5,7 +5,6 @@
     name="sort_by"
     class="form-control"
     aria-describedby="a11y-refresh-page-message"
-    onchange="this.form.submit()"
   >
     {%- assign allowed_sorts = "title-ascending,title-descending,price-ascending,price-descending,created-ascending,created-descending" | split: "," -%}
     {%- for option in results.sort_options -%}
