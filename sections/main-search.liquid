@@ -69,20 +69,23 @@
                                     {%- liquid
                                         assign search_base_url = '/search?q=' | append: terms | append: '&options%5Bprefix%5D=last'
                                     -%}
-                                    <a href="{{ search_base_url }}" class="ps-btn ps-btn--fullwidth">{{ 'general.continue_shopping' | t }}</a>
+                                    <a href="{{ search_base_url }}" class="ps-btn ps-btn--fullwidth" style="max-width: 300px; margin: 0 auto; display: block;">{{ 'general.continue_shopping' | t }}</a>
                                 </div>
                             </div>
                             <script>
-                              // Asegurar que el mensaje de error sea visible
-                              document.addEventListener('DOMContentLoaded', function() {
-                                var emptyState = document.getElementById('search-empty-state');
-                                if (emptyState) {
-                                  // Scroll suave al inicio del contenido
-                                  setTimeout(function() {
-                                    emptyState.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                  }, 100);
+                              // Prevenir scroll automático al botón
+                              (function() {
+                                // Scroll inmediato al header de la página
+                                var pageHeader = document.querySelector('.ps-page__header');
+                                if (pageHeader) {
+                                  window.scrollTo({ top: 0, behavior: 'auto' });
                                 }
-                              });
+
+                                // Segundo intento después de que cargue todo
+                                window.addEventListener('load', function() {
+                                  window.scrollTo({ top: 0, behavior: 'auto' });
+                                });
+                              })();
                             </script>
                         {%- else -%}
                             <div id="product-grid" data-id="{{ section.id }}" class="ps-projects__items ps-list" data-columns="{{ settings.collection_items_col }}" data-product-grid>
