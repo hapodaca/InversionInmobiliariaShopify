@@ -62,31 +62,16 @@
                         %}
 
                         {%- if search.results.size == 0 -%}
-                            <div id="search-empty-state" class="category-empty text-center">
+                            <div class="category-empty text-center">
                                 <h2 class="category-empty-title">{{ 'sections.collection_template.empty' | t }}</h2>
                                 <div class="category-empty-text fw-light">{{ 'sections.collection_template.use_fewer_filters_html' | t: link: search_url, class: "underlined-link link" }}</div>
                                 <div class="mt-3">
                                     {%- liquid
                                         assign search_base_url = '/search?q=' | append: terms | append: '&options%5Bprefix%5D=last'
                                     -%}
-                                    <a href="{{ search_base_url }}" class="ps-btn ps-btn--fullwidth" style="max-width: 300px; margin: 0 auto; display: block;">{{ 'general.continue_shopping' | t }}</a>
+                                    <a href="{{ search_base_url }}" class="ps-btn">{{ 'general.continue_shopping' | t }}</a>
                                 </div>
                             </div>
-                            <script>
-                              // Prevenir scroll automático al botón
-                              (function() {
-                                // Scroll inmediato al header de la página
-                                var pageHeader = document.querySelector('.ps-page__header');
-                                if (pageHeader) {
-                                  window.scrollTo({ top: 0, behavior: 'auto' });
-                                }
-
-                                // Segundo intento después de que cargue todo
-                                window.addEventListener('load', function() {
-                                  window.scrollTo({ top: 0, behavior: 'auto' });
-                                });
-                              })();
-                            </script>
                         {%- else -%}
                             <div id="product-grid" data-id="{{ section.id }}" class="ps-projects__items ps-list" data-columns="{{ settings.collection_items_col }}" data-product-grid>
                                 {%- assign products = search.results | where: 'object_type', 'product' -%}
