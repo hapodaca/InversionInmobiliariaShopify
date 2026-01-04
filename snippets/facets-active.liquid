@@ -70,7 +70,14 @@
             {% if filter.type == "price_range" %}
               {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
                 {%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
-                  <facet-remove>
+                  {%- liquid
+                    assign data_ajax_price = filter.url_to_remove
+                    unless data_ajax_price contains "?"
+                      assign data_ajax_price = data_ajax_price | append: '?'
+                    endunless
+                    assign data_ajax_price = data_ajax_price | append: '&section_id=async-facets'
+                  -%}
+                  <facet-remove data-ajax="{{ data_ajax_price }}">
                     <li><a href="{{ filter.url_to_remove }}"><span class="tags-list-close"></span><span>{{ filter.label }}: {% if filter.min_value.value -%}{{ filter.min_value.value | money }}{%- else -%}{{ 0 | money }}{%- endif -%}-{%- if filter.max_value.value -%}{{ filter.max_value.value | money }}{%- else -%}{{ filter.range_max | money }}{%- endif -%}<span class="visually-hidden">{{ 'products.facets.clear_filter' | t }}</span></span></a></li>
                   </facet-remove>
                 {%- endif -%}
@@ -113,3 +120,97 @@
     </div>
   </div>
 {%- endif -%}
+
+<script>
+(function() {
+  'use strict';
+
+  // Asegurar que los links de facet-remove funcionen
+  function initFacetRemoveLinks() {
+    console.log('🔄 Inicializando links de facet-remove...');
+
+    // Buscar todos los elementos facet-remove
+    const facetRemoveElements = document.querySelectorAll('facet-remove');
+    console.log('📊 Elementos facet-remove encontrados:', facetRemoveElements.length);
+
+    facetRemoveElements.forEach((element, index) => {
+      const links = element.querySelectorAll('a');
+
+      links.forEach((link, linkIndex) => {
+        // Verificar si ya tiene el listener
+        if (link.hasAttribute('data-facet-remove-initialized')) {
+          return;
+        }
+
+        link.setAttribute('data-facet-remove-initialized', 'true');
+
+        // Usar capture phase para ejecutar antes que otros listeners
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          e.stopPropagation();
+
+          console.log('✅ Click en facet-remove link:', this.href);
+
+          // Redirigir directamente a la URL
+          setTimeout(() => {
+            window.location.href = this.href;
+          }, 10);
+        }, true); // true = capture phase
+
+        console.log(`✓ Listener agregado a facet-remove ${index}, link ${linkIndex}`);
+      });
+    });
+  }
+
+  // Ejecutar múltiples veces para asegurar que se inicialice
+  function tryInit() {
+    initFacetRemoveLinks();
+
+    // Intentar nuevamente después de un momento
+    setTimeout(initFacetRemoveLinks, 500);
+    setTimeout(initFacetRemoveLinks, 1000);
+  }
+
+  // Inicializar de inmediato si el DOM ya está listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryInit);
+  } else {
+    tryInit();
+  }
+
+  // También inicializar cuando window.load se dispare
+  window.addEventListener('load', initFacetRemoveLinks);
+
+  // Observar cambios en el DOM para reinicializar
+  const observer = new MutationObserver((mutations) => {
+    let shouldReinit = false;
+
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1 && (node.matches('facet-remove') || node.querySelector('facet-remove'))) {
+            shouldReinit = true;
+          }
+        });
+      }
+    });
+
+    if (shouldReinit) {
+      console.log('🔄 Reinicializando facet-remove después de cambios en DOM...');
+      setTimeout(initFacetRemoveLinks, 100);
+    }
+  });
+
+  // Observar todo el body
+  setTimeout(() => {
+    const body = document.body;
+    if (body) {
+      observer.observe(body, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }, 100);
+})();
+</script>

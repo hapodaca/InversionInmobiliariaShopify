@@ -83,7 +83,11 @@
                                   endif
 
                                   assign filter_label = 'filter-group-' | append: filter.label | handle
-                                  
+
+                                  assign filter_label_lower = filter.label | downcase
+                                  if filter_label_lower == 'disponibilidad' or filter_label_lower == 'availability'
+                                  continue
+                                  endif
                               -%}
                               <filter-block class="ps-widget ps-widget--project sidebar-block filter-group-block js-filter" id="Details-{{ forloop.index }}-{{ section.id }}" data-index="{{ forloop.index }}">
                                   <async-reload data-url-update>
@@ -145,18 +149,14 @@
                                             value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
                                           {%- endif %}
                                         {%- endif -%}
-                                        type="number"
+                                        type="text"
+                                        inputmode="numeric"
                                         placeholder="0"
-                                        min="0"
-                                        {%- if uses_comma_decimals -%}
-                                          max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
-                                        {%- else -%}
-                                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                                        {% endif %}
+                                        data-price-input
                                       >
                                     </div>
                                     <div class="field">
-                                      
+
                                       <label class="field__label" for="Filter-{{ filter.label | escape }}-LTE">
                                         {{ 'general.to' | t }}, {{ cart.currency.symbol }}
                                       </label>
@@ -171,22 +171,17 @@
                                             value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
                                           {%- endif %}
                                         {%- endif -%}
-                                        type="number"
-                                        min="0"
-                                        {%- if uses_comma_decimals -%}
-                                          placeholder="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
-                                          max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
-                                        {%- else -%}
-                                          placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                                          max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
-                                        {% endif %}
+                                        type="text"
+                                        inputmode="numeric"
+                                        placeholder="100000000000"
+                                        data-price-input
                                       >
                                       
                                     </div>
                                   </price-range>
                                   <div class="update__price">
                                     <input type="checkbox" value="Update" class="field__input" id="update__price" />
-                                    <label class="ps-btn text-capitalize" for="update__price">{{ 'products.facets.apply' | t }}</label>
+                                    <label class="ps-btn ps-btn--fullwidth" for="update__price">{{ 'products.facets.apply' | t }}</label>
                                   </div>
                                 </div>
                               </filter-block >
@@ -197,6 +192,239 @@
       </facet-filters-form>
     </div>
   {%- endif -%}
+  <style>
+    /* Mejorar campos de precio */
+    .facets__price .field__input {
+      text-align: right;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    /* Estilo del botón Aplicar - coincidir con ps-btn del sitio */
+    .update__price {
+      margin-top: 16px;
+    }
+
+    .update__price #update__price {
+      display: none;
+    }
+
+    .update__price label.ps-btn,
+    .update__price label.ps-btn.ps-btn--fullwidth {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      width: 100% !important;
+      padding: 0 24px !important;
+      height: 48px !important;
+      font-size: 14px !important;
+      line-height: 20px !important;
+      border: none !important;
+      font-weight: 500 !important;
+      transition: all .4s ease !important;
+      color: #ffffff !important;
+      background-color: #002b5b !important;
+      cursor: pointer !important;
+      border-radius: 6px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      text-decoration: none !important;
+    }
+
+    .update__price label.ps-btn:hover,
+    .update__price label.ps-btn.ps-btn--fullwidth:hover {
+      background-color: #014080 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(0,43,91,0.3) !important;
+    }
+
+    .update__price label.ps-btn:active,
+    .update__price label.ps-btn.ps-btn--fullwidth:active {
+      transform: translateY(0) !important;
+    }
+
+    /* Hacer sticky el sidebar de filtros - se mueve con el scroll de la página */
+    .facets-container.ps-projects__left {
+      position: sticky;
+      top: 120px;
+      align-self: flex-start;
+      min-width: 224px;  /* 280px - 20% = 224px */
+      max-width: 256px;  /* 320px - 20% = 256px */
+      flex-shrink: 0;
+    }
+
+    /* Asegurar que el contenedor padre permita el sticky */
+    #ProductGridContainer.ps-projects {
+      display: flex;
+      align-items: flex-start;
+      gap: 30px;
+    }
+
+    /* Asegurar ancho correcto del contenedor derecho */
+    .ps-projects__right {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 991px) {
+      .facets-container.ps-projects__left {
+        min-width: 192px;  /* 240px - 20% = 192px */
+        max-width: 208px;  /* 260px - 20% = 208px */
+      }
+
+      #ProductGridContainer.ps-projects {
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      #ProductGridContainer.ps-projects {
+        flex-direction: column;
+      }
+
+      .facets-container.ps-projects__left {
+        position: relative;
+        top: 0;
+        min-width: 100%;
+        max-width: 100%;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Esperar a que el DOM esté listo
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPriceFormatting);
+      } else {
+        initPriceFormatting();
+      }
+
+      function initPriceFormatting() {
+        console.log('🔄 Iniciando formateo de campos de precio...');
+
+        // Buscar inputs de precio usando el atributo data-price-input
+        const priceInputs = document.querySelectorAll('[data-price-input]');
+        console.log('📊 Campos de precio encontrados:', priceInputs.length);
+
+        if (priceInputs.length === 0) {
+          console.warn('⚠️ No se encontraron campos de precio');
+          return;
+        }
+
+        priceInputs.forEach((input, index) => {
+          console.log(`📝 Inicializando campo ${index}:`, input.name);
+
+          // Guardar el valor original si existe
+          const initialValue = input.value;
+          if (initialValue && initialValue !== '') {
+            const cleanValue = initialValue.replace(/[^\d]/g, '');
+            if (cleanValue) {
+              input.setAttribute('data-raw-value', cleanValue);
+              input.value = Number(cleanValue).toLocaleString('es-CO');
+              console.log('  Valor inicial formateado:', input.value);
+            }
+          }
+
+          // Evento cuando hace focus: mostrar número sin formato
+          input.addEventListener('focus', function() {
+            const rawValue = this.getAttribute('data-raw-value') || '';
+            this.value = rawValue;
+            this.select(); // Seleccionar todo para fácil edición
+          });
+
+          // Evento cuando pierde focus: formatear
+          input.addEventListener('blur', function() {
+            const cleanValue = this.value.replace(/[^\d]/g, '');
+            if (cleanValue) {
+              this.setAttribute('data-raw-value', cleanValue);
+              this.value = Number(cleanValue).toLocaleString('es-CO');
+              console.log('💰 Formateado:', cleanValue, '→', this.value);
+            } else {
+              this.value = '';
+              this.setAttribute('data-raw-value', '');
+            }
+          });
+
+          // Mientras escribe: solo permitir números (sin activar búsqueda)
+          input.addEventListener('input', function(e) {
+            // Detener cualquier propagación que pueda activar búsqueda automática
+            e.stopPropagation();
+
+            const cursorPos = this.selectionStart;
+            const oldLength = this.value.length;
+
+            // Limpiar todo excepto números
+            let cleanValue = this.value.replace(/[^\d]/g, '');
+            this.value = cleanValue;
+            this.setAttribute('data-raw-value', cleanValue);
+
+            // Restaurar posición del cursor
+            const newLength = this.value.length;
+            const diff = newLength - oldLength;
+            this.setSelectionRange(cursorPos + diff, cursorPos + diff);
+          });
+
+          // Prevenir que Enter active el formulario
+          input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
+          });
+        });
+
+        // Manejar el click del botón "Aplicar"
+        const applyButton = document.querySelector('.update__price label');
+        const applyCheckbox = document.querySelector('#update__price');
+
+        if (applyButton && applyCheckbox) {
+          applyButton.addEventListener('click', function(e) {
+            console.log('✅ Click en Aplicar');
+
+            // Convertir valores formateados a números puros
+            priceInputs.forEach(input => {
+              const rawValue = input.getAttribute('data-raw-value') || input.value.replace(/[^\d]/g, '');
+              input.value = rawValue;
+              console.log('  →', input.name, '=', rawValue);
+            });
+
+            // Activar el checkbox para que se aplique el filtro
+            setTimeout(() => {
+              applyCheckbox.checked = true;
+              applyCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
+            }, 100);
+          });
+        }
+
+        console.log('✓ Formateo de precio inicializado');
+
+        // Observar cambios en el DOM para reinicializar cuando se actualiza AJAX
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length) {
+              mutation.addedNodes.forEach((node) => {
+                if (node.nodeType === 1 && (node.matches('[data-price-input]') || node.querySelector('[data-price-input]'))) {
+                  console.log('🔄 Reinicializando formateo después de AJAX...');
+                  setTimeout(() => initPriceFormatting(), 100);
+                }
+              });
+            }
+          });
+        });
+
+        const facetsContainer = document.querySelector('.facets-container');
+        if (facetsContainer) {
+          observer.observe(facetsContainer, {
+            childList: true,
+            subtree: true
+          });
+        }
+      }
+    })();
+  </script>
+
   {%- for block in section.blocks -%}
     {%- case block.type -%}
     {%- when 'column' -%}
