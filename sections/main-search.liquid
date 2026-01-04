@@ -2,39 +2,19 @@
     assign sort_by = search.sort_by | default: search.default_sort_by
     assign terms = search.terms | escape
     assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
-  
-    assign prd_per_row = cart.attributes.prd_per_row | default: 'grid'
-    assign prd_per_row = prd_per_row | append: ''
+
+    assign layout_mode = 'list'
 -%}
 
 <div class="ps-page--inner ps-page--projects" style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
     {%- paginate search.results by section.settings.products_per_page -%}
         <div class="ps-page__header">
             <div class="container">
-                <form class="ps-form--projects-search" action="{{ routes.search_url }}" method="get" role="search">
-                    <div class="ps-form__top">
-                        <div class="ps-form__top-left">
-                            {% for product_type in shop.types %}
-                                {{ product_type | link_to_type : class: 'ps-btn ps-btn--gray' }}
-                            {% endfor %}
-                        </div>
-                        <div class="ps-form__top-right">
-                            <div class="ps-form underline with-icon"><i class="lnil lnil-map-marker ps-form__icon"></i>
-                                <input class="form-control" type="text" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'sections.image-banner-with-search.search.placeholder' | t }}" />
-                            </div>
-                            <div class="ps-form__actions">
-                                <button class="ps-btn">{{ 'sections.image-banner-with-search.search.button' | t }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                
                 {%- if search.performed -%}
                     <h1 class="ps-page__heading">{{ 'templates.search.title' | t }}</h1>
                 {%- else -%}
                     <h1 class="ps-page__heading">{{ 'general.search_products' | t }}</h1>
                 {%- endif -%}
-
                 {% render 'breadcrumb' %}
             </div>
         </div>
@@ -54,7 +34,6 @@
                         <div class="ps-projects__top">
                             <div class="ps-projects__top-left">
                                 <p class="ProductCountDesktop">
-                                    
                                     {%- if request.page_type == 'search' -%}
                                         {%- if search.results_count > 0 -%}
                                             {{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}
@@ -68,18 +47,17 @@
                                         results: search,
                                         enable_sorting: section.settings.enable_sorting,
                                         section: section,
-                                        prd_per_row: prd_per_row
+                                        sort_by: sort_by
                                     %}
                                 {%- endif -%}
-
                             </div>
                         </div>
 
                         {% render 'facets-active',
                             results: search,
                             section: section,
-                            show_sizes: true
-                            size_options_name: "Size"
+                            show_sizes: true,
+                            size_options_name: "Size",
                             show_colorpics: false
                         %}
 
@@ -88,27 +66,85 @@
                                 <h2 class="category-empty-title">{{ 'sections.collection_template.empty' | t }}</h2>
                                 <div class="category-empty-text fw-light">{{ 'sections.collection_template.use_fewer_filters_html' | t: link: search_url, class: "underlined-link link" }}</div>
                                 <div class="mt-3">
-                                    <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
+                                    {%- liquid
+                                        assign search_base_url = '/search?q=' | append: terms | append: '&options%5Bprefix%5D=last'
+                                    -%}
+                                    <a href="{{ search_base_url }}" class="ps-btn">{{ 'general.continue_shopping' | t }}</a>
                                 </div>
                             </div>
                         {%- else -%}
-                            <div id="product-grid"  data-id="{{ section.id }}" class="ps-projects__items ps-{{ prd_per_row }}" data-columns="3" data-product-grid>
+                            <div id="product-grid" data-id="{{ section.id }}" class="ps-projects__items ps-list" data-columns="{{ settings.collection_items_col }}" data-product-grid>
                                 {%- assign products = search.results | where: 'object_type', 'product' -%}
                                 {%- for product in products -%}
-                                    {% render 'product-item', product: product, settings: settings, layout: prd_per_row %}
+                                    {% render 'product-item', product: product, layout_mode: layout_mode %}
                                 {%- endfor -%}
                             </div>
                             {%- if paginate.pages > 1 -%}
                                 {% render 'pagination', paginate: paginate %}
                             {%- endif -%}
                         {%- endif -%}
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     {%- endpaginate -%}
 </div>
+
+{% style %}
+  .ps-projects__layout-switchers,
+  .view-mode--xl,
+  view-mode,
+  [data-view][class*="lnil"] { display: none !important; }
+
+  .ps-projects__items.ps-list{display:flex;flex-direction:column;gap:0}
+
+  /* Mejorar el formato del select de ordenamiento */
+  .ps-projects__top-right select.form-control,
+  .ps-projects__top-right facet-sort-by select {
+    min-width: 220px;
+    width: auto;
+    max-width: 100%;
+    padding: 10px 35px 10px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.2s ease;
+  }
+
+  .ps-projects__top-right select.form-control:hover,
+  .ps-projects__top-right facet-sort-by select:hover {
+    border-color: #002b5b;
+    box-shadow: 0 2px 8px rgba(0,43,91,0.1);
+  }
+
+  .ps-projects__top-right select.form-control:focus,
+  .ps-projects__top-right facet-sort-by select:focus {
+    outline: none;
+    border-color: #002b5b;
+    box-shadow: 0 0 0 3px rgba(0,43,91,0.1);
+  }
+
+  @media (max-width: 767px) {
+    .ps-projects__top-right select.form-control,
+    .ps-projects__top-right facet-sort-by select {
+      min-width: 180px;
+      font-size: 13px;
+      padding: 8px 30px 8px 12px;
+    }
+  }
+{% endstyle %}
 
 {% schema %}
 {
